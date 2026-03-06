@@ -1,9 +1,9 @@
 <?php
 class App
 {
-  protected $controller = 'HomeController';
-  protected $method = "index";
-  protected $params = [];
+  protected string|object $controller = 'HomeController';
+  protected string $method = "index";
+  protected array $params = [];
 
   public function __construct()
   {
@@ -34,7 +34,7 @@ class App
     call_user_func_array([$this->controller, $this->method], $this->params);
   }
 
-  public function parseUrl()
+  public function parseUrl(): array
   {
     if (isset($_GET['url'])) {
       $url = rtrim($_GET['url'], '/');
