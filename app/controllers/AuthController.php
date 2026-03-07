@@ -11,10 +11,11 @@ class AuthController extends Controller
 
     $data['judul'] = 'Login | Ecommerce Bintang';
 
-    $data['error'] = $_SESSION['login_error'] ?? null;
-    unset($_SESSION['login_error']);
+    $data['error'] = $_SESSION['flash_error'] ?? null;
+    $data['success'] = $_SESSION['flash_success'] ?? null;
+    unset($_SESSION['flash_error'], $_SESSION['flash_success']);
 
-    $this->view('auth//login' . $data);
+    $this->view('auth/login', $data);
   }
 
   public function authenticate(): void
