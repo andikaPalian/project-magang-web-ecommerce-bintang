@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 class ProdukController extends Controller
 {
   public function detail(string $slug): void

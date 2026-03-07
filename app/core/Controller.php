@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 class Controller
 {
   public function view(string $view, array $data = []): void
