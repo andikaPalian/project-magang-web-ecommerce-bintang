@@ -15,6 +15,7 @@ class AuthController extends Controller
     $data['success'] = $_SESSION['flash_success'] ?? null;
     unset($_SESSION['flash_error'], $_SESSION['flash_success']);
 
+    $this->view('templates/header', $data);
     $this->view('auth/login', $data);
   }
 
@@ -33,7 +34,7 @@ class AuthController extends Controller
 
         $this->redirectBasedOnRole($user['role']);
       } else {
-        $_SESSION['login_error'] = 'Email atau password salah';
+        $_SESSION['flash_error'] = 'Email atau password salah';
         header('Location: ' . BASEURL . '/auth');
         exit;
       }
@@ -64,8 +65,9 @@ class AuthController extends Controller
 
     $data['judul'] = 'Register | Ecommerce Bintang';
     $data['error'] = $_SESSION['register_error'] ?? null;
-    unset($$_SESSION['register_error']);
+    unset($_SESSION['flash_error']);
 
+    $this->view('templates/header', $data);
     $this->view('auth/register', $data);
   }
 
