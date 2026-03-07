@@ -114,7 +114,7 @@
 
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
       <?php foreach ($data['flash_sale'] as $produk): ?>
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full">
+        <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
           <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2 py-1 rounded z-10">-13%</div>
           <div class="aspect-w-1 aspect-h-1 bg-gray-50 overflow-hidden relative">
             <img src="<?= !empty($produk['image_url']) ? $produk['image_url'] : 'https://images.unsplash.com/photo-1505156868547-9b49f4df4e04?auto=format&fit=crop&w=400&q=80'; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
@@ -130,12 +130,12 @@
               <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format($produk['price'], 0, ',', '.'); ?></div>
             </div>
           </div>
-          <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm">
+          <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm z-20">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
             </svg>
           </button>
-        </div>
+        </a>
       <?php endforeach; ?>
     </div>
   </div>
@@ -151,7 +151,7 @@
 
   <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
     <?php foreach ($data['terlaris'] as $produk): ?>
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
+      <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
         <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2 py-1 rounded z-10">-10%</div>
         <div class="bg-gray-50 overflow-hidden relative">
           <img src="<?= !empty($produk['image_url']) ? $produk['image_url'] : 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=400&q=80'; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
@@ -167,12 +167,12 @@
             <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format($produk['price'], 0, ',', '.'); ?></div>
           </div>
         </div>
-        <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm">
+        <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm z-20">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
           </svg>
         </button>
-      </div>
+      </a>
     <?php endforeach; ?>
   </div>
 </section>
@@ -210,7 +210,7 @@
 
   <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
     <?php foreach ($data['rekomendasi'] as $produk): ?>
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
+      <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
         <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2 py-1 rounded z-10">-15%</div>
         <div class="bg-gray-50 overflow-hidden relative">
           <img src="<?= !empty($produk['image_url']) ? $produk['image_url'] : 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=400&q=80'; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
@@ -226,12 +226,12 @@
             <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format($produk['price'], 0, ',', '.'); ?></div>
           </div>
         </div>
-        <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm">
+        <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm z-20">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
           </svg>
         </button>
-      </div>
+      </a>
     <?php endforeach; ?>
   </div>
 </section>

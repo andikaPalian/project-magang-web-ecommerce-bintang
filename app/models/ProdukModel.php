@@ -52,4 +52,37 @@ class ProdukModel
 
     return $this->db->resultSet();
   }
+
+  public function getProductBySlug(string $slug): array|false
+  {
+    $this->db->query("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.slug = :slug AND p.is_active = 1");
+    $this->db->bind("slug", $slug);
+
+    return $this->db->single();
+  }
+
+  public function getProductStock(int $product_id): int
+  {
+    $this->db->query("SELECT SUM(stock_quantity) AS total_stock FROM product_stocks WHERE product_id = :product_id");
+    $this->db->bind("product_id", $product_id);
+
+    $result = $this->db->single();
+    return (int) $result['total_stock'] ?? 0;
+  }
+
+  public function getProductSpecs(int $product_id): array
+  {
+    $this->db->query("SELECT * FROM product_specifications WHERE product_id = :product_id");
+    $this->db->bind("product_id", $product_id);
+
+    return $this->db->resultSet();
+  }
+
+  public function getProductReviews(int $product_id): array
+  {
+    $this->db->query("SELECT r.*, u.name as reviewer_name FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.product_id = :product_id ORDER BY r.created_at DESC");
+    $this->db->bind("product_id", $product_id);
+
+    return $this->db->resultSet();
+  }
 }
