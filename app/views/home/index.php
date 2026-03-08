@@ -6,7 +6,7 @@
     <p id="hero-label" class="text-sm font-semibold tracking-widest uppercase mb-3 text-gray-300">ALASKA ELECTRONICS</p>
     <h1 id="hero-title" class="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight">Super Sale Elektronik</h1>
     <p id="hero-subtitle" class="text-lg md:text-xl font-light mb-8 text-gray-200">Diskon Hingga 40% untuk Semua Kategori</p>
-    <a id="hero-btn" href="#" class="inline-flex items-center bg-white text-gray-900 font-semibold px-8 py-3.5 rounded-md hover:bg-gray-100 transition shadow-lg">
+    <a id="hero-btn" href="<?= BASEURL; ?>/katalog" class="inline-flex items-center bg-white text-gray-900 font-semibold px-8 py-3.5 rounded-md hover:bg-gray-100 transition shadow-lg">
       Belanja Sekarang <svg class="w-4 h-4 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
       </svg>
@@ -114,28 +114,61 @@
 
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
       <?php foreach ($data['flash_sale'] as $produk): ?>
-        <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
-          <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2 py-1 rounded z-10">-13%</div>
-          <div class="aspect-w-1 aspect-h-1 bg-gray-50 overflow-hidden relative">
-            <img src="<?= !empty($produk['image_url']) ? $produk['image_url'] : 'https://images.unsplash.com/photo-1505156868547-9b49f4df4e04?auto=format&fit=crop&w=400&q=80'; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
-          </div>
-          <div class="p-4 flex-1 flex flex-col">
-            <p class="text-[11px] text-gray-500 mb-1">Flash Sale</p>
-            <h3 class="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug mb-2"><?= $produk['name']; ?></h3>
-            <div class="flex items-center mb-3">
-              <span class="text-yellow-400 text-xs mr-1">★</span><span class="text-xs font-bold text-gray-700">4.8</span><span class="text-[10px] text-gray-400 ml-1">(234)</span>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
+
+          <?php
+          $harga_asli = (float)$produk['price'];
+          $harga_diskon = !empty($produk['discount_price']) ? (float)$produk['discount_price'] : 0;
+          $ada_diskon = ($harga_diskon > 0 && $harga_diskon < $harga_asli);
+
+          // LOGIKA CERDAS UNTUK GAMBAR
+          $img_src = 'https://images.unsplash.com/photo-1505156868547-9b49f4df4e04?auto=format&fit=crop&w=400&q=80';
+          if (!empty($produk['image_url'])) {
+            if (str_starts_with($produk['image_url'], 'http')) {
+              $img_src = $produk['image_url'];
+            } else {
+              $img_src = BASEURL . '/img/products/' . $produk['image_url'];
+            }
+          }
+          ?>
+
+          <?php if ($ada_diskon): ?>
+            <?php $persentase = round((($harga_asli - $harga_diskon) / $harga_asli) * 100); ?>
+            <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2 py-1 rounded z-10">-<?= $persentase; ?>%</div>
+          <?php endif; ?>
+
+          <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="flex-1 flex flex-col">
+            <div class="aspect-w-1 aspect-h-1 bg-gray-50 overflow-hidden relative">
+              <img src="<?= $img_src; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
             </div>
-            <div class="mt-auto">
-              <div class="text-[11px] text-gray-400 line-through mb-0.5">Rp <?= number_format($produk['price'] + 300000, 0, ',', '.'); ?></div>
-              <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format($produk['price'], 0, ',', '.'); ?></div>
+            <div class="p-4 flex-1 flex flex-col">
+              <p class="text-[11px] text-gray-500 mb-1">Flash Sale</p>
+              <h3 class="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug mb-2"><?= $produk['name']; ?></h3>
+              <div class="flex items-center mb-3">
+                <span class="text-yellow-400 text-xs mr-1">★</span><span class="text-xs font-bold text-gray-700">4.8</span><span class="text-[10px] text-gray-400 ml-1">(234)</span>
+              </div>
+              <div class="mt-auto">
+                <?php if ($ada_diskon): ?>
+                  <div class="text-[11px] text-gray-400 line-through mb-0.5">Rp <?= number_format($harga_asli, 0, ',', '.'); ?></div>
+                  <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format($harga_diskon, 0, ',', '.'); ?></div>
+                <?php else: ?>
+                  <div class="text-[11px] opacity-0 mb-0.5">-</div>
+                  <div class="text-lg font-bold text-gray-900">Rp <?= number_format($harga_asli, 0, ',', '.'); ?></div>
+                <?php endif; ?>
+              </div>
             </div>
-          </div>
-          <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm z-20">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
-          </button>
-        </a>
+          </a>
+
+          <form action="<?= BASEURL; ?>/cart/add" method="POST" class="absolute bottom-4 right-4 z-20">
+            <input type="hidden" name="product_id" value="<?= $produk['id']; ?>">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm cursor-pointer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </button>
+          </form>
+        </div>
       <?php endforeach; ?>
     </div>
   </div>
@@ -151,28 +184,62 @@
 
   <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
     <?php foreach ($data['terlaris'] as $produk): ?>
-      <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
-        <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2 py-1 rounded z-10">-10%</div>
-        <div class="bg-gray-50 overflow-hidden relative">
-          <img src="<?= !empty($produk['image_url']) ? $produk['image_url'] : 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=400&q=80'; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
-        </div>
-        <div class="p-4 flex-1 flex flex-col">
-          <p class="text-[11px] text-gray-500 mb-1">Terlaris</p>
-          <h3 class="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug mb-2"><?= $produk['name']; ?></h3>
-          <div class="flex items-center mb-3">
-            <span class="text-yellow-400 text-xs mr-1">★</span><span class="text-xs font-bold text-gray-700">4.9</span><span class="text-[10px] text-gray-400 ml-1">(189)</span>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
+
+        <?php
+        $harga_asli = (float)$produk['price'];
+        $harga_diskon = !empty($produk['discount_price']) ? (float)$produk['discount_price'] : 0;
+        $ada_diskon = ($harga_diskon > 0 && $harga_diskon < $harga_asli);
+
+        // LOGIKA CERDAS UNTUK GAMBAR
+        $img_src = 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=400&q=80';
+        if (!empty($produk['image_url'])) {
+          if (str_starts_with($produk['image_url'], 'http')) {
+            $img_src = $produk['image_url'];
+          } else {
+            $img_src = BASEURL . '/img/products/' . $produk['image_url'];
+          }
+        }
+        ?>
+
+        <?php if ($ada_diskon): ?>
+          <?php $persentase = round((($harga_asli - $harga_diskon) / $harga_asli) * 100); ?>
+          <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2 py-1 rounded z-10">-<?= $persentase; ?>%</div>
+        <?php endif; ?>
+
+        <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="flex-1 flex flex-col">
+          <div class="bg-gray-50 overflow-hidden relative">
+            <img src="<?= $img_src; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
           </div>
-          <div class="mt-auto">
-            <div class="text-[11px] text-gray-400 line-through mb-0.5">Rp <?= number_format($produk['price'] + 250000, 0, ',', '.'); ?></div>
-            <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format($produk['price'], 0, ',', '.'); ?></div>
+          <div class="p-4 flex-1 flex flex-col">
+            <p class="text-[11px] text-gray-500 mb-1">Terlaris</p>
+            <h3 class="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug mb-2"><?= $produk['name']; ?></h3>
+            <div class="flex items-center mb-3">
+              <span class="text-yellow-400 text-xs mr-1">★</span><span class="text-xs font-bold text-gray-700">4.9</span><span class="text-[10px] text-gray-400 ml-1">(189)</span>
+            </div>
+            <div class="mt-auto">
+              <?php if ($ada_diskon): ?>
+                <div class="text-[11px] text-gray-400 line-through mb-0.5">Rp <?= number_format($harga_asli, 0, ',', '.'); ?></div>
+                <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format($harga_diskon, 0, ',', '.'); ?></div>
+              <?php else: ?>
+                <div class="text-[11px] opacity-0 mb-0.5">-</div>
+                <div class="text-lg font-bold text-gray-900">Rp <?= number_format($harga_asli, 0, ',', '.'); ?></div>
+              <?php endif; ?>
+            </div>
           </div>
-        </div>
-        <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm z-20">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-          </svg>
-        </button>
-      </a>
+        </a>
+
+        <form action="<?= BASEURL; ?>/cart/add" method="POST" class="absolute bottom-4 right-4 z-20">
+          <input type="hidden" name="product_id" value="<?= $produk['id']; ?>">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </button>
+        </form>
+
+      </div>
     <?php endforeach; ?>
   </div>
 </section>
@@ -185,7 +252,7 @@
         <span class="text-xs font-bold tracking-widest uppercase mb-1 block opacity-80">Promo Audio</span>
         <h3 class="text-3xl font-bold mb-2">Diskon 40%</h3>
         <p class="text-sm mb-4 opacity-90">Headphone & Speaker Premium</p>
-        <a href="#" class="inline-block text-sm font-semibold underline underline-offset-4">Belanja Sekarang</a>
+        <a href="<?= BASEURL; ?>/katalog" class="inline-block text-sm font-semibold underline underline-offset-4">Belanja Sekarang</a>
       </div>
     </div>
     <div class="rounded-2xl h-[220px] p-8 flex flex-col justify-center bg-cover bg-center text-white relative overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1605901309584-818e25960b8f?auto=format&fit=crop&w=800&q=80');">
@@ -194,7 +261,7 @@
         <span class="text-xs font-bold tracking-widest uppercase mb-1 block opacity-80">Gaming Zone</span>
         <h3 class="text-3xl font-bold mb-2">PS5 & Aksesoris</h3>
         <p class="text-sm mb-4 opacity-90">Bundle hemat mulai 6 jutaan</p>
-        <a href="#" class="inline-block text-sm font-semibold underline underline-offset-4">Lihat Penawaran</a>
+        <a href="<?= BASEURL; ?>/katalog" class="inline-block text-sm font-semibold underline underline-offset-4">Lihat Penawaran</a>
       </div>
     </div>
   </div>
@@ -210,28 +277,62 @@
 
   <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
     <?php foreach ($data['rekomendasi'] as $produk): ?>
-      <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
-        <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2 py-1 rounded z-10">-15%</div>
-        <div class="bg-gray-50 overflow-hidden relative">
-          <img src="<?= !empty($produk['image_url']) ? $produk['image_url'] : 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=400&q=80'; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
-        </div>
-        <div class="p-4 flex-1 flex flex-col">
-          <p class="text-[11px] text-gray-500 mb-1">Rekomendasi</p>
-          <h3 class="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug mb-2"><?= $produk['name']; ?></h3>
-          <div class="flex items-center mb-3">
-            <span class="text-yellow-400 text-xs mr-1">★</span><span class="text-xs font-bold text-gray-700">4.9</span><span class="text-[10px] text-gray-400 ml-1">(210)</span>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-md transition">
+
+        <?php
+        $harga_asli = (float)$produk['price'];
+        $harga_diskon = !empty($produk['discount_price']) ? (float)$produk['discount_price'] : 0;
+        $ada_diskon = ($harga_diskon > 0 && $harga_diskon < $harga_asli);
+
+        // LOGIKA CERDAS UNTUK GAMBAR
+        $img_src = 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=400&q=80';
+        if (!empty($produk['image_url'])) {
+          if (str_starts_with($produk['image_url'], 'http')) {
+            $img_src = $produk['image_url'];
+          } else {
+            $img_src = BASEURL . '/img/products/' . $produk['image_url'];
+          }
+        }
+        ?>
+
+        <?php if ($ada_diskon): ?>
+          <?php $persentase = round((($harga_asli - $harga_diskon) / $harga_asli) * 100); ?>
+          <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2 py-1 rounded z-10">-<?= $persentase; ?>%</div>
+        <?php endif; ?>
+
+        <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="flex-1 flex flex-col">
+          <div class="bg-gray-50 overflow-hidden relative">
+            <img src="<?= $img_src; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
           </div>
-          <div class="mt-auto">
-            <div class="text-[11px] text-gray-400 line-through mb-0.5">Rp <?= number_format($produk['price'] + 500000, 0, ',', '.'); ?></div>
-            <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format($produk['price'], 0, ',', '.'); ?></div>
+          <div class="p-4 flex-1 flex flex-col">
+            <p class="text-[11px] text-gray-500 mb-1">Rekomendasi</p>
+            <h3 class="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug mb-2"><?= $produk['name']; ?></h3>
+            <div class="flex items-center mb-3">
+              <span class="text-yellow-400 text-xs mr-1">★</span><span class="text-xs font-bold text-gray-700">4.9</span><span class="text-[10px] text-gray-400 ml-1">(210)</span>
+            </div>
+            <div class="mt-auto">
+              <?php if ($ada_diskon): ?>
+                <div class="text-[11px] text-gray-400 line-through mb-0.5">Rp <?= number_format($harga_asli, 0, ',', '.'); ?></div>
+                <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format($harga_diskon, 0, ',', '.'); ?></div>
+              <?php else: ?>
+                <div class="text-[11px] opacity-0 mb-0.5">-</div>
+                <div class="text-lg font-bold text-gray-900">Rp <?= number_format($harga_asli, 0, ',', '.'); ?></div>
+              <?php endif; ?>
+            </div>
           </div>
-        </div>
-        <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm z-20">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-          </svg>
-        </button>
-      </a>
+        </a>
+
+        <form action="<?= BASEURL; ?>/cart/add" method="POST" class="absolute bottom-4 right-4 z-20">
+          <input type="hidden" name="product_id" value="<?= $produk['id']; ?>">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="bg-[#ef4444] hover:bg-red-600 text-white p-2 rounded-lg transition shadow-sm cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </button>
+        </form>
+
+      </div>
     <?php endforeach; ?>
   </div>
 </section>
