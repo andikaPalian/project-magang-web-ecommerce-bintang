@@ -22,12 +22,12 @@ class ProdukController extends Controller
     $data['produk'] = $produk;
 
     $id = (int) $produk['id'];
-    $user_id = $_SESSION['user_id'] ?? null;
+    $category_id = (int) $produk['category_id'];
 
     $data['stok'] = $productModel->getProductStock($id);
     $data['spesifikasi'] = $productModel->getProductSpecs($id);
     $data['ulasan'] = $productModel->getProductReviews($id);
-    $data['produk_serupa'] = $productModel->getRecommendedProducts(5, $user_id);
+    $data['produk_serupa'] = $productModel->getSimiliarProducts($category_id, $id, 5);
 
     $this->view('templates/header', $data);
     $this->view('templates/navbar', $data);

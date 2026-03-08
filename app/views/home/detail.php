@@ -3,7 +3,7 @@ $produk = $data['produk'];
 $stok = $data['stok'];
 $spesifikasi = $data['spesifikasi'];
 $ulasan = $data['ulasan'];
-$produk_serupa = $data['produk_serupa'];
+$produk_serupa = $data['produk_serupa'] ?? [];
 
 $is_discount = !empty($produk['discount_price']) && $produk['discount_price'] > 0;
 $harga_tampil = $is_discount ? $produk['discount_price'] : $produk['price'];
@@ -15,6 +15,15 @@ if (count($ulasan) > 0) {
   $rata_rating = round($total_bintang / count($ulasan), 1);
 } else {
   $rata_rating = 5.0;
+}
+
+$img_src = 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80';
+if (!empty($produk['image_url'])) {
+  if (str_starts_with($produk['image_url'], 'http')) {
+    $img_src = $produk['image_url'];
+  } else {
+    $img_src = BASEURL . '/img/products/' . $produk['image_url'];
+  }
 }
 ?>
 
@@ -29,6 +38,23 @@ if (count($ulasan) > 0) {
     <span class="text-gray-800 font-medium truncate"><?= $produk['name']; ?></span>
   </nav>
 
+  <?php if (isset($_SESSION['flash_success'])): ?>
+    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-6 flex items-center shadow-sm">
+      <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+      </svg>
+      <p class="font-medium"><?= $_SESSION['flash_success']; ?></p>
+    </div>
+    <?php unset($_SESSION['flash_success']); ?>
+  <?php endif; ?>
+
+  <div id="ajax-alert" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 items-center shadow-sm transition-all duration-300">
+    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+    </svg>
+    <p id="ajax-alert-text" class="font-medium"></p>
+  </div>
+
   <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
 
     <div class="md:col-span-7 relative">
@@ -38,9 +64,7 @@ if (count($ulasan) > 0) {
         </div>
       <?php endif; ?>
       <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-sm aspect-w-4 aspect-h-3">
-        <img src="<?= !empty($produk['image_url']) ? $produk['image_url'] : 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80'; ?>"
-          alt="<?= $produk['name']; ?>"
-          class="w-full h-full object-cover">
+        <img src="<?= $img_src; ?>" alt="<?= $produk['name']; ?>" class="w-full h-full object-cover">
       </div>
     </div>
 
@@ -65,7 +89,6 @@ if (count($ulasan) > 0) {
         <div class="text-4xl font-bold text-[#ef4444] tracking-tight">Rp <?= number_format((float)$harga_tampil, 0, ',', '.'); ?></div>
         <?php if ($is_discount): ?>
           <span class="text-gray-400 line-through text-base mb-1">Rp <?= number_format((float)$produk['price'], 0, ',', '.'); ?></span>
-          <span class="bg-red-50 text-[#ef4444] text-xs font-bold px-2 py-1 rounded mb-1.5">-<?= $persen_diskon; ?>%</span>
         <?php endif; ?>
       </div>
 
@@ -74,36 +97,40 @@ if (count($ulasan) > 0) {
       </p>
 
       <?php if ($stok > 0): ?>
-        <div class="flex items-center space-x-4 mb-6">
-          <span class="text-sm font-medium text-gray-700">Jumlah:</span>
-          <div class="flex items-center border border-gray-300 rounded-lg">
-            <button type="button" class="px-4 py-2 text-gray-500 hover:bg-gray-100 transition rounded-l-lg">-</button>
-            <input type="number" value="1" min="1" max="<?= $stok; ?>" class="w-12 text-center py-2 border-none focus:ring-0 text-sm font-semibold text-gray-800 bg-transparent outline-none">
-            <button type="button" class="px-4 py-2 text-gray-500 hover:bg-gray-100 transition rounded-r-lg">+</button>
-          </div>
-        </div>
+        <form id="form-add-cart" action="<?= BASEURL; ?>/cart/add?ajax=1" method="POST">
+          <input type="hidden" name="product_id" value="<?= $produk['id']; ?>">
 
-        <div class="flex space-x-3 mb-4">
-          <button class="flex-1 bg-[#ef4444] hover:bg-red-600 text-white font-bold py-3.5 px-6 rounded-lg transition flex items-center justify-center space-x-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
-            <span>Tambah ke Keranjang</span>
-          </button>
-          <button class="w-[52px] h-[52px] border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:text-[#ef4444] hover:border-[#ef4444] transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-            </svg>
-          </button>
-          <button class="w-[52px] h-[52px] border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:text-[#ef4444] hover:border-[#ef4444] transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
-            </svg>
-          </button>
-        </div>
-        <button class="w-full border-2 border-[#ef4444] text-[#ef4444] hover:bg-red-50 font-bold py-3.5 px-6 rounded-lg transition">
-          Beli Sekarang
-        </button>
+          <div class="flex items-center space-x-4 mb-6">
+            <span class="text-sm font-medium text-gray-700">Jumlah:</span>
+            <div class="flex items-center border border-gray-300 rounded-lg">
+              <button type="button" onclick="decrementQty()" class="px-4 py-2 text-gray-500 hover:bg-gray-100 transition rounded-l-lg">-</button>
+              <input type="number" id="qty-input" name="quantity" value="1" min="1" max="<?= $stok; ?>" readonly class="w-12 text-center py-2 border-none focus:ring-0 text-sm font-semibold text-gray-800 bg-transparent outline-none cursor-default">
+              <button type="button" onclick="incrementQty(<?= $stok; ?>)" class="px-4 py-2 text-gray-500 hover:bg-gray-100 transition rounded-r-lg">+</button>
+            </div>
+          </div>
+
+          <div class="flex space-x-3 mb-4">
+            <button type="submit" id="btn-add-cart" class="flex-1 bg-[#ef4444] hover:bg-red-600 text-white font-bold py-3.5 px-6 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
+              <svg id="icon-cart-default" class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <svg id="icon-cart-success" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span id="text-add-cart">Tambah ke Keranjang</span>
+            </button>
+
+            <button type="button" class="w-[52px] h-[52px] border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:text-[#ef4444] hover:border-[#ef4444] transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <a href="<?= BASEURL; ?>/cart" class="block text-center w-full border-2 border-[#ef4444] text-[#ef4444] hover:bg-red-50 font-bold py-3 px-6 rounded-lg transition">
+            Beli Sekarang
+          </a>
+        </form>
       <?php else: ?>
         <div class="bg-gray-100 p-4 rounded-lg text-center text-gray-500 font-semibold mb-6">
           Maaf, stok produk saat ini sedang kosong.
@@ -112,27 +139,21 @@ if (count($ulasan) > 0) {
 
       <div class="grid grid-cols-3 gap-2 mt-8 pt-6 border-t border-gray-100">
         <div class="text-center flex flex-col items-center">
-          <div class="text-[#ef4444] mb-1.5">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="text-[#ef4444] mb-1.5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-            </svg>
-          </div>
+            </svg></div>
           <span class="text-[11px] font-medium text-gray-600">Gratis Ongkir</span>
         </div>
         <div class="text-center flex flex-col items-center">
-          <div class="text-[#ef4444] mb-1.5">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="text-[#ef4444] mb-1.5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-            </svg>
-          </div>
+            </svg></div>
           <span class="text-[11px] font-medium text-gray-600">Garansi Resmi</span>
         </div>
         <div class="text-center flex flex-col items-center">
-          <div class="text-[#ef4444] mb-1.5">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="text-[#ef4444] mb-1.5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-            </svg>
-          </div>
+            </svg></div>
           <span class="text-[11px] font-medium text-gray-600">7 Hari Return</span>
         </div>
       </div>
@@ -209,71 +230,67 @@ if (count($ulasan) > 0) {
     </div>
   </div>
 
-  <div class="mb-10" data-aos="fade-up">
-    <h2 class="text-xl font-bold text-[#1e293b] mb-6">Produk Serupa</h2>
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-5">
-      <?php foreach ($produk_serupa as $sim_prod): ?>
-        <?php
-        $sim_disc = !empty($sim_prod['discount_price']) && $sim_prod['discount_price'] > 0;
-        $sim_harga = $sim_disc ? $sim_prod['discount_price'] : $sim_prod['price'];
-        $sim_pct = $sim_disc ? round((($sim_prod['price'] - $sim_prod['discount_price']) / $sim_prod['price']) * 100) : 0;
-        ?>
-        <a href="<?= BASEURL; ?>/produk/detail/<?= $sim_prod['slug']; ?>" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-lg transition duration-300">
-          <?php if ($sim_disc): ?>
-            <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2.5 py-1 rounded-md z-10">-<?= $sim_pct; ?>%</div>
-          <?php endif; ?>
+  <?php if (!empty($produk_serupa)): ?>
+    <div class="mb-10" data-aos="fade-up">
+      <h2 class="text-xl font-bold text-[#1e293b] mb-6">Produk Serupa</h2>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-5">
+        <?php foreach ($produk_serupa as $sim_prod): ?>
+          <?php
+          $sim_disc = !empty($sim_prod['discount_price']) && $sim_prod['discount_price'] > 0;
+          $sim_harga = $sim_disc ? $sim_prod['discount_price'] : $sim_prod['price'];
+          $sim_pct = $sim_disc ? round((($sim_prod['price'] - $sim_prod['discount_price']) / $sim_prod['price']) * 100) : 0;
 
-          <div class="bg-gray-50 overflow-hidden relative aspect-w-1 aspect-h-1">
-            <img src="<?= !empty($sim_prod['image_url']) ? $sim_prod['image_url'] : 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=400&q=80'; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500">
+          $sim_img = 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=400&q=80';
+          if (!empty($sim_prod['image_url'])) {
+            if (str_starts_with($sim_prod['image_url'], 'http')) {
+              $sim_img = $sim_prod['image_url'];
+            } else {
+              $sim_img = BASEURL . '/img/products/' . $sim_prod['image_url'];
+            }
+          }
+          ?>
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group flex flex-col relative h-full hover:shadow-lg transition duration-300">
+            <?php if ($sim_disc): ?>
+              <div class="absolute top-3 left-3 bg-[#ef4444] text-white text-[10px] font-bold px-2.5 py-1 rounded-md z-10">-<?= $sim_pct; ?>%</div>
+            <?php endif; ?>
+
+            <a href="<?= BASEURL; ?>/produk/detail/<?= $sim_prod['slug']; ?>" class="flex-1 flex flex-col">
+              <div class="bg-gray-50 overflow-hidden relative aspect-w-1 aspect-h-1">
+                <img src="<?= $sim_img; ?>" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500">
+              </div>
+
+              <div class="p-4 flex-1 flex flex-col">
+                <p class="text-[10px] text-gray-500 mb-1 uppercase tracking-wider">Rekomendasi</p>
+                <h3 class="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug mb-3"><?= $sim_prod['name']; ?></h3>
+
+                <div class="mt-auto">
+                  <?php if ($sim_disc): ?>
+                    <div class="text-[11px] text-gray-400 line-through mb-0.5">Rp <?= number_format((float)$sim_prod['price'], 0, ',', '.'); ?></div>
+                  <?php endif; ?>
+                  <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format((float)$sim_harga, 0, ',', '.'); ?></div>
+                </div>
+              </div>
+            </a>
+
+            <form action="<?= BASEURL; ?>/cart/add" method="POST" class="absolute bottom-4 right-4 z-20">
+              <input type="hidden" name="product_id" value="<?= $sim_prod['id']; ?>">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="bg-[#ef4444] hover:bg-red-600 text-white w-8 h-8 rounded-lg flex items-center justify-center transition shadow-sm cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+              </button>
+            </form>
+
           </div>
-
-          <div class="p-4 flex-1 flex flex-col">
-            <p class="text-[10px] text-gray-500 mb-1 uppercase tracking-wider">Rekomendasi</p>
-            <h3 class="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug mb-3"><?= $sim_prod['name']; ?></h3>
-
-            <div class="mt-auto">
-              <?php if ($sim_disc): ?>
-                <div class="text-[11px] text-gray-400 line-through mb-0.5">Rp <?= number_format((float)$sim_prod['price'], 0, ',', '.'); ?></div>
-              <?php endif; ?>
-              <div class="text-lg font-bold text-[#ef4444]">Rp <?= number_format((float)$sim_harga, 0, ',', '.'); ?></div>
-            </div>
-          </div>
-
-          <button class="absolute bottom-4 right-4 bg-[#ef4444] hover:bg-red-600 text-white w-8 h-8 rounded-lg flex items-center justify-center transition shadow-sm z-20">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
-          </button>
-        </a>
-      <?php endforeach; ?>
+        <?php endforeach; ?>
+      </div>
     </div>
-  </div>
+  <?php else: ?>
+    <div class="mb-10 p-6 bg-gray-50 rounded-xl text-center text-gray-500">
+      Belum ada produk serupa di kategori ini.
+    </div>
+  <?php endif; ?>
 </div>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabBtns.forEach(b => {
-          b.classList.remove('text-[#ef4444]', 'font-semibold');
-          b.classList.add('text-gray-500', 'font-medium');
-          b.querySelector('.tab-indicator').classList.remove('bg-[#ef4444]');
-          b.querySelector('.tab-indicator').classList.add('bg-transparent');
-        });
-
-        tabContents.forEach(c => c.classList.add('hidden'));
-
-        btn.classList.remove('text-gray-500', 'font-medium');
-        btn.classList.add('text-[#ef4444]', 'font-semibold');
-        btn.querySelector('.tab-indicator').classList.remove('bg-transparent');
-        btn.querySelector('.tab-indicator').classList.add('bg-[#ef4444]');
-
-        const targetId = 'content-' + btn.getAttribute('data-target');
-        document.getElementById(targetId).classList.remove('hidden');
-      });
-    });
-  });
-</script>
+<script src="<?= BASEURL; ?>/js/detail.js"></script>

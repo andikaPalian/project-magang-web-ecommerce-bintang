@@ -46,8 +46,19 @@ class ProdukModel
     if ($user_id !== null) {
       $this->db->query("SELECT p.category_id FROM order_items oi JOIN orders o ON oi.order_id = o.id JOIN products p ON oi.product_id = p.id WHERE o.user_id = :user_id GROUP BY p.category_id ORDER BY COUNT(p.category_id) DESC LIMIT 1");
       $this->db->bind("user_id", $user_id);
+      $favCategory = $this->db->single();
 
-      return $this->db->resultSet();
+      if ($favCategory) {
+        $this->db->query("SELECT * FROM products WHERE category_id = :category_id AND is_active = 1 ORDER BY RAND() LIMIT :limit");
+        $this->db->bind("category_id", $favCategory['category_id']);
+        $this->db->bind("limit", $limit);
+
+        $result = $this->db->resultSet();
+
+        if (!empty($result)) {
+          return $result;
+        }
+      }
     }
     $this->db->query("SELECT * FROM products WHERE is_active = 1 ORDER BY RAND() LIMIT :limit");
     $this->db->bind("limit", $limit);
@@ -84,6 +95,16 @@ class ProdukModel
   {
     $this->db->query("SELECT r.*, u.name as reviewer_name FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.product_id = :product_id ORDER BY r.created_at DESC");
     $this->db->bind("product_id", $product_id);
+
+    return $this->db->resultSet();
+  }
+
+  public function getSimiliarProducts(int $category_id, int $current_product_id, int $limit = 5): array
+  {
+    $this->db->query("SELECT * FROM products WHERE category_id = :category_id AND id != :product_id AND is_active = 1 ORDER BY RAND() LIMIT :limit");
+    $this->db->bind("category_id", $category_id);
+    $this->db->bind("product_id", $current_product_id);
+    $this->db->bind("limit", $limit);
 
     return $this->db->resultSet();
   }
