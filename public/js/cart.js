@@ -8,10 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
       errorText.textContent = message;
       errorBox.classList.remove("hidden");
       errorBox.classList.add("flex");
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => {
         errorBox.classList.add("hidden");
         errorBox.classList.remove("flex");
@@ -52,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const modal = document.getElementById("custom-confirm-modal");
-  const modalBox = modal.querySelector("div");
+  const modalBox = modal.querySelector(".modal-box");
   const btnCancel = document.getElementById("btn-cancel-modal");
   const btnConfirm = document.getElementById("btn-confirm-modal");
 
@@ -64,13 +61,13 @@ document.addEventListener("DOMContentLoaded", function () {
     modal.classList.add("flex");
     setTimeout(() => {
       modal.classList.remove("opacity-0");
-      modalBox.classList.remove("scale-95");
+      modalBox.classList.remove("translate-y-10");
     }, 10);
   };
 
   const hideConfirmModal = () => {
     modal.classList.add("opacity-0");
-    modalBox.classList.add("scale-95");
+    modalBox.classList.add("translate-y-10");
     setTimeout(() => {
       modal.classList.add("hidden");
       modal.classList.remove("flex");
@@ -84,8 +81,10 @@ document.addEventListener("DOMContentLoaded", function () {
     hideConfirmModal();
   });
 
+  // ==========================================
+  // AJAX UPDATE QTY
+  // ==========================================
   const updateForms = document.querySelectorAll(".ajax-update-form");
-
   updateForms.forEach((form) => {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -118,16 +117,9 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
               jsonResponse = JSON.parse(rawText);
             } catch (e) {
-              throw {
-                status: 500,
-                message: "Terjadi kesalahan respon server.",
-              };
+              throw { status: 500, message: "Terjadi kesalahan respon server." };
             }
-            if (!response.ok)
-              throw {
-                status: response.status,
-                data: jsonResponse,
-              };
+            if (!response.ok) throw { status: response.status, data: jsonResponse };
             return jsonResponse;
           })
           .then((data) => {
@@ -136,20 +128,20 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.status === "success") {
               if (data.new_quantity === undefined && actionValue === "decrement") {
                 const card = document.getElementById("cart-card-" + cartId);
-                card.style.transition = "all 0.5s ease";
+                card.style.transition = "all 0.3s ease";
+                card.style.transform = "scale(0.9) rotate(-2deg)";
                 card.style.opacity = "0";
-                card.style.transform = "translateX(-20px)";
                 setTimeout(() => {
                   card.remove();
                   const headerCount = document.getElementById("header-item-count");
-                  if (headerCount) headerCount.textContent = data.cart_count + " Item";
+                  if (headerCount) headerCount.textContent = data.cart_count + " ITEMS";
                   if (data.cart_count === 0) window.location.reload();
-                }, 500);
+                }, 300);
               } else {
                 displayQty.textContent = data.new_quantity;
                 inputHiddenQty.value = data.new_quantity;
-                displayQty.classList.add("scale-125", "text-[#ef4444]");
-                setTimeout(() => displayQty.classList.remove("scale-125", "text-[#ef4444]"), 300);
+                displayQty.classList.add("bg-[#FFE600]"); // Efek kedip kuning
+                setTimeout(() => displayQty.classList.remove("bg-[#FFE600]"), 200);
               }
               updateSummaryUI(data);
             }
@@ -172,7 +164,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   const removeForms = document.querySelectorAll(".ajax-remove-form");
-
   removeForms.forEach((form) => {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -194,32 +185,25 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
               jsonResponse = JSON.parse(rawText);
             } catch (e) {
-              throw {
-                status: 500,
-                message: "Terjadi kesalahan respon server.",
-              };
+              throw { status: 500, message: "Server error." };
             }
-            if (!response.ok)
-              throw {
-                status: response.status,
-                data: jsonResponse,
-              };
+            if (!response.ok) throw { status: response.status, data: jsonResponse };
             return jsonResponse;
           })
           .then((data) => {
             if (data.status === "success") {
-              const card = form.closest(".bg-white.rounded-2xl");
-              card.style.transition = "all 0.4s ease";
+              const card = form.closest(".cart-item-card");
+              card.style.transition = "all 0.3s ease";
+              card.style.transform = "scale(0.9) rotate(2deg)";
               card.style.opacity = "0";
-              card.style.transform = "scale(0.95)";
 
               setTimeout(() => {
                 card.remove();
                 const headerItemCount = document.getElementById("header-item-count");
-                if (headerItemCount) headerItemCount.textContent = data.cart_count + " Item";
+                if (headerItemCount) headerItemCount.textContent = data.cart_count + " ITEMS";
                 updateSummaryUI(data);
                 if (data.cart_count <= 0) window.location.reload();
-              }, 400);
+              }, 300);
             }
           })
           .catch((error) => {
