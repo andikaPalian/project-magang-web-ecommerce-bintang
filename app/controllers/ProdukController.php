@@ -18,7 +18,7 @@ class ProdukController extends Controller
       exit;
     }
 
-    $data['judul'] = $produk['name'] . ' | Ecommerce Bintang';
+    $data['judul'] = $produk['name'] . ' | TI MART';
     $data['produk'] = $produk;
 
     $id = (int) $produk['id'];

@@ -41,7 +41,7 @@ class OrderModel
         $this->db->bind("price", $price_to_save);
         $this->db->execute();
 
-        $this->db->query("UPDATE products_stocks SET stock_quantity = stock_quantity - :quantity WHERE product_id = :product_id AND location_id = :location_id AND stock_quantity >= :quantity");
+        $this->db->query("UPDATE product_stocks SET stock_quantity = stock_quantity - :quantity WHERE product_id = :product_id AND location_id = :location_id AND stock_quantity >= :quantity");
         $this->db->bind("quantity", $item['quantity']);
         $this->db->bind("product_id", $item['product_id']);
         $this->db->bind("location_id", $orderData['fulfilled_by_location_id']);

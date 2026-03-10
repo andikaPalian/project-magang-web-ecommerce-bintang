@@ -34,7 +34,7 @@ class CartController extends Controller
     $user_id = $_SESSION['user_id'];
     $cartModel = $this->model('CartModel');
 
-    $data['judul'] = 'Keranjang Belanja | Ecommerce Bintang';
+    $data['judul'] = 'Keranjang Belanja | TI MART';
 
     $data['cart_items'] = $cartModel->getCartByUserId($user_id);
 

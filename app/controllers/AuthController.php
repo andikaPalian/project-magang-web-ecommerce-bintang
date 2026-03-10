@@ -63,7 +63,7 @@ class AuthController extends Controller
       $this->redirectBasedOnRole($_SESSION['role']);
     }
 
-    $data['judul'] = 'Register | Ecommerce Bintang';
+    $data['judul'] = 'Register | TI MART';
     $data['error'] = $_SESSION['register_error'] ?? null;
     unset($_SESSION['flash_error']);
 

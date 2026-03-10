@@ -11,19 +11,31 @@ class OrderController extends Controller
     }
   }
 
+  public function index(): void
+  {
+    // $data['judul'] = 'Checkout | TI MART';
+
+    // $this->view('templates/header', $data);
+    // $this->view('templates/navbar', $data);
+    // $this->view('home/order_success', $data);
+    // $this->view('templates/footer', $data);
+    header('Location: ' . BASEURL . '/checkout');
+    exit;
+  }
+
   public function create(): void
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $user_id = $_SESSION['user_id'];
 
       $recipient_name = htmlspecialchars(trim($_POST['recipient_name'] ?? ''));
-      $recipient_phone = htmlspecialchars(trim($_POST['recipient_phone'] ?? ''));
-      $shipping_address = htmlspecialchars(trim($_POST['recipient_address'] ?? ''));
+      $recipient_phone = htmlspecialchars(trim($_POST['phone_number'] ?? ''));
+      $shipping_address = htmlspecialchars(trim($_POST['shipping_address'] ?? ''));
       $shipping_cost = (float) ($_POST['shipping_method'] ?? 0);
-      $shipping_method_name = ($shipping_cost == 150000) ? 'Kargo' : 'Reguler';
+      $shipping_method_name = ($shipping_cost == 150000) ? 'Heavy Cargo' : 'Standard Drop';
       $payment_method = htmlspecialchars(trim($_POST['payment_method'] ?? 'Transfer BCA'));
 
-      if (empty($recipient_name) || empty($recipient_phone) || empty($recipient_address)) {
+      if (empty($recipient_name) || empty($recipient_phone) || empty($shipping_address)) {
         $_SESSION['flash_error'] = 'Harap isi data pengiriman dengan lengkap!';
         header('Location: ' . BASEURL . '/checkout');
         exit;
@@ -66,7 +78,7 @@ class OrderController extends Controller
 
       if ($order_id) {
         $_SESSION['flash_success'] = 'Pemesanan berhasil!';
-        header('Location: ' . BASEURL . '/order/success' . $order_id);
+        header('Location: ' . BASEURL . '/order/success/' . $order_id);
         exit;
       } else {
         $_SESSION['flash_error'] = 'Pemesanan gagal!';
@@ -76,9 +88,14 @@ class OrderController extends Controller
     }
   }
 
-  public function success(string $order_id): void
+  public function success(?string $order_id = null): void
   {
-    $data['judul'] = 'Pesanan Berhasil | Alaska Electronics';
+    if (!$order_id) {
+      header('Location: ' . BASEURL . '/checkout');
+      exit;
+    }
+
+    $data['judul'] = 'Pesanan Berhasil | TI MART';
     $data['order'] = $this->model('OrderModel')->getOrderById((int) $order_id);
 
     if (!$data['order'] || $data['order']['user_id'] !== $_SESSION['user_id']) {

@@ -31,7 +31,7 @@ class CheckoutController extends Controller
     $data['total_diskon'] = $total['harga_diskon'] ?? 0;
     $data['subtotal_bayar'] = $total['total_bayar'] ?? 0;
 
-    $data['judul'] = 'Checkout | Ecommerce Bintang';
+    $data['judul'] = 'Checkout | TI MART';
 
     $this->view('templates/header', $data);
     $this->view('templates/navbar', $data);

@@ -5,7 +5,7 @@ class HomeController extends Controller
 {
   public function index(): void
   {
-    $data['judul'] = 'Beranda | Ecommerce Bintang';
+    $data['judul'] = 'Beranda | TI MART';
 
     $productModel = $this->model('ProdukModel');
 
