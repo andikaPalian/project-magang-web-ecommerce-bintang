@@ -62,7 +62,7 @@
       </div>
 
       <div class="flex flex-col sm:flex-row gap-4">
-        <a href="<?= BASEURL; ?>/pesanan" class="flex-1 bg-[#2563EB] text-white border-4 border-black text-center py-4 font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_#000] active:shadow-none transition-all flex items-center justify-center">
+        <a href="<?= BASEURL; ?>/order/upload/<?= $data['order']['id']; ?>" class="flex-1 bg-[#2563EB] text-white border-4 border-black text-center py-4 font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_#000] active:shadow-none transition-all flex items-center justify-center">
           UPLOAD PROOF
           <svg class="w-5 h-5 ml-3 border-l-2 border-white pl-2" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
