@@ -13,14 +13,16 @@ class OrderController extends Controller
 
   public function index(): void
   {
-    // $data['judul'] = 'Checkout | TI MART';
+    $user_id = $_SESSION['user_id'];
 
-    // $this->view('templates/header', $data);
-    // $this->view('templates/navbar', $data);
-    // $this->view('home/order_success', $data);
-    // $this->view('templates/footer', $data);
-    header('Location: ' . BASEURL . '/checkout');
-    exit;
+    $data['judul'] = 'Orders | TI MART';
+
+    $data['orders'] = $this->model('OrderModel')->getOrdersByUserId($user_id);
+
+    $this->view('templates/header', $data);
+    $this->view('templates/navbar', $data);
+    $this->view('home/order_history', $data);
+    $this->view('templates/footer', $data);
   }
 
   public function create(): void
@@ -107,5 +109,92 @@ class OrderController extends Controller
     $this->view('templates/navbar', $data);
     $this->view('home/order_success', $data);
     $this->view('templates/footer', $data);
+  }
+
+  public function upload(?string $order_id = null): void
+  {
+    $user_id = $_SESSION['user_id'];
+
+    if (!$order_id) {
+      $_SESSION['flash_error'] = 'ID pesanan tidak ditemukan di URL.';
+      header('Location: ' . BASEURL . '/order');
+      exit;
+    }
+
+    $data['judul'] = 'Upload Bukti | TI MART';
+    $data['order'] = $this->model('OrderModel')->getOrderById((int) $order_id);
+
+    if (!$data['order']) {
+      $_SESSION['flash_error'] = 'Pesanan tidak ditemukan.';
+      header('Location: ' . BASEURL . '/order');
+      exit;
+    }
+
+    if ($data['order']['user_id'] != $user_id) {
+      $_SESSION['flash_error'] = 'Ini bukan pesanan anda.';
+      header('Location: ' . BASEURL . '/order');
+      exit;
+    }
+
+    if ($data['order']['payment_status'] != 'pending') {
+      $_SESSION['flash_error'] = 'Pesanan ini sudah tidak membutuhkan bukti pembayaran.';
+      header('Location: ' . BASEURL . '/order');
+      exit;
+    }
+
+    $this->view('templates/header', $data);
+    $this->view('templates/navbar', $data);
+    $this->view('home/upload_bukti', $data);
+    $this->view('templates/footer', $data);
+  }
+
+  public function processUpload(): void
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $order_id = (int) ($_POST['order_id'] ?? 0);
+      $file = $_FILES['payment_proof'] ?? null;
+
+      if (!$order_id || !$file || $file['error'] !== UPLOAD_ERR_OK) {
+        $_SESSION['flash_error'] = 'Gagal mengunggah file. Pastikan anda memilih gambar.';
+        header('Location: ' . BASEURL . '/order/upload/' . $order_id);
+        exit;
+      }
+
+      $allowed_ext = ['jpg', 'jpeg', 'png'];
+      $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+      if (!in_array($file_ext, $allowed_ext)) {
+        $_SESSION['flash_error'] = 'Format file tidak diizinkan. Hanya JPG, JPEG, dan PNG diperbolehkan.';
+        header('Location: ' . BASEURL . '/order/upload/' . $order_id);
+        exit;
+      }
+
+      if ($file['size'] > 5242880) {
+        $_SESSION['flash_error'] = 'Ukuran file terlalu besar. Maksimal 5MB.';
+        header('Location: ' . BASEURL . '/order/upload/' . $order_id);
+        exit;
+      }
+
+      $new_file_name = 'proof_' . $order_id . '_' . time() . '.' . $file_ext;
+      $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/website-ecommerce-bintang/public/img/proofs/';
+
+      if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0777, true);
+      }
+
+      $target_file = $target_dir . $new_file_name;
+
+      if (move_uploaded_file($file['tmp_name'], $target_file)) {
+        $this->model('OrderModel')->updatePaymentProof($order_id, $new_file_name);
+
+        $_SESSION['flash_success'] = 'BUKTI BERHASIL DIKIRIM! MENUNGGU VERIFIKASI ADMIN.';
+        header('Location: ' . BASEURL . '/order');
+        exit;
+      } else {
+        $_SESSION['flash_error'] = 'Sistem gagal menyimpan file gambar.';
+        header('Location: ' . BASEURL . '/order');
+        exit;
+      }
+    }
   }
 }

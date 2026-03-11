@@ -1,6 +1,15 @@
 <div class="bg-[#F8F9FA] min-h-screen font-sans text-black py-16" data-aos="zoom-in">
   <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
+    <?php if (isset($_SESSION['flash_success'])): ?>
+      <div class="bg-[#A6FAAE] border-4 border-black text-black px-4 py-3 mb-8 shadow-[4px_4px_0_0_#000] font-black uppercase tracking-wider flex items-center">
+        <svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <p><?= $_SESSION['flash_success']; ?></p>
+      </div>
+      <?php unset($_SESSION['flash_success']); ?>
+    <?php endif; ?>
     <div class="bg-[#A6FAAE] border-4 border-black shadow-[8px_8px_0_0_#000] p-8 mb-10 text-center relative overflow-hidden">
       <div class="absolute -right-10 -top-10 w-32 h-32 bg-white rounded-full mix-blend-overlay opacity-50"></div>
 

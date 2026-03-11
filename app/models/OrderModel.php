@@ -15,13 +15,14 @@ class OrderModel
     try {
       $this->db->beginTransaction();
 
-      $this->db->query("INSERT INTO orders (invoice_number, user_id, fulfilled_by_location_id, total_price, shipping_cost, shipping_method, discount_applied, grand_total, payment_status, order_status, recipient_name, recipient_phone, shipping_address) VALUES (:invoice_number, :user_id, :location_id, :total_price, :shipping_cost, :shipping_method, :discount_applied, :grand_total, 'pending', 'pending', :recipient_name, :recipient_phone, :shipping_address)");
+      $this->db->query("INSERT INTO orders (invoice_number, user_id, fulfilled_by_location_id, total_price, shipping_cost, shipping_method, payment_method, discount_applied, grand_total, payment_status, order_status, recipient_name, recipient_phone, shipping_address) VALUES (:invoice_number, :user_id, :location_id, :total_price, :shipping_cost, :shipping_method, :payment_method, :discount_applied, :grand_total, 'pending', 'pending', :recipient_name, :recipient_phone, :shipping_address)");
       $this->db->bind('invoice_number', $orderData['invoice_number']);
       $this->db->bind('user_id', $orderData['user_id']);
       $this->db->bind('location_id', $orderData['fulfilled_by_location_id']);
       $this->db->bind('total_price', $orderData['total_price']);
       $this->db->bind('shipping_cost', $orderData['shipping_cost']);
       $this->db->bind('shipping_method', $orderData['shipping_method']);
+      $this->db->bind('payment_method', $orderData['payment_method']);
       $this->db->bind('discount_applied', $orderData['discount_applied']);
       $this->db->bind('grand_total', $orderData['grand_total']);
       $this->db->bind('recipient_name', $orderData['recipient_name']);
@@ -70,5 +71,24 @@ class OrderModel
     $this->db->bind("order_id", $order_id);
 
     return $this->db->single();
+  }
+
+  public function getOrdersByUserId(int $user_id): array
+  {
+    $this->db->query("SELECT * FROM orders WHERE user_id = :user_id ORDER BY created_at DESC");
+    $this->db->bind("user_id", $user_id);
+
+    $result = $this->db->resultSet();
+
+    return $result ? $result : [];
+  }
+
+  public function updatePaymentProof(int $order_id, string $file_name): bool
+  {
+    $this->db->query("UPDATE orders SET payment_proof = :proof WHERE id = :order_id");
+    $this->db->bind("proof", $file_name);
+    $this->db->bind("order_id", $order_id);
+
+    return $this->db->execute();
   }
 }
