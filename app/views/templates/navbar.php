@@ -92,7 +92,7 @@ if (isset($_SESSION['user_id'])) {
             }
             ?>
             <a href="<?= BASEURL . $dashboard_link; ?>" class="px-4 py-3 border-b-2 border-black text-xs font-black uppercase text-black hover:bg-[#90E0FF] transition-colors">DASHBOARD</a>
-            <a href="<?= BASEURL; ?>/pesanan" class="px-4 py-3 border-b-2 border-black text-xs font-black uppercase text-black hover:bg-[#90E0FF] transition-colors">ORDERS</a>
+            <a href="<?= BASEURL; ?>/order" class="px-4 py-3 border-b-2 border-black text-xs font-black uppercase text-black hover:bg-[#90E0FF] transition-colors">ORDERS</a>
             <a href="<?= BASEURL; ?>/auth/logout" class="px-4 py-3 text-xs font-black uppercase text-white bg-[#FF5757] hover:bg-red-700 transition-colors">LOGOUT</a>
           </div>
         </div>
