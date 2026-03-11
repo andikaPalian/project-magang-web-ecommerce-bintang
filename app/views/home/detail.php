@@ -135,7 +135,7 @@ if (!empty($produk['image_url'])) {
                 <span id="text-add-cart">Add to Cart</span>
               </button>
 
-              <a href="<?= BASEURL; ?>/cart" class="flex-1 bg-black text-white border-4 border-black shadow-[6px_6px_0_0_#000] hover:bg-[#2563EB] hover:border-[#2563EB] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_#000] active:shadow-none font-black uppercase tracking-widest py-4 px-6 transition-all flex items-center justify-center text-center">
+              <a href="<?= BASEURL; ?>/checkout" class="flex-1 bg-black text-white border-4 border-black shadow-[6px_6px_0_0_#000] hover:bg-[#2563EB] hover:border-[#2563EB] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_#000] active:shadow-none font-black uppercase tracking-widest py-4 px-6 transition-all flex items-center justify-center text-center">
                 Beli Sekarang
               </a>
             </div>
@@ -260,6 +260,7 @@ if (!empty($produk['image_url'])) {
                   <form action="<?= BASEURL; ?>/cart/add?ajax=1" method="POST" class="ajax-add-cart">
                     <input type="hidden" name="product_id" value="<?= $sim_prod['id']; ?>">
                     <input type="hidden" name="quantity" value="1">
+
                     <button type="submit" class="btn-submit bg-white border-2 border-black shadow-[2px_2px_0_0_#000] p-1.5 hover:bg-[#A6FAAE] active:shadow-none active:translate-y-[2px] active:translate-x-[2px] transition-all cursor-pointer">
                       <svg class="icon-cart w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
