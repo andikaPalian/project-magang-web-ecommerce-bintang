@@ -9,7 +9,7 @@ class AuthController extends Controller
       $this->redirectBasedOnRole($_SESSION['role']);
     }
 
-    $data['judul'] = 'Login | Ecommerce Bintang';
+    $data['judul'] = 'Login | TI MART';
 
     $data['error'] = $_SESSION['flash_error'] ?? null;
     $data['success'] = $_SESSION['flash_success'] ?? null;
