@@ -1,13 +1,19 @@
 <?php
 $cart_count = 0;
-$notif_count = 2;
+$notif_count = 0;
 
 if (isset($_SESSION['user_id'])) {
   $db = new Database();
+
   $db->query("SELECT SUM(quantity) as total_items FROM carts WHERE user_id = :user_id");
   $db->bind('user_id', $_SESSION['user_id']);
   $result = $db->single();
   $cart_count = (int) ($result['total_items'] ?? 0);
+
+  $db->query("SELECT COUNT(*) as count FROM notifications WHERE user_id = :user_id AND is_read = 0");
+  $db->bind('user_id', $_SESSION['user_id']);
+  $notif_result = $db->single();
+  $notif_count = (int) ($notif_result['count'] ?? 0);
 }
 ?>
 
@@ -46,16 +52,17 @@ if (isset($_SESSION['user_id'])) {
 
       <?php if (isset($_SESSION['user_id'])): ?>
 
-        <button class="relative bg-white border-2 border-black w-10 h-10 flex items-center justify-center hover:bg-[#FFE600] hover:shadow-[4px_4px_0_0_#000] hover:-translate-y-[2px] hover:-translate-x-[2px] transition-all group" title="Notifications">
+        <a href="<?= BASEURL; ?>/notification" class="relative bg-white border-2 border-black w-10 h-10 flex items-center justify-center hover:bg-[#FFE600] hover:shadow-[4px_4px_0_0_#000] hover:-translate-y-[2px] hover:-translate-x-[2px] transition-all group" title="Notifications">
           <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
           </svg>
+
           <?php if ($notif_count > 0): ?>
             <span class="absolute -top-2 -right-2 bg-[#FF5757] text-white text-[10px] font-black w-5 h-5 flex items-center justify-center border-2 border-black shadow-[2px_2px_0_0_#000]">
-              <?= $notif_count; ?>
+              <?= $notif_count > 99 ? '99+' : $notif_count; ?>
             </span>
           <?php endif; ?>
-        </button>
+        </a>
 
         <a href="<?= BASEURL; ?>/wishlist" class="relative bg-white border-2 border-black w-10 h-10 flex items-center justify-center hover:bg-[#FF90E8] hover:shadow-[4px_4px_0_0_#000] hover:-translate-y-[2px] hover:-translate-x-[2px] transition-all group" title="Wishlist">
           <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

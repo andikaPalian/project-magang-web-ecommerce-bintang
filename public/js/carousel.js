@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
       label: "PROMO GADGET",
       title: "MACBOOK & LAPTOP PRO",
       subtitle: "Cashback Hingga Rp 2.000.000",
-      btnText: "VIEW ARSENAL",
+      btnText: "VIEW WiSHLIST",
       btnColor: "bg-[#FF5757]",
     },
     {

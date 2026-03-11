@@ -25,6 +25,8 @@ if (!empty($produk['image_url'])) {
     $img_src = BASEURL . '/img/products/' . $produk['image_url'];
   }
 }
+
+$is_wishlisted = isset($data['is_wishlisted']) && $data['is_wishlisted'];
 ?>
 
 <div class="bg-[#F8F9FA] min-h-screen font-sans text-black pt-8 pb-20" data-aos="fade-in">
@@ -33,7 +35,7 @@ if (!empty($produk['image_url'])) {
     <nav class="flex items-center text-[10px] font-black uppercase tracking-widest mb-8 space-x-3 bg-white border-2 border-black p-3 shadow-[4px_4px_0_0_#000] w-max">
       <a href="<?= BASEURL; ?>" class="hover:text-[#2563EB] hover:underline transition">BASE</a>
       <span>/</span>
-      <a href="<?= BASEURL; ?>/katalog" class="hover:text-[#2563EB] hover:underline transition">ARSENAL</a>
+      <a href="<?= BASEURL; ?>/katalog" class="hover:text-[#2563EB] hover:underline transition">WISHLIST</a>
       <span>/</span>
       <a href="<?= BASEURL; ?>/katalog/kategori/<?= strtolower($produk['category_name']) ?>" class="hover:text-[#2563EB] hover:underline transition"><?= $produk['category_name']; ?></a>
       <span>/</span>
@@ -135,22 +137,46 @@ if (!empty($produk['image_url'])) {
                 <span id="text-add-cart">Add to Cart</span>
               </button>
 
+              <a href="<?= BASEURL; ?>/wishlist/toggle/<?= $produk['id']; ?>?ajax=1"
+                class="btn-wishlist w-16 sm:w-20 bg-white border-4 border-black shadow-[6px_6px_0_0_#000] hover:bg-[#FF90E8] active:shadow-none active:translate-y-[2px] active:translate-x-[2px] transition-all flex items-center justify-center group"
+                title="Add to Wishlist">
+                <svg class="w-7 h-7 transition-colors duration-300 <?= $is_wishlisted ? 'fill-[#FF5757] text-[#FF5757]' : 'text-black' ?>"
+                  fill="<?= $is_wishlisted ? 'currentColor' : 'none' ?>"
+                  stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+              </a>
+
               <a href="<?= BASEURL; ?>/checkout" class="flex-1 bg-black text-white border-4 border-black shadow-[6px_6px_0_0_#000] hover:bg-[#2563EB] hover:border-[#2563EB] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_#000] active:shadow-none font-black uppercase tracking-widest py-4 px-6 transition-all flex items-center justify-center text-center">
                 Beli Sekarang
               </a>
             </div>
           </form>
+
         <?php else: ?>
-          <div class="bg-gray-200 border-4 border-black p-4 text-center font-black uppercase text-gray-500 mb-6 shadow-[4px_4px_0_0_#000]">
-            OUT OF STOCK / UNAVAILABLE
+
+          <div class="flex flex-col sm:flex-row gap-4 mb-6">
+            <div class="flex-1 bg-gray-200 border-4 border-black py-4 px-6 flex items-center justify-center text-center font-black uppercase text-gray-500 shadow-[6px_6px_0_0_#000]">
+              OUT OF STOCK / UNAVAILABLE
+            </div>
+
+            <a href="<?= BASEURL; ?>/wishlist/toggle/<?= $produk['id']; ?>?ajax=1"
+              class="btn-wishlist w-full sm:w-20 bg-white border-4 border-black shadow-[6px_6px_0_0_#000] hover:bg-[#FF90E8] active:shadow-none active:translate-y-[2px] active:translate-x-[2px] transition-all flex items-center justify-center group py-4"
+              title="Save for Later">
+              <svg class="w-8 h-8 transition-colors duration-300 <?= $is_wishlisted ? 'fill-[#FF5757] text-[#FF5757]' : 'text-black' ?>"
+                fill="<?= $is_wishlisted ? 'currentColor' : 'none' ?>"
+                stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </a>
           </div>
+
         <?php endif; ?>
 
       </div>
     </div>
 
     <div class="mb-16">
-
       <div class="flex flex-wrap border-b-4 border-black mb-6 gap-2 pt-2 pl-1">
         <button class="tab-btn px-6 py-3 bg-[#FFE600] border-4 border-black border-b-0 text-sm font-black uppercase tracking-widest shadow-[4px_-4px_0_0_#000] translate-y-1 relative z-10" data-target="desc">
           DESKRIPSI
@@ -233,8 +259,20 @@ if (!empty($produk['image_url'])) {
             if (!empty($sim_prod['image_url'])) {
               $sim_img = str_starts_with($sim_prod['image_url'], 'http') ? $sim_prod['image_url'] : BASEURL . '/img/products/' . $sim_prod['image_url'];
             }
+
+            $is_sim_fav = isset($sim_prod['is_wishlisted']) && $sim_prod['is_wishlisted'] === true;
           ?>
             <div class="group relative flex flex-col h-full">
+              <a href="<?= BASEURL; ?>/wishlist/toggle/<?= $sim_prod['id']; ?>?ajax=1"
+                class="btn-wishlist absolute top-2 right-2 z-20 bg-white border-2 border-black p-1.5 shadow-[2px_2px_0_0_#000] hover:bg-[#FF90E8] active:shadow-none active:translate-y-[1px] active:translate-x-[1px] transition-all group"
+                title="Save to Wishlist">
+                <svg class="w-4 h-4 transition-colors duration-300 <?= $is_sim_fav ? 'fill-[#FF5757] text-[#FF5757]' : 'text-black' ?>"
+                  fill="<?= $is_sim_fav ? 'currentColor' : 'none' ?>"
+                  stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+              </a>
+
               <a href="<?= BASEURL; ?>/produk/detail/<?= $sim_prod['slug']; ?>" class="block border-4 border-black shadow-[6px_6px_0_0_#000] bg-white aspect-square mb-4 overflow-hidden group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_0_#000] transition-all relative">
                 <?php if ($sim_disc): ?>
                   <div class="absolute top-0 left-0 bg-[#FF5757] text-white text-[10px] font-black px-2 py-1 border-b-2 border-r-2 border-black z-10">-<?= $sim_pct; ?>%</div>
@@ -260,7 +298,6 @@ if (!empty($produk['image_url'])) {
                   <form action="<?= BASEURL; ?>/cart/add?ajax=1" method="POST" class="ajax-add-cart">
                     <input type="hidden" name="product_id" value="<?= $sim_prod['id']; ?>">
                     <input type="hidden" name="quantity" value="1">
-
                     <button type="submit" class="btn-submit bg-white border-2 border-black shadow-[2px_2px_0_0_#000] p-1.5 hover:bg-[#A6FAAE] active:shadow-none active:translate-y-[2px] active:translate-x-[2px] transition-all cursor-pointer">
                       <svg class="icon-cart w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
@@ -282,3 +319,4 @@ if (!empty($produk['image_url'])) {
 </div>
 
 <script src="<?= BASEURL; ?>/js/detail.js?v=<?= time(); ?>"></script>
+<script src="<?= BASEURL; ?>/js/wishlist.js?v=<?= time(); ?>"></script>

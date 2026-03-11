@@ -5,12 +5,15 @@ class ProdukController extends Controller
 {
   public function detail(string $slug): void
   {
+    $user_id = $_SESSION['user_id'] ?? null;
+
     if (empty($slug)) {
       header('Location: ' . BASEURL);
       exit;
     }
 
     $productModel = $this->model('ProdukModel');
+    $wishlistModel = $this->model('WishlistModel');
 
     $produk = $productModel->getProductBySlug($slug);
     if (!$produk) {
@@ -27,7 +30,18 @@ class ProdukController extends Controller
     $data['stok'] = $productModel->getProductStock($id);
     $data['spesifikasi'] = $productModel->getProductSpecs($id);
     $data['ulasan'] = $productModel->getProductReviews($id);
-    $data['produk_serupa'] = $productModel->getSimiliarProducts($category_id, $id, 5);
+
+    $produk_serupa = $productModel->getSimiliarProducts($category_id, $id, 5);
+
+    $data['is_wishlisted'] = $user_id ? $wishlistModel->isProductInWishlist((int) $user_id, $id) : false;
+
+    if (is_array($produk_serupa)) {
+      foreach ($produk_serupa as &$p) {
+        $p['is_wishlisted'] = $user_id ? $wishlistModel->isProductInWishlist((int) $user_id, (int) $p['id']) : false;
+      }
+    }
+
+    $data['produk_serupa'] = $produk_serupa ? $produk_serupa : [];
 
     $this->view('templates/header', $data);
     $this->view('templates/navbar', $data);

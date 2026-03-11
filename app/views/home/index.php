@@ -125,8 +125,20 @@
           $harga_diskon = !empty($produk['discount_price']) ? (float)$produk['discount_price'] : 0;
           $ada_diskon = ($harga_diskon > 0 && $harga_diskon < $harga_asli);
           $img_src = !empty($produk['image_url']) ? (str_starts_with($produk['image_url'], 'http') ? $produk['image_url'] : BASEURL . '/img/products/' . $produk['image_url']) : 'https://images.unsplash.com/photo-1505156868547-9b49f4df4e04?auto=format&fit=crop&w=400&q=80';
+          $is_fav = isset($produk['is_wishlisted']) && $produk['is_wishlisted'];
         ?>
           <div class="group relative flex flex-col h-full">
+
+            <a href="<?= BASEURL; ?>/wishlist/toggle/<?= $produk['id']; ?>?ajax=1"
+              class="btn-wishlist absolute top-2 right-2 z-20 bg-white border-2 border-black p-1.5 shadow-[2px_2px_0_0_#000] hover:bg-[#FF90E8] active:shadow-none active:translate-y-[1px] active:translate-x-[1px] transition-all group"
+              title="Save to Wishlist">
+              <svg class="w-4 h-4 transition-colors duration-300 <?= $is_fav ? 'fill-[#FF5757] text-[#FF5757]' : 'text-black' ?>"
+                fill="<?= $is_fav ? 'currentColor' : 'none' ?>"
+                stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </a>
+
             <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="block border-4 border-black shadow-[6px_6px_0_0_#000] bg-white aspect-square mb-4 overflow-hidden group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_0_#000] transition-all relative">
               <?php if ($ada_diskon): $persentase = round((($harga_asli - $harga_diskon) / $harga_asli) * 100); ?>
                 <div class="absolute top-0 left-0 bg-[#FF5757] text-white text-[10px] font-black px-2 py-1 border-b-2 border-r-2 border-black z-10">-<?= $persentase; ?>%</div>
@@ -177,8 +189,20 @@
         $harga_diskon = !empty($produk['discount_price']) ? (float)$produk['discount_price'] : 0;
         $ada_diskon = ($harga_diskon > 0 && $harga_diskon < $harga_asli);
         $img_src = !empty($produk['image_url']) ? (str_starts_with($produk['image_url'], 'http') ? $produk['image_url'] : BASEURL . '/img/products/' . $produk['image_url']) : 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=400&q=80';
+        $is_fav = isset($produk['is_wishlisted']) && $produk['is_wishlisted'];
       ?>
         <div class="group relative flex flex-col h-full">
+
+          <a href="<?= BASEURL; ?>/wishlist/toggle/<?= $produk['id']; ?>?ajax=1"
+            class="btn-wishlist absolute top-2 right-2 z-20 bg-white border-2 border-black p-1.5 shadow-[2px_2px_0_0_#000] hover:bg-[#FF90E8] active:shadow-none active:translate-y-[1px] active:translate-x-[1px] transition-all group"
+            title="Save to Wishlist">
+            <svg class="w-4 h-4 transition-colors duration-300 <?= $is_fav ? 'fill-[#FF5757] text-[#FF5757]' : 'text-black' ?>"
+              fill="<?= $is_fav ? 'currentColor' : 'none' ?>"
+              stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </a>
+
           <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="block border-4 border-black shadow-[6px_6px_0_0_#000] bg-white aspect-square mb-4 overflow-hidden group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_0_#000] transition-all relative">
             <?php if ($ada_diskon): $persentase = round((($harga_asli - $harga_diskon) / $harga_asli) * 100); ?>
               <div class="absolute top-0 left-0 bg-[#2563EB] text-white text-[10px] font-black px-2 py-1 border-b-2 border-r-2 border-black z-10">-<?= $persentase; ?>%</div>
@@ -251,8 +275,20 @@
         $harga_diskon = !empty($produk['discount_price']) ? (float)$produk['discount_price'] : 0;
         $ada_diskon = ($harga_diskon > 0 && $harga_diskon < $harga_asli);
         $img_src = !empty($produk['image_url']) ? (str_starts_with($produk['image_url'], 'http') ? $produk['image_url'] : BASEURL . '/img/products/' . $produk['image_url']) : 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=400&q=80';
+        $is_fav = isset($produk['is_wishlisted']) && $produk['is_wishlisted'];
       ?>
         <div class="group relative flex flex-col h-full">
+
+          <a href="<?= BASEURL; ?>/wishlist/toggle/<?= $produk['id']; ?>?ajax=1"
+            class="btn-wishlist absolute top-10 right-2 z-20 bg-white border-2 border-black p-1.5 shadow-[2px_2px_0_0_#000] hover:bg-[#FF90E8] active:shadow-none active:translate-y-[1px] active:translate-x-[1px] transition-all group"
+            title="Save to Wishlist">
+            <svg class="w-4 h-4 transition-colors duration-300 <?= $is_fav ? 'fill-[#FF5757] text-[#FF5757]' : 'text-black' ?>"
+              fill="<?= $is_fav ? 'currentColor' : 'none' ?>"
+              stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </a>
+
           <a href="<?= BASEURL; ?>/produk/detail/<?= $produk['slug']; ?>" class="block border-4 border-black shadow-[6px_6px_0_0_#000] bg-white aspect-square mb-4 overflow-hidden group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_0_#000] transition-all relative">
             <div class="absolute top-0 right-0 bg-[#FFE600] text-black text-[10px] font-black px-2 py-1 border-b-2 border-l-2 border-black z-10">FOR YOU</div>
             <?php if ($ada_diskon): $persentase = round((($harga_asli - $harga_diskon) / $harga_asli) * 100); ?>
@@ -339,3 +375,4 @@
 
 <script src="<?= BASEURL; ?>/js/home_cart.js?v=<?= time(); ?>"></script>
 <script src="<?= BASEURL; ?>/js/carousel.js?v=<?= time(); ?>"></script>
+<script src="<?= BASEURL; ?>/js/wishlist.js?v=<?= time(); ?>"></script>
