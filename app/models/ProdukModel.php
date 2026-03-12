@@ -66,6 +66,14 @@ class ProdukModel
     return $this->db->resultSet();
   }
 
+  public function getProductById(int $product_id): array|false
+  {
+    $this->db->query("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.id = :product_id AND p.is_active = 1");
+    $this->db->bind("product_id", $product_id);
+
+    return $this->db->single();
+  }
+
   public function getProductBySlug(string $slug): array|false
   {
     $this->db->query("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.slug = :slug AND p.is_active = 1");

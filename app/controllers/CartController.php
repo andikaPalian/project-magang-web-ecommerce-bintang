@@ -61,9 +61,10 @@ class CartController extends Controller
       $user_id = $_SESSION['user_id'];
       $product_id = (int) ($_POST['product_id'] ?? 0);
       $quantity = (int) ($_POST['quantity'] ?? 0);
+      $action_type = $_POST['action'] ?? '';
 
       if ($product_id <= 0 || $quantity <= 0) {
-        if ($is_ajax) {
+        if ($is_ajax && $action_type !== 'buy_now') {
           http_response_code(400);
           echo json_encode(['message' => 'Data produk atau jumlah tidak valid.']);
           exit;
@@ -75,6 +76,23 @@ class CartController extends Controller
       }
 
       $stock = $this->model('ProdukModel')->getProductStock($product_id);
+
+      if ($action_type === 'buy_now') {
+        if ($quantity > $stock) {
+          $_SESSION['flash_error'] = 'Gagal! Sisa stok hanya ' . $stock . ' barang';
+          header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? BASEURL));
+          exit;
+        }
+
+        $_SESSION['buy_now_item'] = [
+          'product_id' => $product_id,
+          'quantity' => $quantity
+        ];
+
+        header('Location: ' . BASEURL . '/checkout');
+        exit;
+      }
+
       $cart_items_result = $this->model('CartModel')->getCartByUserId($user_id);
       $cart_items = is_array($cart_items_result) ? $cart_items_result : [];
 
@@ -96,6 +114,7 @@ class CartController extends Controller
         $_SESSION['flash_error'] = 'Gagal! Sisa stok hanya ' . $stock . ' barang. Anda sudah memiliki ' . $current_quantity_in_cart . ' di keranjang.';
       } else {
         $this->model('CartModel')->addToCart($user_id, $product_id, $quantity);
+
         if ($is_ajax) {
           http_response_code(200);
 

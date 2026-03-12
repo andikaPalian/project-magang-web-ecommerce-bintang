@@ -115,12 +115,17 @@
               <div class="flex items-start justify-between group bg-white border-2 border-black p-2 shadow-[2px_2px_0_0_#000]">
                 <div class="flex items-center space-x-3 w-3/4">
                   <div class="w-12 h-12 bg-gray-100 border-2 border-black flex-shrink-0 overflow-hidden">
-                    <?php $img = str_starts_with($item['image_url'], 'http') ? $item['image_url'] : BASEURL . '/img/products/' . $item['image_url']; ?>
+
+                    <?php
+                    $img_url = $item['image_url'] ?? '';
+                    $img = !empty($img_url) ? (str_starts_with($img_url, 'http') ? $img_url : BASEURL . '/img/products/' . $img_url) : 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=400&q=80';
+                    ?>
                     <img src="<?= $img; ?>" class="w-full h-full object-cover mix-blend-multiply grayscale">
+
                   </div>
                   <div>
-                    <h4 class="text-xs font-black uppercase line-clamp-1 leading-tight"><?= $item['name']; ?></h4>
-                    <p class="text-[10px] font-bold mt-1 text-gray-700"><?= $item['quantity']; ?> x Rp <?= number_format(!empty($item['discount_price']) ? $item['discount_price'] : $item['price'], 0, ',', '.'); ?></p>
+                    <h4 class="text-xs font-black uppercase line-clamp-1 leading-tight"><?= htmlspecialchars($item['name'] ?? ''); ?></h4>
+                    <p class="text-[10px] font-bold mt-1 text-gray-700"><?= $item['quantity']; ?> x Rp <?= number_format((float)(!empty($item['discount_price']) ? $item['discount_price'] : $item['price']), 0, ',', '.'); ?></p>
                   </div>
                 </div>
               </div>
@@ -130,10 +135,10 @@
           <div class="space-y-2 mb-6 font-bold text-sm">
             <div class="flex justify-between items-end border-b-2 border-black border-dashed pb-2">
               <span class="uppercase">SUBTOTAL</span>
-              <span>Rp <?= number_format((float)$data['total_harga'], 0, ',', '.'); ?></span>
+              <span>Rp <?= number_format((float)($data['total_harga'] ?? 0), 0, ',', '.'); ?></span>
             </div>
 
-            <?php if ($data['total_diskon'] > 0): ?>
+            <?php if (!empty($data['total_diskon']) && $data['total_diskon'] > 0): ?>
               <div class="flex justify-between items-end border-b-2 border-black border-dashed pb-2 text-[#FF5757]">
                 <span class="uppercase">DISCOUNT</span>
                 <span>- Rp <?= number_format((float)$data['total_diskon'], 0, ',', '.'); ?></span>
@@ -149,7 +154,7 @@
           <div class="bg-black text-white p-4 border-2 border-black mb-6 shadow-[4px_4px_0_0_#000]">
             <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-1">TOTAL PEMBAYARAN</p>
             <p id="display-total-bayar" class="text-2xl font-black tracking-tight text-[#A6FAAE]">
-              Rp <?= number_format((float)$data['subtotal_bayar'] + 50000, 0, ',', '.'); ?>
+              Rp <?= number_format((float)($data['subtotal_bayar'] ?? 0) + 50000, 0, ',', '.'); ?>
             </p>
           </div>
 
@@ -168,7 +173,8 @@
 </div>
 
 <script>
-  const subtotalBayar = <?= $data['subtotal_bayar']; ?>;
+  // PERBAIKAN: Pastikan selalu memberikan angka default (0) jika variabel kosong, agar JS tidak error
+  const subtotalBayar = <?= (float)($data['subtotal_bayar'] ?? 0); ?>;
 
   function updateOngkir(ongkir) {
     const formatRupiah = (angka) => new Intl.NumberFormat('id-ID').format(angka);

@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // === LOGIKA TAB ===
   const tabBtns = document.querySelectorAll(".tab-btn");
   const tabContents = document.querySelectorAll(".tab-content");
 
@@ -21,47 +22,83 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const formAddCart = document.getElementById("form-add-cart");
+  const btnAddCart = document.getElementById("btn-add-cart");
+  const btnBuyNow = document.getElementById("btn-buy-now");
+
   if (formAddCart) {
-    formAddCart.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const form = this;
-      const btn = document.getElementById("btn-add-cart");
-      const textBtn = document.getElementById("text-add-cart");
-      const iconDefault = document.getElementById("icon-cart-default");
-      const iconSuccess = document.getElementById("icon-cart-success");
-      const alertBox = document.getElementById("ajax-alert");
-      const alertText = document.getElementById("ajax-alert-text");
+    if (btnAddCart) {
+      btnAddCart.addEventListener("click", function (e) {
+        e.preventDefault(); // Jangan refresh halaman
 
-      btn.disabled = true;
-      btn.classList.add("opacity-50", "cursor-not-allowed");
-      alertBox.classList.add("hidden");
+        const textBtn = document.getElementById("text-add-cart");
+        const iconDefault = document.getElementById("icon-cart-default");
+        const iconSuccess = document.getElementById("icon-cart-success");
+        const alertBox = document.getElementById("ajax-alert");
 
-      fetch(form.action, {
-        method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json", "X-Requested-With": "XMLHttpRequest" },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          btn.disabled = false;
-          btn.classList.remove("opacity-50", "cursor-not-allowed", "bg-[#FFE600]");
-          btn.classList.add("bg-[#A6FAAE]");
-          textBtn.textContent = "DITAMBAHKAN!";
-          iconDefault.classList.add("hidden");
-          iconSuccess.classList.remove("hidden");
+        btnAddCart.disabled = true;
+        btnAddCart.classList.add("opacity-50", "cursor-not-allowed");
+        if (alertBox) alertBox.classList.add("hidden");
 
-          updateCartBadge(data.cart_count);
+        const formData = new FormData(formAddCart);
+        formData.append("action", "add_to_cart");
 
-          setTimeout(() => {
-            btn.classList.add("bg-[#FFE600]");
-            btn.classList.remove("bg-[#A6FAAE]");
-            textBtn.textContent = "ADD TO LOADOUT";
-            iconDefault.classList.remove("hidden");
-            iconSuccess.classList.add("hidden");
-          }, 2500);
+        // URL Harus mengandung parameter ?ajax=1
+        const actionUrl = formAddCart.action.includes("?ajax=1")
+          ? formAddCart.action
+          : formAddCart.action + "?ajax=1";
+
+        fetch(actionUrl, {
+          method: "POST",
+          body: formData,
+          headers: { Accept: "application/json", "X-Requested-With": "XMLHttpRequest" },
         })
-        .catch((err) => console.error(err));
-    });
+          .then(async (res) => {
+            if (res.status === 401) {
+              const data = await res.json();
+              window.location.href = data.redirect;
+              throw new Error("Unauthorized");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            btnAddCart.disabled = false;
+            btnAddCart.classList.remove("opacity-50", "cursor-not-allowed", "bg-[#FFE600]");
+            btnAddCart.classList.add("bg-[#A6FAAE]");
+            if (textBtn) textBtn.textContent = "DITAMBAHKAN!";
+            if (iconDefault) iconDefault.classList.add("hidden");
+            if (iconSuccess) iconSuccess.classList.remove("hidden");
+
+            updateCartBadge(data.cart_count);
+
+            setTimeout(() => {
+              btnAddCart.classList.add("bg-[#FFE600]");
+              btnAddCart.classList.remove("bg-[#A6FAAE]");
+              if (textBtn) textBtn.textContent = "ADD TO CART";
+              if (iconDefault) iconDefault.classList.remove("hidden");
+              if (iconSuccess) iconSuccess.classList.add("hidden");
+            }, 2500);
+          })
+          .catch((err) => {
+            if (err.message !== "Unauthorized") console.error(err);
+            btnAddCart.disabled = false;
+            btnAddCart.classList.remove("opacity-50", "cursor-not-allowed");
+          });
+      });
+    }
+
+    if (btnBuyNow) {
+      btnBuyNow.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const actionInput = document.createElement("input");
+        actionInput.type = "hidden";
+        actionInput.name = "action";
+        actionInput.value = "buy_now";
+        formAddCart.appendChild(actionInput);
+
+        formAddCart.submit();
+      });
+    }
   }
 
   const ajaxSimilarForms = document.querySelectorAll(".ajax-add-cart");
@@ -76,12 +113,23 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.disabled = true;
       btn.classList.add("opacity-50");
 
-      fetch(currentForm.action, {
+      const actionUrl = currentForm.action.includes("?ajax=1")
+        ? currentForm.action
+        : currentForm.action + "?ajax=1";
+
+      fetch(actionUrl, {
         method: "POST",
         body: new FormData(currentForm),
         headers: { Accept: "application/json", "X-Requested-With": "XMLHttpRequest" },
       })
-        .then((res) => res.json())
+        .then(async (res) => {
+          if (res.status === 401) {
+            const data = await res.json();
+            window.location.href = data.redirect;
+            throw new Error("Unauthorized");
+          }
+          return res.json();
+        })
         .then((data) => {
           btn.disabled = false;
           btn.classList.remove("opacity-50", "bg-white");
@@ -98,7 +146,11 @@ document.addEventListener("DOMContentLoaded", function () {
             if (iconSuccess) iconSuccess.classList.add("hidden");
           }, 2000);
         })
-        .catch((err) => alert("Gagal menambahkan produk."));
+        .catch((err) => {
+          if (err.message !== "Unauthorized") alert("Gagal menambahkan produk.");
+          btn.disabled = false;
+          btn.classList.remove("opacity-50");
+        });
     });
   });
 
