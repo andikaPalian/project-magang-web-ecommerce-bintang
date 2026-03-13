@@ -31,8 +31,8 @@ if (isset($_SESSION['user_id'])) {
 
       <div class="hidden lg:flex space-x-6">
         <a href="<?= BASEURL; ?>/katalog" class="text-xs font-black text-black uppercase tracking-widest hover:text-[#2563EB] transition-colors">SHOP</a>
-        <a href="#" class="text-xs font-black text-black uppercase tracking-widest hover:text-[#2563EB] transition-colors">ARCHIVE</a>
-        <a href="#" class="text-xs font-black text-black uppercase tracking-widest hover:text-[#2563EB] transition-colors">MISSION</a>
+        <a href="#" class="text-xs font-black text-black uppercase tracking-widest hover:text-[#2563EB] transition-colors">BLOG</a>
+        <a href="<?= BASEURL; ?>/aboutUs" class="text-xs font-black text-black uppercase tracking-widest hover:text-[#2563EB] transition-colors">ABOUT US</a>
       </div>
     </div>
 
