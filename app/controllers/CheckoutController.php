@@ -18,6 +18,8 @@ class CheckoutController extends Controller
 
     $data['judul'] = 'Checkout | TI MART';
 
+    $data['user'] = $this->model('UserModel')->getUserById($user_id);
+
     if (isset($_SESSION['buy_now_item'])) {
       $product_id = $_SESSION['buy_now_item']['product_id'];
       $quantity = $_SESSION['buy_now_item']['quantity'];

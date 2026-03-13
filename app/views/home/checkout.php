@@ -25,15 +25,15 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="md:col-span-1">
               <label class="block text-xs font-black uppercase tracking-widest mb-2">NAMA LENGKAP</label>
-              <input type="text" name="recipient_name" required class="w-full bg-gray-50 border-2 border-black px-4 py-3 font-bold text-sm outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 focus:-translate-x-1 transition-all placeholder-gray-400" placeholder="JOHN DOE">
+              <input type="text" name="recipient_name" value="<?= htmlspecialchars($data['user']['name'] ?? ''); ?>" required class="w-full bg-gray-50 border-2 border-black px-4 py-3 font-bold text-sm outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 focus:-translate-x-1 transition-all placeholder-gray-400" placeholder="JOHN DOE">
             </div>
             <div class="md:col-span-1">
               <label class="block text-xs font-black uppercase tracking-widest mb-2">NO. TELEPON</label>
-              <input type="tel" name="phone_number" required class="w-full bg-gray-50 border-2 border-black px-4 py-3 font-bold text-sm outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 focus:-translate-x-1 transition-all placeholder-gray-400" placeholder="08XXXXXXXXXX">
+              <input type="tel" name="phone_number" value="<?= htmlspecialchars($data['user']['phone'] ?? ''); ?>" required class="w-full bg-gray-50 border-2 border-black px-4 py-3 font-bold text-sm outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 focus:-translate-x-1 transition-all placeholder-gray-400" placeholder="08XXXXXXXXXX">
             </div>
             <div class="md:col-span-2">
               <label class="block text-xs font-black uppercase tracking-widest mb-2">ALAMAT LENGKAP</label>
-              <textarea name="shipping_address" required rows="3" class="w-full bg-gray-50 border-2 border-black px-4 py-3 font-bold text-sm outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 focus:-translate-x-1 transition-all placeholder-gray-400" placeholder="STREET NAME, RT/RW, CITY, POSTAL CODE"></textarea>
+              <textarea name="shipping_address" required rows="3" class="w-full bg-gray-50 border-2 border-black px-4 py-3 font-bold text-sm outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 focus:-translate-x-1 transition-all placeholder-gray-400" placeholder="STREET NAME, RT/RW, CITY, POSTAL CODE"><?= htmlspecialchars($data['user']['address'] ?? ''); ?></textarea>
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label class="cursor-pointer group relative">
-              <input type="radio" name="shipping_method" value="50000" class="peer sr-only" checked onclick="updateOngkir(50000)">
+              <input type="radio" name="shipping_method" value="50000" class="peer sr-only" checked onclick="updateOngkir(50000, 'Standard Drop')">
               <div class="h-full bg-gray-50 border-2 border-black p-4 peer-checked:bg-[#2563EB] peer-checked:text-white peer-checked:shadow-[4px_4px_0_0_#000] peer-checked:-translate-y-1 transition-all">
                 <div class="flex justify-between items-start mb-2">
                   <p class="font-black uppercase tracking-wider text-sm">STANDARD DROP</p>
@@ -60,7 +60,7 @@
             </label>
 
             <label class="cursor-pointer group relative">
-              <input type="radio" name="shipping_method" value="150000" class="peer sr-only" onclick="updateOngkir(150000)">
+              <input type="radio" name="shipping_method" value="150000" class="peer sr-only" onclick="updateOngkir(150000, 'Heavy Cargo')">
               <div class="h-full bg-gray-50 border-2 border-black p-4 peer-checked:bg-[#2563EB] peer-checked:text-white peer-checked:shadow-[4px_4px_0_0_#000] peer-checked:-translate-y-1 transition-all">
                 <div class="flex justify-between items-start mb-2">
                   <p class="font-black uppercase tracking-wider text-sm">HEAVY CARGO</p>
@@ -158,6 +158,8 @@
             </p>
           </div>
 
+          <input type="hidden" name="shipping_method_name" id="input-shipping-method-name" value="Standard Drop">
+
           <button type="submit" class="w-full flex justify-center items-center py-4 px-4 border-4 border-black shadow-[6px_6px_0_0_#000] text-sm font-black uppercase tracking-widest text-white bg-[#FF5757] hover:bg-red-700 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[4px_4px_0_0_#000] active:translate-y-[6px] active:translate-x-[6px] active:shadow-none transition-all">
             CONFIRM & PAY
             <svg class="w-5 h-5 ml-2 border-l-2 border-white pl-2" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
@@ -173,15 +175,16 @@
 </div>
 
 <script>
-  // PERBAIKAN: Pastikan selalu memberikan angka default (0) jika variabel kosong, agar JS tidak error
   const subtotalBayar = <?= (float)($data['subtotal_bayar'] ?? 0); ?>;
 
-  function updateOngkir(ongkir) {
+  function updateOngkir(ongkir, methodName) {
     const formatRupiah = (angka) => new Intl.NumberFormat('id-ID').format(angka);
 
     document.getElementById('display-ongkir').textContent = 'Rp ' + formatRupiah(ongkir);
 
     const totalAkhir = subtotalBayar + parseInt(ongkir);
     document.getElementById('display-total-bayar').textContent = 'Rp ' + formatRupiah(totalAkhir);
+
+    document.getElementById('input-shipping-method-name').value = methodName;
   }
 </script>
