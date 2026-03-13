@@ -5,16 +5,12 @@ $notif_count = 0;
 if (isset($_SESSION['user_id'])) {
   $user_id = (int) $_SESSION['user_id'];
 
-  // Panggil file Model yang dibutuhkan
-  // Pastikan letak path foldernya sudah sesuai dengan struktur MVC Anda
   require_once '../app/models/CartModel.php';
   require_once '../app/models/NotificationModel.php';
 
-  // Instansiasi Model
   $cartModel = new CartModel();
   $notifModel = new NotificationModel();
 
-  // Tarik data dengan fungsi yang sudah dibuat di Model
   $cart_count = $cartModel->getCartTotalItem($user_id);
   $notif_count = $notifModel->getUnreadCount($user_id);
 }
@@ -138,4 +134,4 @@ if (isset($_SESSION['user_id'])) {
       <li><a href="#" class="inline-block px-3 py-1.5 border-2 border-transparent hover:border-black hover:bg-[#FFE600] hover:shadow-[2px_2px_0_0_#000] hover:-translate-y-[1px] transition-all">CABLES</a></li>
     </ul>
   </div>
-</div>  
+</div>
