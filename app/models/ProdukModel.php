@@ -116,4 +116,19 @@ class ProdukModel
 
     return $this->db->resultSet();
   }
+
+  public function getAllProducts(): array
+  {
+    $this->db->query("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.is_active = 1 ORDER BY p.created_at DESC");
+
+    return $this->db->resultSet();
+  }
+
+  public function getProductsByCategorySlug(string $slug): array
+  {
+    $this->db->query("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE c.slug = :slug AND p.is_active = 1 ORDER BY p.created_at DESC");
+    $this->db->bind("slug", $slug);
+
+    return $this->db->resultSet();
+  }
 }
