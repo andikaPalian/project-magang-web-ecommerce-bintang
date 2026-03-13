@@ -19,7 +19,7 @@ class Usermodel
 
   public function getUserById(int $id): array|false
   {
-    $this->db->query("SELECT id, name, email, role FROM users WHERE id = :id");
+    $this->db->query("SELECT id, name, email, role, phone, address FROM users WHERE id = :id");
     $this->db->bind('id', $id);
 
     return $this->db->single();
