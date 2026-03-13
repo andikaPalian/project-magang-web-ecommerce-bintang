@@ -91,4 +91,14 @@ class CartModel
       'total_bayar' => $total_harga - $total_diskon
     ];
   }
+
+  public function getCartTotalItem(int $user_id): int
+  {
+    $this->db->query("SELECT SUM(quantity) AS total_items FROM carts WHERE user_id = :user_id");
+    $this->db->bind("user_id", $user_id);
+
+    $result = $this->db->single();
+
+    return (int) ($result['total_items'] ?? 0);
+  }
 }

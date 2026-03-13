@@ -3,17 +3,20 @@ $cart_count = 0;
 $notif_count = 0;
 
 if (isset($_SESSION['user_id'])) {
-  $db = new Database();
+  $user_id = (int) $_SESSION['user_id'];
 
-  $db->query("SELECT SUM(quantity) as total_items FROM carts WHERE user_id = :user_id");
-  $db->bind('user_id', $_SESSION['user_id']);
-  $result = $db->single();
-  $cart_count = (int) ($result['total_items'] ?? 0);
+  // Panggil file Model yang dibutuhkan
+  // Pastikan letak path foldernya sudah sesuai dengan struktur MVC Anda
+  require_once '../app/models/CartModel.php';
+  require_once '../app/models/NotificationModel.php';
 
-  $db->query("SELECT COUNT(*) as count FROM notifications WHERE user_id = :user_id AND is_read = 0");
-  $db->bind('user_id', $_SESSION['user_id']);
-  $notif_result = $db->single();
-  $notif_count = (int) ($notif_result['count'] ?? 0);
+  // Instansiasi Model
+  $cartModel = new CartModel();
+  $notifModel = new NotificationModel();
+
+  // Tarik data dengan fungsi yang sudah dibuat di Model
+  $cart_count = $cartModel->getCartTotalItem($user_id);
+  $notif_count = $notifModel->getUnreadCount($user_id);
 }
 ?>
 
@@ -92,13 +95,19 @@ if (isset($_SESSION['user_id'])) {
             <div class="px-4 py-3 border-b-4 border-black bg-black text-white">
               <p class="text-[10px] font-black uppercase tracking-widest">STATUS: ONLINE</p>
             </div>
+
             <?php
-            $dashboard_link = '/home';
+            // Logika Dinamis: Jika pembeli -> Profil, Jika lainnya -> Dashboard
+            $nav_link = '/profile';
+            $nav_text = 'PROFIL SAYA';
+
             if (isset($_SESSION['role']) && $_SESSION['role'] !== 'pembeli') {
-              $dashboard_link = '/' . $_SESSION['role'] . '/dashboard';
+              $nav_link = '/' . $_SESSION['role'] . '/dashboard';
+              $nav_text = 'DASHBOARD';
             }
             ?>
-            <a href="<?= BASEURL . $dashboard_link; ?>" class="px-4 py-3 border-b-2 border-black text-xs font-black uppercase text-black hover:bg-[#90E0FF] transition-colors">DASHBOARD</a>
+            <a href="<?= BASEURL . $nav_link; ?>" class="px-4 py-3 border-b-2 border-black text-xs font-black uppercase text-black hover:bg-[#90E0FF] transition-colors"><?= $nav_text; ?></a>
+
             <a href="<?= BASEURL; ?>/order" class="px-4 py-3 border-b-2 border-black text-xs font-black uppercase text-black hover:bg-[#90E0FF] transition-colors">ORDERS</a>
             <a href="<?= BASEURL; ?>/auth/logout" class="px-4 py-3 text-xs font-black uppercase text-white bg-[#FF5757] hover:bg-red-700 transition-colors">LOGOUT</a>
           </div>
@@ -129,4 +138,4 @@ if (isset($_SESSION['user_id'])) {
       <li><a href="#" class="inline-block px-3 py-1.5 border-2 border-transparent hover:border-black hover:bg-[#FFE600] hover:shadow-[2px_2px_0_0_#000] hover:-translate-y-[1px] transition-all">CABLES</a></li>
     </ul>
   </div>
-</div>
+</div>  

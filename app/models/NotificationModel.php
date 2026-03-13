@@ -25,7 +25,7 @@ class NotificationModel
 
     $result = $this->db->single();
 
-    return (int) $result['count'];
+    return (int) ($result['count'] ?? 0);
   }
 
   public function markAsRead(int $notification_id, int $user_id): bool
