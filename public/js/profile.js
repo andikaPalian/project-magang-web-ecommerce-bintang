@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Setup Toast (Menggunakan logika persis seperti milik Anda)
   const toastSuccess = document.getElementById("global-toast");
   const toastSuccessMsg = document.getElementById("global-toast-success-msg");
   const toastError = document.getElementById("global-toast-error");
@@ -31,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  // Tangkap Form Profil
   const formProfile = document.getElementById("form-profile");
 
   if (formProfile) {
@@ -41,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const btnSubmit = formProfile.querySelector('button[type="submit"]');
       const originalBtnText = btnSubmit.innerHTML;
 
-      // Efek Loading pada tombol
       btnSubmit.disabled = true;
       btnSubmit.classList.add("opacity-75", "cursor-wait");
       btnSubmit.innerHTML = `
@@ -74,19 +71,16 @@ document.addEventListener("DOMContentLoaded", function () {
           return data;
         })
         .then((data) => {
-          // Kembalikan Tombol Normal
           btnSubmit.disabled = false;
           btnSubmit.classList.remove("opacity-75", "cursor-wait");
           btnSubmit.innerHTML = originalBtnText;
 
-          // Panggil Toast Sukses ala Anda
           showToast("success", data.message);
 
-          // Update nama di UI Card kiri jika ada balasan nama baru
           if (data.new_name) {
             const profileNameCard = document.querySelector(".w-20.h-20.mx-auto + h3");
             const profileInitial = document.querySelector(".w-20.h-20.mx-auto span");
-            const navbarName = document.querySelector("button span.line-clamp-1"); // Update nama di Navbar juga
+            const navbarName = document.querySelector("button span.line-clamp-1");
 
             if (profileNameCard) profileNameCard.textContent = data.new_name.toUpperCase();
             if (profileInitial) profileInitial.textContent = data.new_name.charAt(0).toUpperCase();
@@ -101,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
           if (error.status === 401) {
             window.location.href = error.data?.redirect || BASEURL + "/auth";
           } else {
-            // Panggil Toast Error ala Anda
             showToast("error", error.data?.message || "Terjadi kesalahan saat menyimpan.");
           }
         });
