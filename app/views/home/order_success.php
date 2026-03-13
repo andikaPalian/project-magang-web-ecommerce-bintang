@@ -16,7 +16,7 @@
       <svg class="w-20 h-20 mx-auto mb-6 text-black" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
       </svg>
-      <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight mb-2">ORDER SECURED</h1>
+      <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight mb-2">ORDER SUCCESS</h1>
       <p class="font-bold text-black uppercase tracking-widest text-sm bg-white border-2 border-black inline-block px-4 py-1 mt-2 shadow-[2px_2px_0_0_#000]">
         INV: <?= htmlspecialchars($data['order']['invoice_number']); ?>
       </p>
@@ -27,7 +27,7 @@
         <svg class="w-6 h-6 mr-3 text-[#2563EB]" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
         </svg>
-        PAYMENT INTEL
+        ORDER SUMMARY
       </h2>
 
       <div class="mb-8 border-l-4 border-[#FF5757] pl-4">
@@ -46,11 +46,11 @@
 
         <?php if (str_contains(strtolower($data['order']['payment_method']), 'bca')): ?>
           <p class="text-3xl md:text-4xl font-black tracking-widest mb-1">8732-192-333</p>
-          <p class="font-bold uppercase text-sm text-gray-600">A.N. TI MART TACTICAL</p>
+          <p class="font-bold uppercase text-sm text-gray-600">A.N. TI MART</p>
 
         <?php elseif (str_contains(strtolower($data['order']['payment_method']), 'mandiri')): ?>
           <p class="text-3xl md:text-4xl font-black tracking-widest mb-1">137-000-999-888</p>
-          <p class="font-bold uppercase text-sm text-gray-600">A.N. TI MART TACTICAL</p>
+          <p class="font-bold uppercase text-sm text-gray-600">A.N. TI MART</p>
 
         <?php else: ?>
           <p class="font-bold uppercase text-sm text-gray-600 mb-4">SCAN THIS QRIS CODE TO PAY:</p>
@@ -65,7 +65,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
         </svg>
         <div>
-          <h4 class="font-black uppercase text-sm mb-1">TIME SENSITIVE</h4>
+          <h4 class="font-black uppercase text-sm mb-1">PAYMENT INSTRUCTIONS</h4>
           <p class="text-xs font-bold uppercase leading-relaxed">Complete your payment within 24 hours and upload the proof. Failure to do so will result in order termination.</p>
         </div>
       </div>
@@ -79,7 +79,7 @@
         </a>
 
         <a href="<?= BASEURL; ?>" class="flex-1 bg-white text-black border-4 border-black text-center py-4 font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:bg-gray-100 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_#000] active:shadow-none transition-all flex items-center justify-center">
-          BACK TO BASE
+          BACK TO HOME
         </a>
       </div>
 

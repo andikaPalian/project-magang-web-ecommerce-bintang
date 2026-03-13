@@ -8,8 +8,8 @@
         </svg>
         BACK TO CART
       </a>
-      <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight" style="-webkit-text-stroke: 1px black;">SECURE CHECKOUT</h1>
-      <p class="text-sm font-bold mt-2 text-gray-700 bg-[#FFE600] inline-block px-3 py-1 border-2 border-black shadow-[2px_2px_0_0_#000]">DEPLOYMENT PROTOCOL INITIATED</p>
+      <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight" style="-webkit-text-stroke: 1px black;">CHECKOUT</h1>
+      <p class="text-sm font-bold mt-2 text-gray-700 bg-[#FFE600] inline-block px-3 py-1 border-2 border-black shadow-[2px_2px_0_0_#000]">CHECKOUT PRODUK ANDA</p>
     </div>
 
     <form action="<?= BASEURL; ?>/order/create" method="POST" id="checkout-form" class="flex flex-col lg:flex-row gap-8 items-start">

@@ -4,10 +4,10 @@
     <div class="mb-10 border-b-8 border-black pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
       <div>
         <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none" style="-webkit-text-stroke: 2px black;">
-          SISTEM <br> NOTIFIKASI
+          NOTIFICATIONS
         </h1>
         <p class="text-sm font-black mt-4 text-gray-700 uppercase tracking-[0.2em] border-l-8 border-[#2563EB] pl-4">
-          LOG AKTIVITAS DAN PEMBARUAN STATUS GEAR ANDA
+          YOUR NOTIFICATIONS WILL BE DISPLAYED HERE
         </p>
       </div>
 
@@ -17,7 +17,7 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
             </svg>
-            TANDAI SEMUA DIBACA
+            MARK ALL AS READ
           </button>
         </form>
       <?php endif; ?>
@@ -39,10 +39,10 @@
         <svg class="w-24 h-24 mx-auto mb-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
         </svg>
-        <h2 class="text-3xl font-black uppercase mb-4">TIDAK ADA TRANSMISI</h2>
+        <h2 class="text-3xl font-black uppercase mb-4">TIDAK ADA NOTIFIKASI BARU</h2>
         <p class="font-bold text-gray-500 mb-8">BELUM ADA NOTIFIKASI BARU UNTUK SAAT INI.</p>
         <a href="<?= BASEURL; ?>/katalog" class="inline-block bg-[#FFE600] text-black border-4 border-black px-10 py-4 font-black uppercase tracking-widest shadow-[6px_6px_0_0_#000] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_#000] transition-all">
-          KEMBALI KE BASE
+          KEMBALI KE HOME
         </a>
       </div>
 
@@ -79,7 +79,7 @@
               </div>
 
               <?php if (!$is_read): ?>
-                <a href="<?= BASEURL; ?>/notification/read/<?= $notif['id']; ?>" class="flex-shrink-0 bg-[#FFE600] border-2 border-black p-2 shadow-[2px_2px_0_0_#000] hover:bg-[#A6FAAE] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all" title="Tandai Dibaca">
+                <a href="<?= BASEURL; ?>/notification/read/<?= $notif['id']; ?>" class="flex-shrink-0 bg-[#FFE600] border-2 border-black p-2 shadow-[2px_2px_0_0_#000] hover:bg-[#A6FAAE] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all" title="MARK AS READ">
                   <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                   </svg>

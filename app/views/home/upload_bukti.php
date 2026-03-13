@@ -2,8 +2,8 @@
   <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <div class="mb-10 border-b-4 border-black pb-4">
-      <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight" style="-webkit-text-stroke: 1px black;">UPLOAD INTEL</h1>
-      <p class="text-sm font-bold mt-2 text-gray-700 uppercase tracking-widest border-l-4 border-[#2563EB] pl-2">SUBMIT PAYMENT PROOF FOR VERIFICATION</p>
+      <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight" style="-webkit-text-stroke: 1px black;">UPLOAD BUKTI PEMBAYARAN</h1>
+      <p class="text-sm font-bold mt-2 text-gray-700 uppercase tracking-widest border-l-4 border-[#2563EB] pl-2">SUBMIT BUKTI PEMBAYARAN ANDA UNTUK KONFIRMASI PESANAN ANDA</p>
     </div>
 
     <?php if (isset($_SESSION['flash_error'])): ?>
@@ -23,7 +23,7 @@
       </div>
 
       <div class="mb-6">
-        <p class="text-xs font-black text-gray-500 uppercase tracking-widest mb-1">TOTAL AMOUNT SECURED</p>
+        <p class="text-xs font-black text-gray-500 uppercase tracking-widest mb-1">TOTAL AMOUNT REQUIRED</p>
         <p class="text-3xl font-black text-black tracking-tighter">Rp <?= number_format((float)$data['order']['grand_total'], 0, ',', '.'); ?></p>
       </div>
 
@@ -41,18 +41,18 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
               </svg>
               <p class="font-black uppercase text-sm md:text-base tracking-widest" id="file-name-display">CLICK OR DRAG FILE HERE</p>
-              <p class="text-[10px] font-bold text-gray-500 mt-2 uppercase tracking-widest bg-white border-2 border-black px-2 py-0.5">MAX FILE SIZE: 2MB</p>
+              <p class="text-[10px] font-bold text-gray-500 mt-2 uppercase tracking-widest bg-white border-2 border-black px-2 py-0.5">MAX FILE SIZE: 5MB</p>
             </div>
           </div>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-4 mt-10">
           <button type="submit" class="flex-1 bg-[#2563EB] text-white border-4 border-black text-center py-4 font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_#000] active:translate-y-[6px] active:translate-x-[6px] active:shadow-none transition-all cursor-pointer z-20 relative">
-            TRANSMIT DATA
+            UPLOAD
           </button>
 
           <a href="<?= BASEURL; ?>/order" class="flex-1 bg-white text-black border-4 border-black text-center py-4 font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:bg-[#FF5757] hover:text-white hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_#000] active:translate-y-[6px] active:translate-x-[6px] active:shadow-none transition-all z-20 relative">
-            ABORT
+            CANCEL
           </a>
         </div>
       </form>

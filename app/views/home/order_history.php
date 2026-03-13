@@ -3,11 +3,11 @@
 
     <div class="mb-10 flex flex-col sm:flex-row items-start sm:items-end justify-between border-b-4 border-black pb-4 gap-4">
       <div>
-        <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight" style="-webkit-text-stroke: 1px black;">DEPLOYMENT LOGS</h1>
-        <p class="text-sm font-bold mt-2 text-gray-700 uppercase tracking-widest border-l-4 border-[#2563EB] pl-2">TRACK YOUR ACQUIRED GEAR</p>
+        <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight" style="-webkit-text-stroke: 1px black;">ORDER HISTORY</h1>
+        <p class="text-sm font-bold mt-2 text-gray-700 uppercase tracking-widest border-l-4 border-[#2563EB] pl-2">YOUR ORDER HISTORY WILL BE DISPLAYED HERE</p>
       </div>
       <div class="bg-black text-white px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[4px_4px_0_0_#A6FAAE]">
-        STATUS: SECURE
+        <a href="<?= BASEURL; ?>/katalog">VIEW CATALOG</a>
       </div>
     </div>
 
