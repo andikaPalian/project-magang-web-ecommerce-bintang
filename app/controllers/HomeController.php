@@ -11,6 +11,7 @@ class HomeController extends Controller
 
     $productModel = $this->model('ProdukModel');
     $wishlistModel = $this->model('WishlistModel');
+    $articleModel = $this->model('ArticleModel');
 
     $kategori = $productModel->getCategories(8);
     $flash_sale = $productModel->getFlashSaleProducts(5);
@@ -33,6 +34,7 @@ class HomeController extends Controller
     $data['flash_sale'] = $flash_sale;
     $data['terlaris'] = $terlaris;
     $data['rekomendasi'] = $rekomendasi;
+    $data['articles'] = $articleModel->getPublishedArticles();
 
     $this->view('templates/header', $data);
     $this->view('templates/navbar', $data);

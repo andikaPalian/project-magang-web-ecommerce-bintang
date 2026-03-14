@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
 
       <div class="hidden lg:flex space-x-6">
         <a href="<?= BASEURL; ?>/katalog" class="text-xs font-black text-black uppercase tracking-widest hover:text-[#2563EB] transition-colors">SHOP</a>
-        <a href="#" class="text-xs font-black text-black uppercase tracking-widest hover:text-[#2563EB] transition-colors">BLOG</a>
+        <a href="<?= BASEURL; ?>/article" class="text-xs font-black text-black uppercase tracking-widest hover:text-[#2563EB] transition-colors">BLOG</a>
         <a href="<?= BASEURL; ?>/aboutUs" class="text-xs font-black text-black uppercase tracking-widest hover:text-[#2563EB] transition-colors">ABOUT US</a>
       </div>
     </div>
@@ -123,7 +123,7 @@ if (isset($_SESSION['user_id'])) {
   </div>
 </nav>
 
-<div class="bg-[#F8F9FA] border-b-4 border-black hidden md:block">
+<!-- <div class="bg-[#F8F9FA] border-b-4 border-black hidden md:block">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <ul class="flex space-x-2 text-xs font-black text-black py-3 uppercase tracking-widest overflow-x-auto overflow-y-hidden custom-scrollbar">
       <li><a href="#" class="inline-block px-3 py-1.5 border-2 border-transparent hover:border-black hover:bg-[#FFE600] hover:shadow-[2px_2px_0_0_#000] hover:-translate-y-[1px] transition-all">KEYBOARDS</a></li>
@@ -134,4 +134,4 @@ if (isset($_SESSION['user_id'])) {
       <li><a href="#" class="inline-block px-3 py-1.5 border-2 border-transparent hover:border-black hover:bg-[#FFE600] hover:shadow-[2px_2px_0_0_#000] hover:-translate-y-[1px] transition-all">CABLES</a></li>
     </ul>
   </div>
-</div>
+</div> -->

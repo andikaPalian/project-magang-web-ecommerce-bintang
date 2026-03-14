@@ -328,22 +328,28 @@
 
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" data-aos="fade-up">
     <div class="flex justify-between items-end mb-6 border-b-4 border-black pb-2">
-      <h2 class="italic text-2xl font-black text-black uppercase tracking-tight">BLOG & PROMO</h2>
+      <h2 class="italic text-2xl font-black text-black uppercase tracking-tight">BLOG & ARTICLES</h2>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <?php for ($i = 1; $i <= 3; $i++): ?>
-        <a href="#" class="border-4 border-black shadow-[6px_6px_0_0_#000] bg-white group hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#000] transition-all flex flex-col">
+      <?php foreach (array_slice($data['articles'] ?? [], 0, 3) as $article):
+        $img_src = !empty($article['image_url']) ? $article['image_url'] : 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=600&q=80';
+        $tanggal = date('d M Y', strtotime($article['created_at']));
+      ?>
+        <a href="<?= BASEURL; ?>/article/read/<?= $article['slug']; ?>" class="border-4 border-black shadow-[6px_6px_0_0_#000] bg-white group hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#000] transition-all flex flex-col">
           <div class="h-48 border-b-4 border-black overflow-hidden relative">
-            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover mix-blend-multiply grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500">
-            <div class="absolute top-2 left-2 bg-[#FFE600] border-2 border-black px-2 py-1 text-[10px] font-black uppercase">INTEL</div>
+            <img src="<?= $img_src; ?>" class="w-full h-full object-cover mix-blend-multiply grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500">
+            <div class="absolute top-2 left-2 bg-[#FFE600] border-2 border-black px-2 py-1 text-[10px] font-black uppercase">NEWS</div>
           </div>
           <div class="p-5 flex-1 flex flex-col">
-            <h3 class="text-lg font-black uppercase leading-tight mb-3 group-hover:text-[#2563EB] transition-colors">Tactical Guide: Choosing the Best Laptop for Operations 2026</h3>
-            <p class="text-xs font-bold text-gray-500 uppercase mt-auto">28 FEB 2026</p>
+            <h3 class="text-lg font-black uppercase leading-tight mb-3 group-hover:text-[#2563EB] transition-colors"><?= $article['title']; ?></h3>
+            <p class="text-xs font-bold text-gray-500 uppercase mt-auto flex items-center justify-between">
+              <span><?= $tanggal; ?></span>
+              <span class="text-black bg-[#FFE600] px-2 py-0.5 border border-black shadow-[1px_1px_0_0_#000]">READ</span>
+            </p>
           </div>
         </a>
-      <?php endfor; ?>
+      <?php endforeach; ?>
     </div>
   </section>
 
