@@ -3,18 +3,18 @@
 declare(strict_types=1);
 class AdminWebController extends Controller
 {
-  // public function __construct()
-  // {
-  //   if (!isset($_SESSION['user_id'])) {
-  //     header('Location: ' . BASEURL . '/auth');
-  //     exit;
-  //   }
+  public function __construct()
+  {
+    if (!isset($_SESSION['user_id'])) {
+      header('Location: ' . BASEURL . '/auth');
+      exit;
+    }
 
-  //   if ($_SESSION['role'] !== 'admin_web' && $_SESSION['role'] !== 'pemilik') {
-  //     header('Location: ' . BASEURL);
-  //     exit;
-  //   }
-  // }
+    if ($_SESSION['role'] !== 'admin_web' && $_SESSION['role'] !== 'pemilik') {
+      header('Location: ' . BASEURL);
+      exit;
+    }
+  }
 
   public function dashboard(): void
   {
