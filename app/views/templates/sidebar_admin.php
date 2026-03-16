@@ -12,8 +12,8 @@ $user_name = $_SESSION['name'] ?? 'ROOT_USER';
         >_
       </div>
       <div>
-        <h1 class="font-black text-lg leading-tight uppercase tracking-tighter">TIMART.EXE</h1>
-        <p class="text-[9px] font-black text-[#2563EB] uppercase tracking-widest">COMMAND CENTER</p>
+        <h1 class="font-black text-lg leading-tight uppercase tracking-tighter">TIMART</h1>
+        <p class="text-[9px] font-black text-[#2563EB] uppercase tracking-widest">ADMIN DASHBOARD</p>
       </div>
     </div>
 
@@ -72,7 +72,7 @@ $user_name = $_SESSION['name'] ?? 'ROOT_USER';
 
       <div class="flex-1 max-w-md">
         <div class="flex w-full bg-white border-4 border-black shadow-[4px_4px_0_0_#000] transition-transform focus-within:-translate-y-1">
-          <input type="text" placeholder="SEARCH_COMMAND..." class="w-full px-4 py-2 font-black text-xs uppercase outline-none placeholder-gray-400 text-black">
+          <input type="text" placeholder="SEARCH" class="w-full px-4 py-2 font-black text-xs uppercase outline-none placeholder-gray-400 text-black">
           <div class="flex items-center justify-center px-3 border-l-4 border-black bg-gray-50">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -94,7 +94,7 @@ $user_name = $_SESSION['name'] ?? 'ROOT_USER';
           </svg>
         </button>
         <a href="<?= BASEURL; ?>/auth/logout" class="bg-black text-white px-5 py-2.5 border-4 border-black font-black uppercase text-xs tracking-widest hover:bg-[#FF5757] hover:border-[#FF5757] transition-colors shadow-[4px_4px_0_0_#FF5757] active:translate-y-1 active:shadow-none">
-          LOGOUT.EXE
+          LOGOUT
         </a>
       </div>
     </header>

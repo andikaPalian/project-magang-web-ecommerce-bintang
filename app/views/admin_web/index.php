@@ -1,5 +1,5 @@
 <div class="mb-8" data-aos="fade-in">
-  <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-1">DASHBOARD_OVERVIEW</h1>
+  <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-1">DASHBOARD</h1>
   <p class="text-sm font-bold text-gray-500 uppercase tracking-widest">
     STATUS: <span class="text-black">ONLINE</span> / COMMANDER: <span class="text-[#2563EB]"><?= $_SESSION['name'] ?? 'ROOT' ?></span>
   </p>
@@ -52,7 +52,7 @@
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-xl font-black uppercase tracking-tight">SALES ANALYTICS</h3>
       <div class="flex space-x-2">
-        <button class="border-2 border-black px-3 py-1 text-xs font-black uppercase bg-black text-white shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 transition-transform">7D REVENUE</button>
+        <button class="border-2 border-black px-3 py-1 text-xs font-black uppercase bg-black text-white shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 transition-transform">7 DAYS</button>
       </div>
     </div>
     <div class="w-full h-[250px]">
