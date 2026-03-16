@@ -48,7 +48,7 @@ class AuthController extends Controller
       'admin_toko' => '/admin_toko/dashboard',
       'gudang'     => '/gudang/dashboard',
       'ekspedisi'  => '/ekspedisi/dashboard',
-      'admin_web'  => '/admin_web/dashboard',
+      'admin_web'  => '/adminweb/dashboard',
       'pemilik'    => '/pemilik/dashboard',
       default      => '/auth/logout'
     };
