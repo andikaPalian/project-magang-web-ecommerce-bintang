@@ -131,4 +131,72 @@ class ProdukModel
 
     return $this->db->resultSet();
   }
+
+  public function getAllCategoriesAdmin(): array
+  {
+    $this->db->query("SELECT * FROM categories ORDER BY name ASC");
+
+    return $this->db->resultSet();
+  }
+
+  public function getAllProductsForAdmin(): array
+  {
+    $this->db->query("SELECT p.*, c.name AS category_name, COALESCE(SUM(ps.stock_quantity), 0) AS total_stock FROM products p LEFT JOIN categories c ON p.category_id = c.id LEFT JOIN product_stocks ps ON p.id = ps.product_id GROUP BY p.id ORDER BY p.created_at DESC");
+
+    return $this->db->resultSet();
+  }
+
+  public function addProduct(array $data, ?string $image_url = null): int
+  {
+    $this->db->query("INSERT INTO products (category_id, name, slug, description, price, discount_price, weight_grams, image_url, is_active) VALUES (:category_id, :name, :slug, :description, :price, :discount_price, :weight_grams, :image_url, :is_active)");
+
+    $this->db->bind('category_id', $data['category_id']);
+    $this->db->bind('name', $data['name']);
+    $this->db->bind('slug', $data['slug']);
+    $this->db->bind('description', $data['description']);
+    $this->db->bind('price', $data['price']);
+    $this->db->bind('discount_price', !empty($data['discount_price']) ? $data['discount_price'] : null);
+    $this->db->bind('weight_grams', $data['weight_grams']);
+    $this->db->bind('image_url', $image_url);
+    $this->db->bind('is_active', $data['is_active']);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
+
+  public function updateProduct(array $data, ?string $image_url = null): int
+  {
+    $imageQuery = $image_url ? ", image_url = :image_url" : "";
+
+    $this->db->query("UPDATE products SET category_id = :category_id, name = :name, slug = :slug, description = :description, price= :price, discount_price = :discount_price, weight_grams = :weight_grams, is_active = :is_active $imageQuery WHERE id = :id");
+
+    $this->db->bind('category_id', $data['category_id']);
+    $this->db->bind('name', $data['name']);
+    $this->db->bind('slug', $data['slug']);
+    $this->db->bind('description', $data['description']);
+    $this->db->bind('price', $data['price']);
+    $this->db->bind('discount_price', !empty($data['discount_price']) ? $data['discount_price'] : null);
+    $this->db->bind('weight_grams', $data['weight_grams']);
+    $this->db->bind('is_active', $data['is_active']);
+    $this->db->bind('id', $data['id']);
+
+    if ($image_url) {
+      $this->db->bind('image_url', $image_url);
+    }
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
+
+  public function deleteProduct(int $product_id): int
+  {
+    $this->db->query("DELETE FROM products WHERE id = :id");
+    $this->db->bind('id', $product_id);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
 }
