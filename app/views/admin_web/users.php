@@ -2,7 +2,7 @@
   <div>
     <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-2">USER MANAGEMENT</h1>
     <p class="text-sm font-bold text-gray-600 max-w-xl leading-relaxed">
-      Atur dan pantau semua pengguna terdaftar di platform. Kelola hak akses, status akun, dan peran staf.
+      Atur dan pantau semua users terdaftar di platform. Kelola hak akses, status akun, dan peran staf.
     </p>
   </div>
 
@@ -15,115 +15,163 @@
 </div>
 
 <div class="flex flex-wrap gap-4 mb-6" data-aos="fade-up">
-  <button class="bg-black text-white px-4 py-2 border-4 border-black font-black text-xs flex items-center shadow-[4px_4px_0_0_#000] hover:bg-gray-800">
-    All Roles <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
-    </svg>
-  </button>
-  <button class="bg-white text-black px-4 py-2 border-4 border-black font-black text-xs flex items-center shadow-[4px_4px_0_0_#000] hover:bg-gray-100">
-    Role: Buyer <span class="ml-2 text-gray-400">×</span>
-  </button>
-  <button class="bg-white text-black px-4 py-2 border-4 border-black font-black text-xs flex items-center shadow-[4px_4px_0_0_#000] hover:bg-gray-100">
-    Status: Active <span class="ml-2 text-gray-400">×</span>
-  </button>
+  <div class="relative inline-block">
+    <select id="roleFilter" onchange="filterTable()" class="appearance-none bg-black text-white px-4 py-3 pr-10 border-4 border-black font-black text-xs uppercase shadow-[4px_4px_0_0_#000] hover:bg-gray-800 cursor-pointer outline-none transition-all">
+      <option value="ALL">ALL ROLES</option>
+      <option value="PEMBELI">PEMBELI / BUYER</option>
+      <option value="ADMIN TOKO">ADMIN TOKO</option>
+      <option value="GUDANG">GUDANG</option>
+      <option value="EKSPEDISI">EKSPEDISI</option>
+      <option value="ADMIN WEB">ADMIN WEB</option>
+      <option value="PEMILIK">PEMILIK</option>
+    </select>
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </div>
+  </div>
+
+  <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="SEARCH NAME OR EMAIL..." class="bg-white text-black px-4 py-3 border-4 border-black font-black text-xs uppercase shadow-[4px_4px_0_0_#000] focus:outline-none focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all w-72">
 
   <div class="flex-1"></div>
 
-  <button class="bg-white text-black px-6 py-2 border-4 border-black font-black text-xs flex items-center shadow-[4px_4px_0_0_#000] hover:bg-gray-100">
+  <button onclick="resetFilter()" class="bg-white text-black px-6 py-3 border-4 border-black font-black text-xs flex items-center shadow-[4px_4px_0_0_#000] hover:bg-[#FF5757] hover:text-white transition-all">
     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
     </svg>
-    Filter
+    RESET
   </button>
 </div>
 
-<div class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] overflow-x-auto mb-10" data-aos="fade-up" data-aos-delay="100">
+<div class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] overflow-x-auto mb-6" data-aos="fade-up" data-aos-delay="100">
   <table class="w-full text-left border-collapse min-w-[900px]">
     <thead>
-      <tr class="bg-black text-white text-xs font-black uppercase tracking-widest">
-        <th class="p-5 border-r-4 border-white">NAME</th>
-        <th class="p-5 border-r-4 border-white">EMAIL</th>
-        <th class="p-5 border-r-4 border-white">ROLE</th>
-        <th class="p-5 border-r-4 border-white">STATUS</th>
+      <tr class="bg-black text-white text-[10px] font-black uppercase tracking-widest">
+        <th class="p-5 border-r-2 border-black">USER DETAILS</th>
+        <th class="p-5 border-r-2 border-black">EMAIL ADDRESS</th>
+        <th class="p-5 border-r-2 border-black">SYSTEM ROLE</th>
+        <th class="p-5 border-r-2 border-black">STATUS</th>
         <th class="p-5 text-center">ACTIONS</th>
       </tr>
     </thead>
-    <tbody class="text-sm font-bold text-black bg-white">
+    <tbody class="text-sm font-bold text-black bg-white" id="tableBody">
 
-      <?php foreach ($data['users'] as $user):
-        // Lingkaran Warna Avatar Acak ala Desain
-        $avatarColors = ['bg-[#FF90E8]', 'bg-[#A6FAAE]', 'bg-[#B28DFF]', 'bg-[#90E0FF]', 'bg-[#FFE600]'];
-        $randomColor = $avatarColors[$user['id'] % count($avatarColors)];
-
-        // Badge Role
-        $roleText = str_replace('_', ' ', $user['role']);
-        $roleBadge = 'border-gray-400 text-gray-600 bg-gray-100'; // Default Buyer
-        if ($user['role'] == 'admin_toko' || $user['role'] == 'admin_web') $roleBadge = 'border-[#2563EB] text-[#2563EB] bg-blue-50';
-        if ($user['role'] == 'gudang') $roleBadge = 'border-[#E65100] text-[#E65100] bg-orange-50';
-        if ($user['role'] == 'ekspedisi') $roleBadge = 'border-[#FF5757] text-[#FF5757] bg-red-50';
-        if ($user['role'] == 'pemilik') $roleBadge = 'border-[#FFE600] text-black bg-yellow-50';
-      ?>
-        <tr class="border-b-4 border-black hover:bg-gray-50 transition-colors">
-          <td class="p-4 border-r-4 border-black flex items-center">
-            <div class="w-8 h-8 rounded-full border-2 border-black mr-3 <?= $randomColor ?> shrink-0"></div>
-            <span class="font-black text-base"><?= htmlspecialchars($user['name']) ?></span>
-          </td>
-          <td class="p-4 border-r-4 border-black font-semibold text-gray-700">
-            <?= htmlspecialchars($user['email']) ?>
-          </td>
-          <td class="p-4 border-r-4 border-black">
-            <span class="border-2 px-2 py-1 text-[10px] font-black uppercase tracking-widest <?= $roleBadge ?>">
-              <?= $roleText ?>
-            </span>
-          </td>
-          <td class="p-4 border-r-4 border-black">
-            <span class="text-[#00C853] font-black text-sm flex items-center">
-              <span class="w-2 h-2 rounded-full bg-[#00C853] mr-2"></span> Active
-            </span>
-          </td>
-          <td class="p-4 flex items-center justify-center space-x-2">
-
-            <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)) ?>)" class="bg-white text-black p-2 border-2 border-black hover:bg-gray-200 transition-all shadow-[2px_2px_0_0_#000]" title="EDIT STAFF">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+      <?php if (empty($data['users'])) : ?>
+        <tr class="border-b-4 border-black bg-gray-50">
+          <td colspan="5" class="p-16 text-center text-gray-500 font-black uppercase tracking-widest">
+            <div class="flex flex-col items-center justify-center">
+              <svg class="w-16 h-16 mb-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
-            </button>
-
-            <?php if (isset($_SESSION['user_id']) && $user['id'] != $_SESSION['user_id']): ?>
-              <a href="<?= BASEURL; ?>/adminuser/deleteUser/<?= $user['id'] ?>" onclick="return confirm('Hapus staf ini?');" class="bg-white text-black p-2 border-2 border-black hover:bg-[#FF5757] hover:text-white transition-all shadow-[2px_2px_0_0_#000]" title="BLOCK / DELETE">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
-                </svg>
-              </a>
-            <?php else: ?>
-              <button class="bg-gray-200 text-gray-400 p-2 border-2 border-gray-400 cursor-not-allowed" title="TIDAK BISA MENGHAPUS DIRI SENDIRI">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
-              </button>
-            <?php endif; ?>
-
+              BELUM ADA DATA USER TERDAFTAR.
+            </div>
           </td>
         </tr>
-      <?php endforeach; ?>
+      <?php else : ?>
+
+        <?php foreach ($data['users'] as $user):
+          $avatarColors = ['bg-[#FF90E8]', 'bg-[#A6FAAE]', 'bg-[#B28DFF]', 'bg-[#90E0FF]', 'bg-[#FFE600]'];
+          $randomColor = $avatarColors[$user['id'] % count($avatarColors)];
+
+          $uid = 'USR-' . str_pad((string)$user['id'], 4, '0', STR_PAD_LEFT);
+
+          $roleText = str_replace('_', ' ', $user['role']);
+          $roleBadge = 'border-gray-400 text-gray-600 bg-white';
+          if ($user['role'] == 'admin_toko' || $user['role'] == 'admin_web') $roleBadge = 'border-[#2563EB] text-[#2563EB] bg-white';
+          if ($user['role'] == 'gudang') $roleBadge = 'border-[#F97316] text-[#F97316] bg-white';
+          if ($user['role'] == 'ekspedisi') $roleBadge = 'border-[#EAB308] text-[#EAB308] bg-white';
+          if ($user['role'] == 'pemilik') $roleBadge = 'border-[#8B5CF6] text-[#8B5CF6] bg-white';
+        ?>
+          <tr class="border-b-2 border-black hover:bg-gray-50 transition-colors user-row">
+
+            <td class="p-4 border-r-2 border-black">
+              <div class="flex items-center">
+                <div class="w-10 h-10 border-2 border-black mr-4 <?= $randomColor ?> shadow-[3px_3px_0_0_#000] shrink-0"></div>
+                <div>
+                  <span class="font-black text-sm block leading-tight"><?= htmlspecialchars($user['name']) ?></span>
+                  <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mt-0.5">UID: <?= $uid ?></span>
+                </div>
+              </div>
+            </td>
+
+            <td class="p-4 border-r-2 border-black font-bold text-[#334155]">
+              <?= htmlspecialchars($user['email']) ?>
+            </td>
+
+            <td class="p-4 border-r-2 border-black">
+              <span class="border-2 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest <?= $roleBadge ?>">
+                <?= $roleText ?>
+              </span>
+            </td>
+
+            <td class="p-4 border-r-2 border-black">
+              <span class="text-[#00C853] font-black text-xs flex items-center uppercase tracking-widest">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#00C853] border border-black mr-2 shadow-[1px_1px_0_0_#000]"></span> ACTIVE
+              </span>
+            </td>
+
+            <td class="p-4 flex items-center justify-center space-x-3">
+              <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)) ?>)" class="w-8 h-8 flex items-center justify-center bg-white text-black border-2 border-black hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] shadow-[2px_2px_0_0_#000] active:translate-y-0 active:shadow-none transition-all" title="EDIT STAFF">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </button>
+
+              <?php if (isset($_SESSION['user_id']) && $user['id'] != $_SESSION['user_id']): ?>
+                <a href="<?= BASEURL; ?>/adminuser/deleteUser/<?= $user['id'] ?>" onclick="return confirm('Hapus staf ini?');" class="w-8 h-8 flex items-center justify-center bg-white text-black border-2 border-black hover:-translate-y-0.5 hover:bg-[#FF5757] hover:text-white hover:shadow-[4px_4px_0_0_#000] shadow-[2px_2px_0_0_#000] active:translate-y-0 active:shadow-none transition-all" title="BLOCK / DELETE">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+                  </svg>
+                </a>
+              <?php else: ?>
+                <button class="w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-400 border-2 border-gray-400 cursor-not-allowed shadow-[2px_2px_0_0_gray]" title="TIDAK BISA MENGHAPUS DIRI SENDIRI">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                  </svg>
+                </button>
+              <?php endif; ?>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      <?php endif; ?>
+
+      <tr id="noResultRow" class="border-b-4 border-black bg-gray-50 hidden">
+        <td colspan="5" class="p-16 text-center text-[#FF5757] font-black uppercase tracking-widest">
+          <div class="flex flex-col items-center justify-center">
+            <svg class="w-16 h-16 mb-4 text-[#FF5757]" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            USER TIDAK DITEMUKAN.
+          </div>
+        </td>
+      </tr>
 
     </tbody>
   </table>
 </div>
 
+<div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" id="paginationWrapper" data-aos="fade-up" data-aos-delay="200">
+  <div class="text-xs font-black text-gray-500 uppercase tracking-widest" id="paginationInfo">
+    SHOWING 0 OF 0 REGISTERED USERS
+  </div>
+  <div class="flex items-center gap-2" id="paginationControls">
+  </div>
+</div>
 
 <div id="addStaffModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity">
-  <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-2xl relative animate-fade-in-up">
+  <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-2xl relative" data-aos="zoom-in" data-aos-duration="300">
 
     <button onclick="closeModal('addStaffModal')" class="absolute top-4 right-4 bg-white border-4 border-black w-8 h-8 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white transition-colors">
       X
     </button>
 
     <div class="p-8">
-      <h2 class="text-3xl font-black uppercase mb-1">ADD NEW STAFF</h2>
+      <h2 class="text-3xl font-black uppercase mb-1">ADD NEW USER</h2>
       <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6">EMPLOYEE REGISTRATION FORM</p>
 
       <form action="<?= BASEURL; ?>/adminuser/storeUser" method="POST" class="space-y-5">
+        <input type="hidden" name="address" value="-">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div class="space-y-1">
@@ -167,12 +215,8 @@
         </div>
 
         <div class="flex gap-4 pt-4 mt-6 border-t-4 border-black">
-          <button type="button" onclick="closeModal('addStaffModal')" class="flex-1 bg-white text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">
-            CANCEL
-          </button>
-          <button type="submit" class="flex-1 bg-[#2563EB] text-white px-4 py-3 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">
-            SAVE STAFF
-          </button>
+          <button type="button" onclick="closeModal('addStaffModal')" class="flex-1 bg-white text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">CANCEL</button>
+          <button type="submit" class="flex-1 bg-[#2563EB] text-white px-4 py-3 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">SAVE STAFF</button>
         </div>
       </form>
     </div>
@@ -180,7 +224,7 @@
 </div>
 
 <div id="editStaffModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity">
-  <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-2xl relative animate-fade-in-up">
+  <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-2xl relative" data-aos="zoom-in" data-aos-duration="300">
 
     <button onclick="closeModal('editStaffModal')" class="absolute top-4 right-4 bg-white border-4 border-black w-8 h-8 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white transition-colors">
       X
@@ -191,8 +235,8 @@
       <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6">UPDATE EMPLOYEE CREDENTIALS</p>
 
       <form action="<?= BASEURL; ?>/adminuser/updateUser" method="POST" class="space-y-5">
-
         <input type="hidden" name="id" id="edit_id">
+        <input type="hidden" name="address" id="edit_address">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div class="space-y-1">
@@ -236,56 +280,16 @@
         </div>
 
         <div class="flex gap-4 pt-4 mt-6 border-t-4 border-black">
-          <button type="button" onclick="closeModal('editStaffModal')" class="flex-1 bg-white text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">
-            CANCEL
-          </button>
-          <button type="submit" class="flex-1 bg-[#FFE600] text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">
-            UPDATE STAFF
-          </button>
+          <button type="button" onclick="closeModal('editStaffModal')" class="flex-1 bg-white text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">CANCEL</button>
+          <button type="submit" class="flex-1 bg-[#FFE600] text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">UPDATE STAFF</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<style>
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in-up {
-    animation: fadeInUp 0.3s ease-out forwards;
-  }
-</style>
-
 <script>
-  function openModal(modalId) {
-    document.getElementById(modalId).classList.remove('hidden');
-    document.getElementById(modalId).classList.add('flex');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal(modalId) {
-    document.getElementById(modalId).classList.add('hidden');
-    document.getElementById(modalId).classList.remove('flex');
-    document.body.style.overflow = 'auto';
-  }
-
-  function openEditModal(userData) {
-    document.getElementById('edit_id').value = userData.id;
-    document.getElementById('edit_name').value = userData.name;
-    document.getElementById('edit_email').value = userData.email;
-    document.getElementById('edit_phone').value = userData.phone || '';
-    document.getElementById('edit_role').value = userData.role;
-
-    openModal('editStaffModal');
-  }
+  const HAS_REAL_DATA = <?= empty($data['users']) ? 'false' : 'true'; ?>;
 </script>
+
+<script src="<?= BASEURL; ?>/js/admin_users.js"></script>
