@@ -42,8 +42,12 @@ class Controller
       echo json_encode($response);
       exit;
     } else {
+      $_SESSION['flash_' . $status] = $message;
+
       if ($redirectUrl !== '') {
         header('Location: ' . BASEURL . $redirectUrl);
+      } else {
+        header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? BASEURL));
       }
       exit;
     }
