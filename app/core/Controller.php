@@ -19,4 +19,40 @@ class Controller
     require_once '../app/models/' . $model . '.php';
     return new $model();
   }
+
+  protected function isAjax(): bool
+  {
+    return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false);
+  }
+
+  protected function sendResponse(string $status, string $message, string $redirectUrl = '', int $httpCode = 200): void
+  {
+    if ($this->isAjax()) {
+      http_response_code($httpCode);
+      header('Content-Type: application/json');
+      echo json_encode([
+        'status' => $status,
+        'message' => $message,
+      ]);
+      exit;
+    } else {
+      if ($redirectUrl !== '') {
+        header('Location: ' . BASEURL . $redirectUrl);
+      }
+      exit;
+    }
+  }
+
+  protected function sendData(array $data, int $httpCode = 200): void
+  {
+    if ($this->isAjax()) {
+      http_response_code($httpCode);
+      header('Content-Type: application/json');
+      echo json_encode([
+        'status' => 'success',
+        'data' => $data
+      ]);
+      exit;
+    }
+  }
 }
