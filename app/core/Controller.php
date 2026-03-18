@@ -25,15 +25,21 @@ class Controller
     return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false);
   }
 
-  protected function sendResponse(string $status, string $message, string $redirectUrl = '', int $httpCode = 200): void
+  protected function sendResponse(string $status, string $message, string $redirectUrl = '', int $httpCode = 200, array $extraData = []): void
   {
     if ($this->isAjax()) {
       http_response_code($httpCode);
       header('Content-Type: application/json');
-      echo json_encode([
+      $response = [
         'status' => $status,
-        'message' => $message,
-      ]);
+        'message' => $message
+      ];
+
+      if (!empty($extraData)) {
+        $response = array_merge($response, $extraData);
+      }
+
+      echo json_encode($response);
       exit;
     } else {
       if ($redirectUrl !== '') {
