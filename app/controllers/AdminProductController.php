@@ -16,45 +16,6 @@ class AdminProductController extends Controller
     }
   }
 
-  private function createSlug(string $string): string
-  {
-    $slug = strtolower(trim($string));
-    $slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
-    $slug = $slug . '-' . substr(uniqid(), -5);
-
-    return $slug;
-  }
-
-  private function uploadImage(): string|false
-  {
-    $fileName = $_FILES['image']['name'];
-    $fileSize = $_FILES['image']['size'];
-    $tmpName = $_FILES['image']['tmp_name'];
-
-    $ext = ['jpg', 'jpeg', 'png', 'webp'];
-    $fileExt = explode('.', $fileName);
-    $fileExt = strtolower(end($fileExt));
-
-    if (!in_array($fileExt, $ext)) {
-      return false;
-    }
-
-    if ($fileSize > 5242880) {
-      return false;
-    }
-
-    $newFileName = uniqid() . '.' . $fileExt;
-    $destination = dirname(__DIR__, 2) . '/public/img/products/';
-
-    if (!is_dir($destination)) {
-      mkdir($destination, 0777, true);
-    }
-
-    move_uploaded_file($tmpName, $destination . $newFileName);
-
-    return $newFileName;
-  }
-
   public function index(): void
   {
     $data['judul'] = 'Product Management | TI MART';
@@ -71,45 +32,45 @@ class AdminProductController extends Controller
   public function storeProduct(): void
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $_POST['slug'] = $this->createSlug($_POST['name']);
-    }
+      $_POST['slug'] = Helper::createSlug($_POST['name']);
 
-    $imageName = null;
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-      $imageName = $this->uploadImage();
-      if (!$imageName) {
-        header('Location: ' . BASEURL . '/adminproduct');
-        exit;
+      $imageName = null;
+      if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $imageName = Helper::uploadImage($_FILES['image'], 'products');
+        if (!$imageName) {
+          $this->sendResponse('error', 'Format gambar salah atau ukuran melebihi batas 5MB.', '/adminproduct', 400);
+          return;
+        }
       }
-    }
 
-    if ($this->model('ProdukModel')->addProduct($_POST, $imageName) > 0) {
-      header('Location: ' . BASEURL . '/adminproduct');
-      exit;
-    } else {
-      header('Location: ' . BASEURL . '/adminproduct');
-      exit;
+      if ($this->model('ProdukModel')->addProduct($_POST, $imageName) > 0) {
+        $this->sendResponse('success', 'Produk baru berhasil ditambahkan ke katalog!', '/adminproduct');
+      } else {
+        $this->sendResponse('error', 'Gagal menyimpan produk ke database.', '/adminproduct', 500);
+      }
     }
   }
 
   public function updateProduct(): void
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $_POST['slug'] = $this->createSlug($_POST['name']);
+      $_POST['slug'] = Helper::createSlug($_POST['name']);
 
       $id = (int) $_POST['id'];
       $imageName = null;
 
       if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $imageName = $this->uploadImage();
+        $imageName = Helper::uploadImage($_FILES['image'], 'products');
+        if (!$imageName) {
+          $this->sendResponse('error', 'Format gambar salah atau ukuran melebihi batas 5MB.', '/adminproduct', 400);
+          return;
+        }
       }
 
       if ($this->model('ProdukModel')->updateProduct($_POST, $imageName) >= 0) {
-        header('Location: ' . BASEURL . '/adminproduct');
-        exit;
+        $this->sendResponse('success', 'Data produk berhasil diperbarui!', '/adminproduct');
       } else {
-        header('Location: ' . BASEURL . '/adminproduct');
-        exit;
+        $this->sendResponse('error', 'Tidak ada perubahan atau gagal memperbarui data produk.', '/adminproduct', 400);
       }
     }
   }
@@ -119,11 +80,39 @@ class AdminProductController extends Controller
     $productId = (int) $product_id;
 
     if ($this->model('ProdukModel')->deleteProduct($productId) > 0) {
-      header('Location: ' . BASEURL . '/adminproduct');
-      exit;
+      $this->sendResponse('success', 'Produk berhasil dihapus dari katalog!', '/adminproduct');
     } else {
-      header('Location: ' . BASEURL . '/adminproduct');
-      exit;
+      $this->sendResponse('error', 'Gagal menghapus produk dari katalog.', '/adminproduct', 400);
+    }
+  }
+
+  public function getSpecs(string $product_id): void
+  {
+    $specs = $this->model('ProdukModel')->getProductSpecs((int) $product_id);
+    $this->sendData($specs);
+  }
+
+  public function storeSpecs(): void
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      if ($this->model('ProdukModel')->addProductSpecs($_POST) > 0) {
+        $this->sendResponse('success', 'Spesifikasi produk berhasil ditambahkan!', '/adminproduct');
+      } else {
+        $this->sendResponse('error', 'Gagal menyimpan spesifikasi produk ke database.', '/adminproduct', 500);
+      }
+    }
+  }
+
+  public function deleteSpecs(): void
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $spec_id = (int) $_POST['id'];
+
+      if ($this->model('ProdukModel')->deleteProductSpecs($spec_id) > 0) {
+        $this->sendResponse('success', 'Spesifikasi produk berhasil dihapus!', '/adminproduct');
+      } else {
+        $this->sendResponse('error', 'Gagal menghapus spesifikasi produk.', '/adminproduct', 400);
+      }
     }
   }
 }

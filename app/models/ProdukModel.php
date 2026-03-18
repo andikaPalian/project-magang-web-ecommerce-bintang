@@ -99,6 +99,28 @@ class ProdukModel
     return $this->db->resultSet();
   }
 
+  public function addProductSpecs(array $data): int
+  {
+    $this->db->query("INSERT INTO product_specifications (product_id, spec_name, spec_value) VALUES (:product_id, :spec_name, :spec_value)");
+    $this->db->bind("product_id", $data['product_id']);
+    $this->db->bind("spec_name", $data['spec_name']);
+    $this->db->bind("spec_value", $data['spec_value']);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
+
+  public function deleteProductSpecs(int $spec_id): int
+  {
+    $this->db->query("DELETE FROM product_specifications WHERE id = :spec_id");
+    $this->db->bind("spec_id", $spec_id);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
+
   public function getProductReviews(int $product_id): array
   {
     $this->db->query("SELECT r.*, u.name as reviewer_name FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.product_id = :product_id ORDER BY r.created_at DESC");

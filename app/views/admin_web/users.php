@@ -292,4 +292,4 @@
   const HAS_REAL_DATA = <?= empty($data['users']) ? 'false' : 'true'; ?>;
 </script>
 
-<script src="<?= BASEURL; ?>/js/admin_users.js"></script>
+<script src="<?= BASEURL; ?>/js/admin_users.js?v=<?= time(); ?>"></script>
