@@ -6,20 +6,17 @@ class AdminProductController extends Controller
   public function __construct()
   {
     if (!isset($_SESSION['user_id'])) {
-      header('Location: ' . BASEURL . '/auth');
-      exit;
+      $this->sendResponse('error', 'Silahkan login terlebih dahulu!', '/auth', 401);
     }
 
     if (!in_array($_SESSION['role'], ['admin_web', 'admin_toko'])) {
-      header('Location: ' . BASEURL);
-      exit;
+      $this->sendResponse('error', 'Anda tidak memiliki akses ke halaman ini!', '', 403);
     }
   }
 
   public function index(): void
   {
     $data['judul'] = 'Product Management | TI MART';
-
     $data['products'] = $this->model('ProdukModel')->getAllProductsForAdmin();
     $data['categories'] = $this->model('ProdukModel')->getAllCategoriesAdmin();
 
