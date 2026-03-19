@@ -2,21 +2,17 @@
 $role = $_SESSION['role'] ?? '';
 $user_name = $_SESSION['name'] ?? 'ROOT_USER';
 
-// ========================================================
-// LOGIKA CERDAS: DETEKSI MENU AKTIF BERDASARKAN URL
-// ========================================================
 $current_uri = $_SERVER['REQUEST_URI'];
 
-// Template Class CSS untuk kondisi Aktif & Tidak Aktif
 $activeClass = 'bg-[#2563EB] text-white border-4 border-black shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-transform';
 $inactiveClass = 'text-black border-4 border-transparent hover:border-black hover:bg-gray-100 transition-all';
 
-// Deteksi kata kunci di URL
-$isDashboard = strpos($current_uri, 'dashboard') !== false;
-$isUsers     = strpos($current_uri, 'adminuser') !== false;
-$isProducts  = strpos($current_uri, 'katalog') !== false || strpos($current_uri, 'adminproduct') !== false;
-$isArticles  = strpos($current_uri, 'artikel') !== false;
-$isVouchers  = strpos($current_uri, 'voucher') !== false;
+$isDashboard  = strpos($current_uri, 'dashboard') !== false;
+$isUsers      = strpos($current_uri, 'adminuser') !== false;
+$isProducts   = strpos($current_uri, 'katalog') !== false || strpos($current_uri, 'adminproduct') !== false;
+$isCategories = strpos($current_uri, 'admincategory') !== false;
+$isArticles   = strpos($current_uri, 'artikel') !== false;
+$isVouchers   = strpos($current_uri, 'voucher') !== false;
 ?>
 
 <div class="flex h-screen w-full bg-[#F8F9FA] font-sans text-black overflow-hidden selection:bg-[#FFE600] selection:text-black">
@@ -51,9 +47,16 @@ $isVouchers  = strpos($current_uri, 'voucher') !== false;
 
       <a href="<?= BASEURL; ?>/adminproduct" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isProducts ? $activeClass : $inactiveClass; ?>">
         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002 2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
         </svg>
         PRODUCTS
+      </a>
+
+      <a href="<?= BASEURL; ?>/admincategory" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isCategories ? $activeClass : $inactiveClass; ?>">
+        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+        </svg>
+        CATEGORIES
       </a>
 
       <a href="<?= BASEURL; ?>/artikel" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isArticles ? $activeClass : $inactiveClass; ?>">
@@ -71,12 +74,12 @@ $isVouchers  = strpos($current_uri, 'voucher') !== false;
       </a>
     </nav>
 
-    <div class="p-4 border-t-4 border-black bg-white">
+    <div class="mt-auto p-4 border-t-4 border-black bg-white">
       <div class="border-4 border-black p-3 flex items-center bg-[#F8F9FA]">
         <div class="w-8 h-8 bg-[#FFE600] border-2 border-black mr-3 shrink-0"></div>
         <div class="overflow-hidden">
-          <p class="text-xs font-black uppercase line-clamp-1 truncate"><?= $user_name; ?></p>
-          <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest line-clamp-1"><?= str_replace('_', ' ', $role); ?></p>
+          <p class="text-xs font-black uppercase line-clamp-1 truncate"><?= htmlspecialchars($user_name); ?></p>
+          <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest line-clamp-1"><?= str_replace('_', ' ', htmlspecialchars($role)); ?></p>
         </div>
       </div>
     </div>
