@@ -17,15 +17,13 @@ class ArticleController extends Controller
   public function read(string $slug = ''): void
   {
     if (empty($slug)) {
-      header('Location: ' . BASEURL . '/articles');
-      exit;
+      $this->sendResponse('error', 'Slug tidak valid.', '/article', 400);
     }
 
     $article = $this->model('ArticleModel')->getArticleBySlug($slug);
 
     if (!$article) {
-      header('Location: ' . BASEURL . '/articles');
-      exit;
+      $this->sendResponse('error', 'Artikel tidak ditemukan.', '/article', 404);
     }
 
     $data['judul'] = $article['title'] . ' | TI MART';

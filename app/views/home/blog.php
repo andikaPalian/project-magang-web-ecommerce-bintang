@@ -17,6 +17,15 @@
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
 
+    <?php if (isset($_SESSION['flash_error'])): ?>
+      <div class="bg-[#FF5757] border-4 border-black text-white px-4 py-3 mb-8 shadow-[4px_4px_0_0_#000] font-black uppercase tracking-wider flex items-center" data-aos="fade-down">
+        <svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        <p><?= $_SESSION['flash_error']; ?></p>
+      </div>
+      <?php unset($_SESSION['flash_error']); ?>
+    <?php endif; ?>
     <?php if (empty($data['articles'])): ?>
       <div class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] p-12 text-center">
         <h3 class="text-2xl font-black uppercase mb-2">TIDAK ADA TRANSMISI</h3>
