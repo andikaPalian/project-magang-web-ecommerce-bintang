@@ -8,8 +8,7 @@ class ProdukController extends Controller
     $user_id = $_SESSION['user_id'] ?? null;
 
     if (empty($slug)) {
-      header('Location: ' . BASEURL);
-      exit;
+      $this->sendResponse('error', 'Slug tidak valid.', '', 400);
     }
 
     $productModel = $this->model('ProdukModel');
@@ -17,8 +16,7 @@ class ProdukController extends Controller
 
     $produk = $productModel->getProductBySlug($slug);
     if (!$produk) {
-      header("Location: " . BASEURL);
-      exit;
+      $this->sendResponse('error', 'Produk tidak ditemukan.', '', 404);
     }
 
     $data['judul'] = $produk['name'] . ' | TI MART';
