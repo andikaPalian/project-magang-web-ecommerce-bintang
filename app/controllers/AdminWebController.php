@@ -6,13 +6,11 @@ class AdminWebController extends Controller
   public function __construct()
   {
     if (!isset($_SESSION['user_id'])) {
-      header('Location: ' . BASEURL . '/auth');
-      exit;
+      $this->sendResponse('error', 'Silahkan login terlebih dahulu!', '/auth', 401);
     }
 
     if ($_SESSION['role'] !== 'admin_web' && $_SESSION['role'] !== 'pemilik') {
-      header('Location: ' . BASEURL);
-      exit;
+      $this->sendResponse('error', 'Anda tidak memiliki akses ke halaman ini!', '', 403);
     }
   }
 
