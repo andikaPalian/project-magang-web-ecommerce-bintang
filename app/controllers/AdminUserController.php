@@ -6,21 +6,18 @@ class AdminUserController extends Controller
   public function __construct()
   {
     if (!isset($_SESSION['user_id'])) {
-      header('Location: ' . BASEURL . '/auth');
-      exit;
+      $this->sendResponse('error', 'Silahkan login terlebih dahulu!', '/auth', 401);
     }
 
     if ($_SESSION['role'] !== 'admin_web') {
-      header('Location: ' . BASEURL);
-      exit;
+      $this->sendResponse('error', 'Anda tidak memiliki akses ke halaman ini!', '', 403);
     }
   }
 
   public function index(): void
   {
-    $user_id = $_SESSION['user_id'];
     $data['judul'] = 'User management | TI MART';
-    $data['users'] = $this->model('UserModel')->getAllUsers($user_id);
+    $data['users'] = $this->model('UserModel')->getAllUsers($_SESSION['user_id']);
 
     $this->view('templates/header_admin', $data);
     $this->view('templates/sidebar_admin', $data);
@@ -32,11 +29,9 @@ class AdminUserController extends Controller
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($this->model('UserModel')->addUserByAdmin($_POST) > 0) {
-        header('Location: ' . BASEURL . '/adminuser');
-        exit;
+        $this->sendResponse('success', 'User berhasil ditambahkan!', '/adminuser', 200);
       } else {
-        header('Location: ' . BASEURL . '/adminuser');
-        exit;
+        $this->sendResponse('error', 'Gagal menambahkan user!', '/adminuser', 400);
       }
     }
   }
@@ -51,13 +46,13 @@ class AdminUserController extends Controller
       }
 
       if ($id == $_SESSION['user_id']) {
-        header('Location: ' . BASEURL . '/adminuser');
-        exit;
+        $this->sendResponse('error', 'Anda tidak dapat mengedit diri sendiri!', '/adminuser', 400);
       }
 
       if ($this->model('UserModel')->updateUserByAdmin($_POST, $id) >= 0) {
-        header('Location: ' . BASEURL . '/adminuser');
-        exit;
+        $this->sendResponse('success', 'Data user berhasil diperbarui!', '/adminuser', 200);
+      } else {
+        $this->sendResponse('error', 'Tidak ada perubahan atau gagal memperbarui data user.', '/adminuser', 400);
       }
     }
   }
@@ -65,16 +60,13 @@ class AdminUserController extends Controller
   public function deleteUser(string $id): void
   {
     if ($id == $_SESSION['user_id']) {
-      header('Location: ' . BASEURL . '/adminuser');
-      exit;
+      $this->sendResponse('error', 'Anda tidak dapat menghapus diri sendiri!', '/adminuser', 400);
     }
 
     if ($this->model('UserModel')->deleteUser($id) > 0) {
-      header('Location: ' . BASEURL . '/adminuser');
-      exit;
+      $this->sendResponse('success', 'User berhasil dihapus!', '/adminuser', 200);
     } else {
-      header('Location: ' . BASEURL . '/adminuser');
-      exit;
+      $this->sendResponse('error', 'Gagal menghapus user!', '/adminuser', 400);
     }
   }
 }

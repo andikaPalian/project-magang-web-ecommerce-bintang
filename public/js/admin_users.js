@@ -56,7 +56,6 @@ function filterTable() {
 
   const noResultRow = document.getElementById("noResultRow");
 
-  // Menggunakan variabel global HAS_REAL_DATA dari file View
   if (noResultRow && typeof HAS_REAL_DATA !== "undefined" && HAS_REAL_DATA) {
     if (filteredRows.length === 0) {
       noResultRow.classList.remove("hidden");

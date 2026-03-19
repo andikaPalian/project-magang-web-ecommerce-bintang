@@ -14,6 +14,25 @@
   </button>
 </div>
 
+<?php if (isset($_SESSION['flash_success'])): ?>
+  <div class="bg-[#A6FAAE] border-4 border-black text-black px-4 py-3 mb-6 shadow-[4px_4px_0_0_#000] font-black uppercase tracking-wider flex items-center" data-aos="fade-down">
+    <svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+    </svg>
+    <p><?= $_SESSION['flash_success']; ?></p>
+  </div>
+  <?php unset($_SESSION['flash_success']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['flash_error'])): ?>
+  <div class="bg-[#FF5757] border-4 border-black text-white px-4 py-3 mb-6 shadow-[4px_4px_0_0_#000] font-black uppercase tracking-wider flex items-center" data-aos="fade-down">
+    <svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+    <p><?= $_SESSION['flash_error']; ?></p>
+  </div>
+  <?php unset($_SESSION['flash_error']); ?>
+<?php endif; ?>
 <div class="flex flex-wrap gap-4 mb-6" data-aos="fade-up">
   <div class="relative inline-block">
     <select id="roleFilter" onchange="filterTable()" class="appearance-none bg-black text-white px-4 py-3 pr-10 border-4 border-black font-black text-xs uppercase shadow-[4px_4px_0_0_#000] hover:bg-gray-800 cursor-pointer outline-none transition-all">
