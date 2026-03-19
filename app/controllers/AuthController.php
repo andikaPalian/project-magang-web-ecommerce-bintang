@@ -34,9 +34,7 @@ class AuthController extends Controller
 
         $this->redirectBasedOnRole($user['role']);
       } else {
-        $_SESSION['flash_error'] = 'Email atau password salah';
-        header('Location: ' . BASEURL . '/auth');
-        exit;
+        $this->sendResponse('error', 'Email atau password salah.', '/auth', 401);
       }
     }
   }
@@ -64,7 +62,7 @@ class AuthController extends Controller
     }
 
     $data['judul'] = 'Register | TI MART';
-    $data['error'] = $_SESSION['register_error'] ?? null;
+    $data['error'] = $_SESSION['flash_error'] ?? null;
     unset($_SESSION['flash_error']);
 
     $this->view('templates/header', $data);
@@ -81,21 +79,15 @@ class AuthController extends Controller
       $password_confirmation = $_POST['password_confirmation'] ?? '';
 
       if (empty($name) || empty($email) || empty($password)) {
-        $_SESSION['flash_error'] = 'Semua kolom wajib diisi!';
-        header('Location: ' . BASEURL . '/auth/register');
-        exit;
+        $this->sendResponse('error', 'Semua kolom wajib diisi!', '/auth/register', 400);
       }
 
       if ($password != $password_confirmation) {
-        $_SESSION['flash_error'] = 'Password tidak sama!';
-        header('Location: ' . BASEURL . '/auth/register');
-        exit;
+        $this->sendResponse('error', 'Password tidak sama!', '/auth/register', 400);
       }
 
       if ($this->model('UserModel')->getUserByEmail($email)) {
-        $_SESSION['flash_error'] = 'Email sudah terdaftar!';
-        header('Location: ' . BASEURL . '/auth/register');
-        exit;
+        $this->sendResponse('error', 'Email sudah terdaftar, silahkan gunakan email lain!', '/auth/register', 400);
       }
 
       $data = [
@@ -107,13 +99,9 @@ class AuthController extends Controller
       ];
 
       if ($this->model('UserModel')->registerUser($data) > 0) {
-        $_SESSION['flash_success'] = 'Registrasi berhasil!';
-        header('Location: ' . BASEURL . '/auth');
-        exit;
+        $this->sendResponse('success', 'Registrasi berhasil! Silahkan login.', '/auth', 200);
       } else {
-        $_SESSION['flash_error'] = 'Registrasi gagal!';
-        header('Location: ' . BASEURL . '/auth/register');
-        exit;
+        $this->sendResponse('error', 'Registrasi gagal!', '/auth/register', 500);
       }
     }
   }
@@ -122,7 +110,8 @@ class AuthController extends Controller
   {
     session_unset();
     session_destroy();
-    header('Location: ' . BASEURL . '/auth');
-    exit;
+    session_start();
+
+    $this->sendResponse('success', 'Anda berhasil logout!', '/auth', 200);
   }
 }

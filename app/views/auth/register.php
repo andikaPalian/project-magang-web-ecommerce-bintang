@@ -73,7 +73,7 @@
           </div>
 
           <div>
-            <label for="phone" class="block text-[10px] font-black uppercase tracking-widest text-black mb-2">NO> TELEPON</label>
+            <label for="phone" class="block text-[10px] font-black uppercase tracking-widest text-black mb-2">NO. TELEPON</label>
             <input id="phone" name="phone" type="tel" required
               class="block w-full px-4 py-3 bg-gray-50 border-4 border-black placeholder-gray-400 focus:bg-white focus:outline-none focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 focus:-translate-x-1 transition-all text-sm font-bold text-black uppercase"
               placeholder="08XXXXXXXXXX">

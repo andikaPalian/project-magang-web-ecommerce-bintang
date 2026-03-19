@@ -44,7 +44,7 @@
           <div class="mb-10 text-left border-l-4 border-[#2563EB] pl-4">
             <p class="text-[10px] font-black tracking-widest uppercase text-gray-500 mb-1 bg-[#E2E8F0] inline-block px-2">LOGIN</p>
             <h2 class="text-4xl sm:text-5xl font-black text-black uppercase tracking-tighter leading-none mb-2" style="-webkit-text-stroke: 1px black;">MASUK KE<br>AKUN.</h2>
-            <p class="text-sm font-bold text-gray-700 uppercase tracking-wide mt-3">Selamat datang kembal di TI MART.</p>
+            <p class="text-sm font-bold text-gray-700 uppercase tracking-wide mt-3">Selamat datang kembali di TI MART.</p>
           </div>
 
           <?php if (isset($data['error'])): ?>
