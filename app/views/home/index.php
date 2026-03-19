@@ -91,8 +91,14 @@
     <div class="grid grid-cols-4 md:grid-cols-8 gap-4">
       <?php foreach ($data['kategori'] as $kat): ?>
         <a href="<?= BASEURL; ?>/katalog/kategori/<?= $kat['slug']; ?>" class="flex flex-col items-center group">
-          <div class="w-full aspect-square bg-white border-2 border-black shadow-[4px_4px_0_0_#000] flex items-center justify-center text-3xl text-black group-hover:bg-[#2563EB] group-hover:text-white group-hover:-translate-y-1 transition-all mb-3">
-            <span class="text-2xl font-black uppercase"><?= substr($kat['name'], 0, 1); ?></span>
+          <div class="w-full aspect-square bg-white border-2 border-black shadow-[4px_4px_0_0_#000] flex items-center justify-center overflow-hidden text-3xl text-black group-hover:bg-[#FFE600] group-hover:-translate-y-1 transition-all mb-3 p-3 relative">
+
+            <?php if (!empty($kat['icon'])): ?>
+              <img src="<?= BASEURL; ?>/img/categories/<?= $kat['icon']; ?>" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-[2px_2px_0_rgba(0,0,0,1)]" alt="<?= $kat['name']; ?>">
+            <?php else: ?>
+              <span class="text-2xl font-black uppercase"><?= substr($kat['name'], 0, 1); ?></span>
+            <?php endif; ?>
+
           </div>
           <span class="text-[10px] font-black text-black uppercase text-center group-hover:text-[#2563EB]"><?= $kat['name']; ?></span>
         </a>
