@@ -6,27 +6,18 @@ class CartController extends Controller
   public function __construct()
   {
     if (!isset($_SESSION['user_id'])) {
-      if ($this->isAjax()) {
-        $this->sendResponse('error', 'Silahkan login terlebih dahulu!', '/auth', 401);
-        exit;
-      }
-
-      $_SESSION['flash_error'] = 'Silahkan login terlebih dahulu!';
-      header('Location: ' . BASEURL . '/auth');
-      exit;
+      $this->sendResponse('error', 'Silahkan login terlebih dahulu!', '/auth', 401);
     }
   }
 
   public function index(): void
   {
-    $user_id = $_SESSION['user_id'];
     $cartModel = $this->model('CartModel');
 
     $data['judul'] = 'Keranjang Belanja | TI MART';
+    $data['cart_items'] = $cartModel->getCartByUserId($_SESSION['user_id']);
 
-    $data['cart_items'] = $cartModel->getCartByUserId($user_id);
-
-    $total = $cartModel->getCartTotal($user_id);
+    $total = $cartModel->getCartTotal($_SESSION['user_id']);
 
     $data['total_harga'] = $total['total_harga'];
     $data['total_diskon'] = $total['total_diskon'];
