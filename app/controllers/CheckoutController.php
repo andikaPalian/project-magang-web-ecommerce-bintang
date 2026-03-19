@@ -6,19 +6,14 @@ class CheckoutController extends Controller
   public function __construct()
   {
     if (!isset($_SESSION['user_id'])) {
-      $_SESSION['flash_error'] = 'Silahkan login terlebih dahulu!';
-      header('Location: ' . BASEURL . '/auth');
-      exit;
+      $this->sendResponse('error', 'Silahkan login terlebih dahulu!', '/auth', 401);
     }
   }
 
   public function index(): void
   {
-    $user_id = $_SESSION['user_id'];
-
     $data['judul'] = 'Checkout | TI MART';
-
-    $data['user'] = $this->model('UserModel')->getUserById($user_id);
+    $data['user'] = $this->model('UserModel')->getUserById($_SESSION['user_id']);
 
     if (isset($_SESSION['buy_now_item'])) {
       $product_id = $_SESSION['buy_now_item']['product_id'];
@@ -28,9 +23,7 @@ class CheckoutController extends Controller
 
       if (!$produk) {
         unset($_SESSION['buy_now_item']);
-        $_SESSION['flash_error'] = 'Produk tidak ditemukan atau tidak tersedia.';
-        header('Location: ' . BASEURL . '/cart');
-        exit;
+        $this->sendResponse('error', 'Produk tidak ditemukan atau tidak tersedia.', '/cart', 400);
       }
 
       $harga_asli = (float) $produk['price'];
@@ -56,15 +49,13 @@ class CheckoutController extends Controller
     } else {
       $cartModel = $this->model('CartModel');
 
-      $data['cart_items'] = $cartModel->getCartByUserId($user_id);
+      $data['cart_items'] = $cartModel->getCartByUserId($_SESSION['user_id']);
 
       if (empty($data['cart_items'])) {
-        $_SESSION['flash_error'] = 'Keranjang belanja kosong!';
-        header('Location: ' . BASEURL . '/cart');
-        exit;
+        $this->sendResponse('error', 'Keranjang belanja kosong!', '/cart', 400);
       }
 
-      $total = $cartModel->getCartTotal($user_id);
+      $total = $cartModel->getCartTotal($_SESSION['user_id']);
       $data['total_harga'] = $total['total_harga'] ?? 0;
       $data['total_diskon'] = $total['harga_diskon'] ?? 0;
       $data['subtotal_bayar'] = $total['total_bayar'] ?? 0;
