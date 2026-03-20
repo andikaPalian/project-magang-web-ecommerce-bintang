@@ -40,4 +40,19 @@ class Helper
 
     return $newFileName;
   }
+
+  public static function deleteImage(?string $fileName, string $targetFolder): bool
+  {
+    if (!empty($fileName) || str_starts_with($fileName, 'http')) {
+      return true;
+    }
+
+    $filePath = dirname(__DIR__, 2) . '/public/img/' . $targetFolder . '/' . $fileName;
+
+    if (file_exists($filePath)) {
+      return unlink($filePath);
+    }
+
+    return true;
+  }
 }

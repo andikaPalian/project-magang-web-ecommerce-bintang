@@ -1,128 +1,180 @@
-<div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end pb-4 gap-4" data-aos="fade-in">
-  <div>
-    <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-2">PRODUCT MANAGEMENT</h1>
-    <p class="text-sm font-bold text-gray-600 max-w-xl leading-relaxed">
-      Kelola katalog produk, harga, diskon, dan pantau ketersediaan stok di gudang.
-    </p>
-  </div>
-
-  <button onclick="openModal('addProductModal')" class="bg-[#2563EB] text-white px-6 py-3 border-4 border-black font-black text-sm uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:shadow-none transition-all flex items-center shrink-0">
-    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
-    </svg>
-    ADD NEW PRODUCT
-  </button>
+<div class="mb-8" data-aos="fade-in">
+  <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-2">PRODUCT MANAGEMENT</h1>
+  <p class="text-sm font-bold text-gray-600 max-w-xl leading-relaxed">
+    Kelola katalog produk, harga, diskon, dan pantau ketersediaan stok di gudang.
+  </p>
 </div>
 
-<div class="flex flex-wrap gap-4 mb-6" data-aos="fade-up">
-  <div class="relative inline-block">
-    <select id="categoryFilter" onchange="filterTable()" class="appearance-none bg-black text-white px-4 py-3 pr-10 border-4 border-black font-black text-xs uppercase shadow-[4px_4px_0_0_#000] hover:bg-gray-800 cursor-pointer outline-none transition-all">
-      <option value="ALL">ALL CATEGORIES</option>
-      <?php foreach ($data['categories'] as $cat) : ?>
-        <option value="<?= strtoupper($cat['name']) ?>"><?= strtoupper($cat['name']) ?></option>
-      <?php endforeach; ?>
-    </select>
-    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
-      </svg>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" data-aos="fade-up">
+  <div class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] p-6 relative flex flex-col justify-between">
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="text-xs font-black uppercase tracking-widest text-black">TOTAL PRODUCTS</h3>
+      <div class="w-6 h-6 bg-[#2563EB] text-white flex items-center justify-center border-2 border-black">
+        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M3 3h18v18H3V3zm16 16V5H5v14h14zm-6-8h4v6h-4v-6zm-6 4h4v2H7v-2zm0-4h4v2H7v-2zm0-4h10v2H7V7z" />
+        </svg>
+      </div>
     </div>
+    <div class="text-5xl font-black tracking-tighter mb-4"><?= number_format($data['stats']['total_products'] ?? 0, 0, ',', '.'); ?></div>
+    <div><span class="inline-block bg-white text-gray-500 border-2 border-black px-2 py-1 text-[9px] font-black uppercase tracking-widest">RECORDED IN DATABASE</span></div>
   </div>
 
-  <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="SEARCH PRODUCT NAME..." class="bg-white text-black px-4 py-3 border-4 border-black font-black text-xs uppercase shadow-[4px_4px_0_0_#000] focus:outline-none focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all w-72">
-  <div class="flex-1"></div>
-  <button onclick="resetFilter()" class="bg-white text-black px-6 py-3 border-4 border-black font-black text-xs flex items-center shadow-[4px_4px_0_0_#000] hover:bg-[#FF5757] hover:text-white transition-all">
-    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-    </svg>
-    RESET
-  </button>
+  <div class="bg-[#FFE600] border-4 border-black shadow-[8px_8px_0_0_#000] p-6 relative flex flex-col justify-between">
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="text-xs font-black uppercase tracking-widest text-black">OUT OF STOCK</h3>
+      <div class="w-6 h-6 text-black flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+    </div>
+    <div class="text-5xl font-black tracking-tighter mb-4"><?= $data['stats']['out_of_stock'] ?? 0; ?></div>
+    <div><span class="inline-block bg-black text-[#FFE600] border-2 border-black px-2 py-1 text-[9px] font-black uppercase tracking-widest <?= ($data['stats']['out_of_stock'] ?? 0) > 0 ? 'animate-pulse' : '' ?>">ACTION REQUIRED</span></div>
+  </div>
+
+  <div class="bg-[#2563EB] border-4 border-black shadow-[8px_8px_0_0_#000] p-6 relative flex flex-col justify-between text-white">
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="text-xs font-black uppercase tracking-widest">TOP CATEGORY</h3>
+      <div class="w-6 h-6 bg-white text-[#2563EB] flex items-center justify-center rounded-full border-2 border-black">
+        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+        </svg>
+      </div>
+    </div>
+    <div class="text-3xl font-black tracking-tighter mb-4 uppercase line-clamp-2 leading-tight" style="-webkit-text-stroke: 1px black; text-shadow: 2px 2px 0 #000;"><?= htmlspecialchars($data['stats']['top_category'] ?? 'N/A'); ?></div>
+    <div><span class="inline-block bg-white text-black border-2 border-black px-2 py-1 text-[9px] font-black uppercase tracking-widest">DOMINANT ENTITY</span></div>
+  </div>
 </div>
 
-<div class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] overflow-x-auto mb-6" data-aos="fade-up" data-aos-delay="100">
+<div class="flex flex-col xl:flex-row justify-between items-start gap-6 mb-8 relative z-20" data-aos="fade-up" data-aos-delay="100">
+
+  <div class="w-full xl:flex-1 flex flex-col md:flex-row items-start gap-4">
+    <div class="w-full md:flex-1 bg-white border-4 border-black flex items-center px-4 shadow-[4px_4px_0_0_#000] focus-within:-translate-y-1 focus-within:shadow-[6px_6px_0_0_#000] transition-all">
+      <svg class="w-5 h-5 text-black mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="SEARCH BY NAME..." class="w-full py-3 bg-transparent font-black text-xs uppercase outline-none placeholder-gray-400">
+    </div>
+
+    <div class="w-full md:w-64 relative" id="filterCategoryDropdown">
+      <input type="hidden" id="categoryFilter" value="ALL">
+      <button type="button" onclick="toggleFilterCategory()" class="w-full py-3 px-4 bg-white border-4 border-black font-black text-xs uppercase flex justify-between items-center shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] focus:outline-none transition-all cursor-pointer">
+        <span id="filterCategoryText" class="truncate">ALL CATEGORIES</span>
+        <svg class="w-4 h-4 text-black transition-transform shrink-0 ml-2" id="filterCategoryIcon" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+
+      <div id="filterCategoryMenu" class="absolute z-50 w-full mt-2 bg-white border-4 border-black shadow-[6px_6px_0_0_#000] hidden flex-col max-h-60 overflow-y-auto text-left">
+        <div onclick="selectFilterCategory('ALL', 'ALL CATEGORIES')" class="p-3 font-black text-xs uppercase border-b-2 border-black hover:bg-[#FFE600] cursor-pointer transition-colors text-black">
+          ALL CATEGORIES
+        </div>
+        <?php foreach ($data['categories'] as $cat) : ?>
+          <div onclick="selectFilterCategory('<?= strtoupper($cat['name']) ?>', '<?= strtoupper(addslashes(htmlspecialchars($cat['name']))) ?>')" class="p-3 font-black text-xs uppercase border-b-2 border-black last:border-b-0 hover:bg-[#FFE600] cursor-pointer transition-colors text-black">
+            <?= htmlspecialchars($cat['name']) ?>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+
+    <button onclick="resetFilter()" class="w-full md:w-auto bg-white text-black px-8 py-3 border-4 border-black font-black text-xs uppercase shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:bg-[#FF5757] hover:text-white hover:shadow-[6px_6px_0_0_#000] transition-all flex items-center justify-center shrink-0">
+      RESET
+    </button>
+  </div>
+
+  <a href="<?= BASEURL; ?>/adminproduct/create" class="w-full xl:w-auto bg-[#2563EB] text-white px-8 py-3 border-4 border-black font-black text-sm uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:shadow-none transition-all flex items-center justify-center shrink-0">
+    + TAMBAH PRODUK
+  </a>
+</div>
+
+<div class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] overflow-x-auto mb-6 relative z-10" data-aos="fade-up" data-aos-delay="200">
   <table class="w-full text-left border-collapse min-w-[1000px]">
     <thead>
       <tr class="bg-black text-white text-[10px] font-black uppercase tracking-widest">
-        <th class="p-5 border-r-2 border-black w-2/5">PRODUCT DETAILS</th>
-        <th class="p-5 border-r-2 border-black">PRICING</th>
-        <th class="p-5 border-r-2 border-black text-center">STOCK & WGT</th>
-        <th class="p-5 border-r-2 border-black text-center">STATUS</th>
-        <th class="p-5 text-center">ACTIONS</th>
+        <th class="p-4 border-r-2 border-black w-20 text-center">IMG</th>
+        <th class="p-4 border-r-2 border-black">PRODUCT NAME</th>
+        <th class="p-4 border-r-2 border-black">CATEGORY_REF</th>
+        <th class="p-4 border-r-2 border-black">PRICE</th>
+        <th class="p-4 border-r-2 border-black text-center">STOCK_STATUS</th>
+        <th class="p-4 text-center w-40">OPS</th>
       </tr>
     </thead>
     <tbody class="text-sm font-bold text-black bg-white" id="tableBody">
       <?php if (empty($data['products'])) : ?>
         <tr class="border-b-4 border-black bg-gray-50">
-          <td colspan="5" class="p-16 text-center text-gray-500 font-black uppercase tracking-widest">
-            <div class="flex flex-col items-center justify-center">
-              <svg class="w-16 h-16 mb-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-              </svg>
-              BELUM ADA PRODUK DI KATALOG.
-            </div>
+          <td colspan="6" class="p-16 text-center text-gray-500 font-black uppercase tracking-widest">
+            DATABASE KOSONG.
           </td>
         </tr>
       <?php else : ?>
         <?php foreach ($data['products'] as $product):
-          $imgSrc = str_starts_with($product['image_url'] ?? '', 'http') ? $product['image_url'] : BASEURL . '/img/products/' . ($product['image_url'] ?? 'placeholder.png');
-          $price = 'Rp ' . number_format((float)$product['price'], 0, ',', '.');
-          $discountPrice = $product['discount_price'] > 0 ? 'Rp ' . number_format((float)$product['discount_price'], 0, ',', '.') : null;
+          $img_src = !empty($product['image_url']) ? (str_starts_with($product['image_url'], 'http') ? $product['image_url'] : BASEURL . '/img/products/' . $product['image_url']) : BASEURL . '/img/products/placeholder.png';
+
+          $stock = (int)$product['total_stock'];
+          if ($stock <= 0) {
+            $badgeColor = 'bg-[#FF5757] text-white';
+            $badgeText = 'OUT OF STOCK';
+          } elseif ($stock < 5) {
+            $badgeColor = 'bg-[#FFE600] text-black';
+            $badgeText = "CRITICAL ($stock)";
+          } else {
+            $badgeColor = 'bg-[#A6FAAE] text-black';
+            $badgeText = "IN STOCK ($stock)";
+          }
+          $sku = 'PRD-' . str_pad((string)$product['id'], 4, '0', STR_PAD_LEFT);
         ?>
           <tr class="border-b-2 border-black hover:bg-gray-50 transition-colors product-row">
             <td class="p-4 border-r-2 border-black">
-              <div class="flex items-center">
-                <img src="<?= $imgSrc ?>" alt="Product" class="w-14 h-14 object-cover border-2 border-black mr-4 shadow-[3px_3px_0_0_#000] shrink-0 bg-gray-100">
-                <div>
-                  <span class="font-black text-sm block leading-tight truncate max-w-xs"><?= htmlspecialchars($product['name']) ?></span>
-                  <span class="text-[9px] font-black text-gray-500 uppercase tracking-widest block mt-1 product-category">
-                    <?= htmlspecialchars($product['category_name'] ?? 'Uncategorized') ?>
-                  </span>
-                </div>
+              <div class="w-12 h-12 border-2 border-black bg-gray-200 shadow-[2px_2px_0_0_#000] overflow-hidden">
+                <img src="<?= $img_src ?>" class="w-full h-full object-cover grayscale-[30%]">
               </div>
             </td>
             <td class="p-4 border-r-2 border-black">
-              <?php if ($discountPrice) : ?>
-                <span class="text-xs text-gray-400 line-through block"><?= $price ?></span>
-                <span class="font-black text-[#FF5757] text-sm block"><?= $discountPrice ?></span>
-              <?php else : ?>
-                <span class="font-black text-sm block"><?= $price ?></span>
+              <span class="product-name-text font-black text-[#2563EB] text-sm block uppercase leading-tight line-clamp-1"><?= htmlspecialchars($product['name']); ?></span>
+              <span class="text-[9px] font-black text-gray-500 tracking-widest block mt-0.5">ID: <?= $sku ?> | WGT: <?= $product['weight_grams'] ?>g</span>
+            </td>
+            <td class="product-category-text p-4 border-r-2 border-black text-xs font-black uppercase">
+              <?= htmlspecialchars($product['category_name'] ?? 'UNCATEGORIZED'); ?>
+            </td>
+            <td class="p-4 border-r-2 border-black font-black text-sm">
+              <span class="mr-1">Rp</span><?= number_format((float)$product['price'], 0, ',', '.'); ?>
+              <?php if (!empty($product['discount_price'])): ?>
+                <div class="text-[9px] text-[#FF5757] line-through mt-0.5">Rp <?= number_format((float)$product['discount_price'], 0, ',', '.'); ?></div>
               <?php endif; ?>
             </td>
             <td class="p-4 border-r-2 border-black text-center">
-              <div class="font-black text-sm"><?= $product['total_stock'] ?> Pcs</div>
-              <div class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-0.5"><?= number_format($product['weight_grams']) ?>g</div>
+              <span class="inline-block border-2 border-black px-2 py-1 text-[9px] font-black uppercase tracking-widest shadow-[2px_2px_0_0_#000] <?= $badgeColor ?>">
+                <?= $badgeText ?>
+              </span>
             </td>
-            <td class="p-4 border-r-2 border-black text-center">
-              <?php if ($product['is_active']) : ?>
-                <span class="inline-block border-2 border-[#00C853] text-[#00C853] px-2 py-1 text-[9px] font-black uppercase tracking-widest bg-green-50">ACTIVE</span>
-              <?php else : ?>
-                <span class="inline-block border-2 border-gray-500 text-gray-500 px-2 py-1 text-[9px] font-black uppercase tracking-widest bg-gray-100">DRAFT</span>
-              <?php endif; ?>
-            </td>
-            <td class="p-4 flex items-center justify-center space-x-3">
-              <button onclick="openSpecModal(<?= $product['id'] ?>, '<?= htmlspecialchars(addslashes($product['name'])) ?>')" class="w-8 h-8 flex items-center justify-center bg-white text-black border-2 border-black hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] shadow-[2px_2px_0_0_#000] active:translate-y-0 active:shadow-none transition-all" title="MANAGE SPECIFICATIONS">
+            <td class="p-4 flex items-center justify-center space-x-2 h-full pt-5">
+
+              <button onclick="openSpecModal(<?= $product['id'] ?>, '<?= htmlspecialchars(addslashes($product['name'])) ?>')" class="w-8 h-8 flex items-center justify-center bg-white text-black border-2 border-black hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] shadow-[2px_2px_0_0_#000] active:translate-y-0 active:shadow-none transition-all" title="SPECS">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
               </button>
 
-              <button onclick="openEditModal(<?= htmlspecialchars(json_encode($product)) ?>)" class="w-8 h-8 flex items-center justify-center bg-white text-black border-2 border-black hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] shadow-[2px_2px_0_0_#000] active:translate-y-0 active:shadow-none transition-all" title="EDIT PRODUCT">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              <button data-product='<?= htmlspecialchars(json_encode($product, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG), ENT_QUOTES, 'UTF-8') ?>' onclick="openEditModal(this)" class="w-8 h-8 flex items-center justify-center bg-white text-black border-2 border-black hover:-translate-y-0.5 hover:bg-[#FFE600] hover:shadow-[4px_4px_0_0_#000] shadow-[2px_2px_0_0_#000] active:translate-y-0 active:shadow-none transition-all" title="EDIT">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                 </svg>
               </button>
-              <a href="<?= BASEURL; ?>/adminproduct/deleteProduct/<?= $product['id'] ?>" onclick="return confirm('Hapus produk ini dari katalog?');" class="w-8 h-8 flex items-center justify-center bg-white text-black border-2 border-black hover:-translate-y-0.5 hover:bg-[#FF5757] hover:text-white hover:shadow-[4px_4px_0_0_#000] shadow-[2px_2px_0_0_#000] active:translate-y-0 active:shadow-none transition-all" title="DELETE PRODUCT">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+
+              <button onclick="deleteProduct(<?= $product['id']; ?>)" class="w-8 h-8 flex items-center justify-center bg-white text-black border-2 border-black hover:-translate-y-0.5 hover:bg-[#FF5757] hover:text-white hover:shadow-[4px_4px_0_0_#000] shadow-[2px_2px_0_0_#000] active:translate-y-0 active:shadow-none transition-all" title="DELETE">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                 </svg>
-              </a>
+              </button>
+
             </td>
           </tr>
         <?php endforeach; ?>
       <?php endif; ?>
+
       <tr id="noResultRow" class="border-b-4 border-black bg-gray-50 hidden">
-        <td colspan="5" class="p-16 text-center text-[#FF5757] font-black uppercase tracking-widest">
+        <td colspan="6" class="p-16 text-center text-[#FF5757] font-black uppercase tracking-widest">
           <div class="flex flex-col items-center justify-center">
             <svg class="w-16 h-16 mb-4 text-[#FF5757]" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -135,228 +187,205 @@
   </table>
 </div>
 
-<div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" id="paginationWrapper" data-aos="fade-up" data-aos-delay="200">
-  <div class="text-xs font-black text-gray-500 uppercase tracking-widest" id="paginationInfo">SHOWING 0 OF 0 PRODUCTS</div>
+<div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" id="paginationWrapper">
+  <div class="text-xs font-black text-gray-500 uppercase tracking-widest" id="paginationInfo">SHOWING 0 OF 0 ENTRIES</div>
   <div class="flex items-center gap-2" id="paginationControls"></div>
 </div>
 
-<div id="addProductModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity overflow-y-auto pt-20 pb-10">
-  <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-3xl relative my-auto" data-aos="zoom-in" data-aos-duration="300">
-    <button onclick="closeModal('addProductModal')" class="absolute top-4 right-4 bg-white border-4 border-black w-8 h-8 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white transition-colors z-10">X</button>
-    <div class="p-8">
-      <h2 class="text-3xl font-black uppercase mb-1">ADD NEW PRODUCT</h2>
-      <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6">PRODUCT CATALOG ENTRY FORM</p>
-      <form id="addForm" action="<?= BASEURL; ?>/adminproduct/storeProduct" method="POST" enctype="multipart/form-data" class="space-y-5">
-        <div class="space-y-1">
-          <label class="text-[10px] font-black uppercase tracking-widest">PRODUCT NAME</label>
-          <input type="text" name="name" required placeholder="e.g. Laptop ASUS ROG..." class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#2563EB] transition-all">
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">CATEGORY</label>
-            <div class="relative">
-              <select name="category_id" required class="w-full p-3 bg-white border-2 border-black text-black font-bold appearance-none cursor-pointer focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#2563EB] transition-all">
-                <option value="" disabled selected>-- Select Category --</option>
-                <?php foreach ($data['categories'] as $cat) : ?>
-                  <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
-                <?php endforeach; ?>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-black">
-                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">WEIGHT (GRAMS)</label>
-            <input type="number" name="weight_grams" required placeholder="e.g. 1500" class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#2563EB] transition-all">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">NORMAL PRICE (Rp)</label>
-            <input type="number" name="price" required placeholder="e.g. 15000000" class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#2563EB] transition-all">
-          </div>
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">DISCOUNT PRICE (OPTIONAL)</label>
-            <input type="number" name="discount_price" placeholder="Leave empty if no discount" class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#2563EB] transition-all">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">PRODUCT IMAGE (JPG/PNG/WEBP)</label>
-            <input type="file" name="image" accept="image/*" required class="w-full p-2.5 bg-white border-2 border-black text-black font-bold cursor-pointer focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#2563EB] transition-all file:mr-4 file:py-1 file:px-4 file:border-2 file:border-black file:text-xs file:font-black file:bg-black file:text-white hover:file:bg-gray-800">
-          </div>
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">STATUS</label>
-            <div class="relative">
-              <select name="is_active" required class="w-full p-3 bg-white border-2 border-black text-black font-bold appearance-none cursor-pointer focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#2563EB] transition-all">
-                <option value="1">ACTIVE (Published)</option>
-                <option value="0">DRAFT (Hidden)</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-black">
-                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="space-y-1">
-          <label class="text-[10px] font-black uppercase tracking-widest">PRODUCT DESCRIPTION</label>
-          <textarea name="description" rows="4" required placeholder="Describe the product details here..." class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#2563EB] transition-all"></textarea>
-        </div>
-        <div class="flex gap-4 pt-4 border-t-4 border-black mt-6">
-          <button type="button" onclick="closeModal('addProductModal')" class="flex-1 bg-white text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">CANCEL</button>
-          <button type="submit" class="flex-1 bg-[#2563EB] text-white px-4 py-3 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">SAVE PRODUCT</button>
-        </div>
-      </form>
+<div id="editProductModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity overflow-y-auto pt-20 pb-10">
+  <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-5xl relative my-auto">
+    <div class="flex justify-between items-center p-6 border-b-4 border-black bg-[#FFE600] text-black">
+      <div>
+        <h2 class="text-2xl font-black uppercase tracking-widest">EDIT_PRODUCT.SYS</h2>
+        <p class="text-[10px] font-bold uppercase tracking-widest opacity-80">System.Products.Update()</p>
+      </div>
+      <button onclick="closeModal('editProductModal')" type="button" class="bg-white text-black border-4 border-black w-10 h-10 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white shadow-[4px_4px_0_0_#000] transition-all">X</button>
     </div>
-  </div>
-</div>
 
-<div id="editProductModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity overflow-y-auto pt-20 pb-10">
-  <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-3xl relative my-auto" data-aos="zoom-in" data-aos-duration="300">
-    <button onclick="closeModal('editProductModal')" class="absolute top-4 right-4 bg-white border-4 border-black w-8 h-8 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white transition-colors z-10">X</button>
     <div class="p-8">
-      <h2 class="text-3xl font-black uppercase mb-1">EDIT PRODUCT</h2>
-      <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6">UPDATE PRODUCT INFORMATION</p>
-      <form id="editForm" action="<?= BASEURL; ?>/adminproduct/updateProduct" method="POST" enctype="multipart/form-data" class="space-y-5">
+      <form id="editForm" action="<?= BASEURL; ?>/adminproduct/updateProduct" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id" id="edit_id">
-        <div class="space-y-1">
-          <label class="text-[10px] font-black uppercase tracking-widest">PRODUCT NAME</label>
-          <input type="text" name="name" id="edit_name" required class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#FFE600] transition-all">
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">CATEGORY</label>
-            <div class="relative">
-              <select name="category_id" id="edit_category_id" required class="w-full p-3 bg-white border-2 border-black text-black font-bold appearance-none cursor-pointer focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#FFE600] transition-all">
-                <?php foreach ($data['categories'] as $cat) : ?>
-                  <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
-                <?php endforeach; ?>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-black">
-                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+          <div class="lg:col-span-7 space-y-5">
+            <div class="space-y-2">
+              <label class="text-[10px] font-black uppercase tracking-widest text-black">NAMA PRODUK</label>
+              <input type="text" name="name" id="edit_name" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-black">HARGA (Rp)</label>
+                <input type="number" name="price" id="edit_price" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all">
+              </div>
+              <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-black">HARGA DISKON (OPTIONAL)</label>
+                <input type="number" name="discount_price" id="edit_discount" class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-black">KATEGORI PRODUK</label>
+                <div class="relative" id="editCustomCategoryDropdown">
+                  <input type="hidden" name="category_id" id="edit_hiddenCategoryInput" required>
+                  <button type="button" onclick="toggleEditCategory()" class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold uppercase flex justify-between items-center focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all cursor-pointer text-left">
+                    <span id="editCategorySelectedText" class="text-black line-clamp-1">-- SELECT CATEGORY --</span>
+                    <svg class="w-4 h-4 text-black transition-transform shrink-0" id="editCategoryIcon" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </button>
+                  <div id="editCategoryMenu" class="absolute z-50 w-full mt-2 bg-white border-4 border-black shadow-[6px_6px_0_0_#000] hidden flex-col max-h-40 overflow-y-auto">
+                    <?php foreach ($data['categories'] as $cat) : ?>
+                      <div onclick="selectEditCategory('<?= $cat['id'] ?>', '<?= addslashes(htmlspecialchars($cat['name'])) ?>')" class="p-4 font-black uppercase border-b-2 border-black last:border-b-0 hover:bg-[#FFE600] cursor-pointer transition-colors text-black">
+                        <?= htmlspecialchars($cat['name']) ?>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-black">BERAT (GRAMS)</label>
+                <input type="number" name="weight_grams" id="edit_weight" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all">
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-[10px] font-black uppercase tracking-widest text-black">STATUS PRODUK</label>
+              <div class="relative" id="editCustomStatusDropdown">
+                <input type="hidden" name="is_active" id="edit_hiddenStatusInput" required>
+                <button type="button" onclick="toggleEditStatus()" class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold uppercase flex justify-between items-center focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all cursor-pointer text-left">
+                  <span id="editStatusSelectedText" class="text-black">ACTIVE / PUBLISHED</span>
+                  <svg class="w-4 h-4 text-black transition-transform shrink-0" id="editStatusIcon" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="editStatusMenu" class="absolute z-50 w-full mt-2 bg-white border-4 border-black shadow-[6px_6px_0_0_#000] hidden flex-col max-h-40 overflow-y-auto">
+                  <div onclick="selectEditStatus('1', 'ACTIVE / PUBLISHED')" class="p-4 font-black uppercase border-b-2 border-black hover:bg-[#FFE600] cursor-pointer transition-colors text-black">
+                    ACTIVE / PUBLISHED
+                  </div>
+                  <div onclick="selectEditStatus('0', 'DRAFT / HIDDEN')" class="p-4 font-black uppercase border-b-2 border-black hover:bg-[#FFE600] cursor-pointer transition-colors text-black">
+                    DRAFT / HIDDEN
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">WEIGHT (GRAMS)</label>
-            <input type="number" name="weight_grams" id="edit_weight" required class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#FFE600] transition-all">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">NORMAL PRICE (Rp)</label>
-            <input type="number" name="price" id="edit_price" required class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#FFE600] transition-all">
-          </div>
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">DISCOUNT PRICE (OPTIONAL)</label>
-            <input type="number" name="discount_price" id="edit_discount" placeholder="Empty = No discount" class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#FFE600] transition-all">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">UPDATE IMAGE (OPTIONAL)</label>
-            <input type="file" name="image" accept="image/*" class="w-full p-2.5 bg-white border-2 border-black text-black font-bold cursor-pointer focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#FFE600] transition-all file:mr-4 file:py-1 file:px-4 file:border-2 file:border-black file:text-xs file:font-black file:bg-black file:text-white hover:file:bg-gray-800">
-            <span class="text-[9px] text-gray-500 font-bold block mt-1">*Abaikan jika tidak ingin ganti foto</span>
-          </div>
-          <div class="space-y-1">
-            <label class="text-[10px] font-black uppercase tracking-widest">STATUS</label>
-            <div class="relative">
-              <select name="is_active" id="edit_status" required class="w-full p-3 bg-white border-2 border-black text-black font-bold appearance-none cursor-pointer focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#FFE600] transition-all">
-                <option value="1">ACTIVE (Published)</option>
-                <option value="0">DRAFT (Hidden)</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-black">
-                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+
+          <div class="lg:col-span-5 space-y-5">
+            <div class="space-y-2">
+              <label class="text-[10px] font-black uppercase tracking-widest text-black">UBAH FOTO (OPTIONAL)</label>
+              <div class="border-4 border-dashed border-black bg-[#F8F9FA] p-6 text-center hover:bg-[#FFE600] transition-colors relative cursor-pointer group focus-within:bg-white focus-within:shadow-[4px_4px_0_0_#2563EB] focus-within:-translate-y-1">
+                <input type="file" name="image" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                <svg class="w-8 h-8 mx-auto mb-2 text-black group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
                 </svg>
+                <h4 class="font-black uppercase text-[10px] mb-1">UPLOAD NEW IMAGE</h4>
               </div>
             </div>
+
+            <div class="space-y-2 h-full pb-4">
+              <label class="text-[10px] font-black uppercase tracking-widest text-black">DESKRIPSI PRODUK</label>
+              <textarea name="description" id="edit_description" rows="7" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all resize-y"></textarea>
+            </div>
           </div>
+
         </div>
-        <div class="space-y-1">
-          <label class="text-[10px] font-black uppercase tracking-widest">PRODUCT DESCRIPTION</label>
-          <textarea name="description" id="edit_description" rows="4" required class="w-full p-3 bg-white border-2 border-black text-black font-bold focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#FFE600] transition-all"></textarea>
-        </div>
-        <div class="flex gap-4 pt-4 border-t-4 border-black mt-6">
-          <button type="button" onclick="closeModal('editProductModal')" class="flex-1 bg-white text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">CANCEL</button>
-          <button type="submit" class="flex-1 bg-[#FFE600] text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">UPDATE PRODUCT</button>
+
+        <div class="flex gap-4 pt-4 mt-4 border-t-4 border-black">
+          <button type="button" onclick="closeModal('editProductModal')" class="flex-1 bg-white border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all py-4">ABORT</button>
+          <button type="submit" class="flex-1 bg-[#FFE600] text-black border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all py-4">UPDATE RECORD</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<div id="specModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity overflow-y-auto pt-20 pb-10">
-  <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-2xl relative my-auto" data-aos="zoom-in" data-aos-duration="300">
-    <button onclick="closeModal('specModal')" class="absolute top-4 right-4 bg-white border-4 border-black w-8 h-8 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white transition-colors z-10">X</button>
+<div id="specModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity overflow-y-auto pt-20 pb-10">
+  <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-3xl relative my-auto">
+    <div class="flex justify-between items-center p-6 border-b-4 border-black bg-black text-white">
+      <div>
+        <h2 class="text-2xl font-black uppercase tracking-widest">SPESIFIKASI</h2>
+        <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400" id="specProductName">MANAGE PRODUCT SPECS</p>
+      </div>
+      <button onclick="closeModal('specModal')" class="bg-white text-black border-4 border-black w-10 h-10 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white shadow-[4px_4px_0_0_#000] transition-all">X</button>
+    </div>
     <div class="p-8">
-      <h2 class="text-3xl font-black uppercase mb-1">SPECIFICATIONS</h2>
-      <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6" id="specProductName">MANAGE PRODUCT SPECS</p>
 
-      <form id="addSpecForm" action="<?= BASEURL; ?>/adminproduct/storeSpecs" method="POST" class="flex gap-2 mb-6 p-4 bg-gray-50 border-4 border-black">
+      <form id="addSpecForm" action="<?= BASEURL; ?>/adminproduct/storeSpecs" method="POST" class="flex flex-col md:flex-row gap-4 mb-8 bg-[#F8F9FA] p-6 border-4 border-black">
         <input type="hidden" name="product_id" id="spec_product_id">
-        <input type="text" name="spec_name" placeholder="Name (e.g. RAM)" required class="flex-1 p-3 bg-white border-2 border-black text-black font-bold text-sm focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#000] transition-all">
-        <input type="text" name="spec_value" placeholder="Value (e.g. 16GB)" required class="flex-1 p-3 bg-white border-2 border-black text-black font-bold text-sm focus:outline-none focus:border-4 focus:shadow-[4px_4px_0_0_#000] transition-all">
-        <button type="submit" class="bg-black text-white px-6 font-black uppercase tracking-widest border-2 border-black hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000] active:translate-y-0 active:shadow-none transition-all">+</button>
+        <input type="text" name="spec_name" placeholder="Nama (Cth: RAM)" required class="flex-1 p-4 bg-white border-4 border-black font-bold uppercase focus:outline-none focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all">
+        <input type="text" name="spec_value" placeholder="Nilai (Cth: 16GB)" required class="flex-1 p-4 bg-white border-4 border-black font-bold focus:outline-none focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all">
+        <button type="submit" class="bg-black text-white px-8 font-black uppercase text-xl border-4 border-black hover:-translate-y-1 shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] transition-all">+</button>
       </form>
 
-      <div class="border-4 border-black bg-white overflow-hidden max-h-64 overflow-y-auto">
+      <div class="border-4 border-black bg-white overflow-hidden max-h-64 overflow-y-auto shadow-[4px_4px_0_0_#000]">
         <table class="w-full text-left border-collapse">
-          <tbody id="specTableBody" class="text-sm font-bold text-black">
-          </tbody>
+          <tbody id="specTableBody" class="text-sm font-bold text-black"></tbody>
         </table>
       </div>
+
     </div>
   </div>
 </div>
 
-<div id="confirmDeleteModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity">
-  <div class="bg-[#FF5757] border-4 border-black shadow-[8px_8px_0_0_#000] w-full max-w-sm relative text-center p-8" data-aos="zoom-in" data-aos-duration="300">
+<div id="confirmDeleteModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity">
+  <div class="bg-[#FF5757] border-4 border-black shadow-[8px_8px_0_0_#000] w-full max-w-sm relative text-center p-8">
     <div class="w-16 h-16 bg-white border-4 border-black rounded-full flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_0_0_#000]">
       <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
       </svg>
     </div>
     <h2 class="text-2xl font-black uppercase text-white mb-2">WARNING!</h2>
-    <p class="text-sm font-bold text-white mb-6">Anda yakin ingin menghapus spesifikasi ini?</p>
-
+    <p class="text-sm font-bold text-white mb-6">Yakin hapus data ini secara permanen?</p>
     <div class="flex gap-4">
-      <button onclick="closeModal('confirmDeleteModal')" class="flex-1 bg-white text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">BATAL</button>
-      <button onclick="executeDeleteSpec()" class="flex-1 bg-black text-white px-4 py-3 border-4 border-white font-black uppercase tracking-widest shadow-[4px_4px_0_0_#fff] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#fff] transition-all">HAPUS</button>
+      <button onclick="closeModal('confirmDeleteModal')" class="flex-1 bg-white text-black py-3 border-4 border-black font-black uppercase shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all">BATAL</button>
+      <button onclick="executeDeleteSpec()" class="flex-1 bg-black text-white py-3 border-4 border-white font-black uppercase shadow-[4px_4px_0_0_#fff] hover:-translate-y-1 transition-all">HAPUS</button>
     </div>
   </div>
 </div>
 
-<div id="successModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity">
-  <div class="bg-[#00C853] border-4 border-black shadow-[8px_8px_0_0_#000] w-full max-w-sm relative text-center p-8">
+<div id="confirmDeleteProductModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity">
+  <div class="bg-[#FF5757] border-4 border-black shadow-[8px_8px_0_0_#000] w-full max-w-sm relative text-center p-8">
     <div class="w-16 h-16 bg-white border-4 border-black rounded-full flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_0_0_#000]">
-      <svg class="w-8 h-8 text-[#00C853]" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
+      <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+      </svg>
+    </div>
+    <h2 class="text-2xl font-black uppercase text-white mb-2">WARNING!</h2>
+    <p class="text-sm font-bold text-white mb-6">Yakin hapus produk ini secara permanen dari database?</p>
+    <div class="flex gap-4">
+      <button onclick="closeModal('confirmDeleteProductModal')" class="flex-1 bg-white text-black py-3 border-4 border-black font-black uppercase shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all">BATAL</button>
+      <button onclick="executeDeleteProduct()" class="flex-1 bg-black text-white py-3 border-4 border-white font-black uppercase shadow-[4px_4px_0_0_#fff] hover:-translate-y-1 transition-all">HAPUS</button>
+    </div>
+  </div>
+</div>
+
+<div id="successModal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity">
+  <div class="bg-[#A6FAAE] border-4 border-black shadow-[8px_8px_0_0_#000] w-full max-w-sm relative text-center p-8">
+    <div class="w-16 h-16 bg-white border-4 border-black rounded-full flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_0_0_#000]">
+      <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
       </svg>
     </div>
     <h2 class="text-2xl font-black uppercase text-black mb-2">SUCCESS!</h2>
     <p id="successMessage" class="text-sm font-bold text-black mb-6">Operasi berhasil dilakukan.</p>
-    <button onclick="reloadPage()" class="w-full bg-white text-black px-4 py-3 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">OK, LANJUTKAN</button>
+    <button onclick="reloadPage()" class="w-full bg-white text-black py-3 border-4 border-black font-black uppercase shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all">OK, LANJUTKAN</button>
   </div>
 </div>
 
-<div id="errorModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity">
+<div id="errorModal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity">
   <div class="bg-[#FF5757] border-4 border-black shadow-[8px_8px_0_0_#000] w-full max-w-sm relative text-center p-8">
     <div class="w-16 h-16 bg-white border-4 border-black rounded-full flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_0_0_#000]">
-      <svg class="w-8 h-8 text-[#FF5757]" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
+      <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
       </svg>
     </div>
     <h2 class="text-2xl font-black uppercase text-white mb-2">ERROR!</h2>
     <p id="errorMessage" class="text-sm font-bold text-white mb-6">Terjadi kesalahan.</p>
-    <button onclick="closeModal('errorModal')" class="w-full bg-black text-white px-4 py-3 border-4 border-white font-black uppercase tracking-widest shadow-[4px_4px_0_0_#fff] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#fff] transition-all">TUTUP</button>
+    <button onclick="closeModal('errorModal')" class="w-full bg-black text-white py-3 border-4 border-white font-black uppercase shadow-[4px_4px_0_0_#fff] hover:-translate-y-1 transition-all">TUTUP</button>
   </div>
 </div>
 

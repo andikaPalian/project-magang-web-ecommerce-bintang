@@ -20,9 +20,41 @@ class AdminProductController extends Controller
     $data['products'] = $this->model('ProdukModel')->getAllProductsForAdmin();
     $data['categories'] = $this->model('ProdukModel')->getAllCategoriesAdmin();
 
+    $outOfStock = 0;
+    $categoriesCount = [];
+
+    foreach ($data['products'] as $p) {
+      if ($p['total_stock'] <= 0) {
+        $outOfStock++;
+      }
+
+      $catName = $p['category_name'] ?? 'UNCATEGORIZED';
+      $categoriesCount[$catName] = ($categoriesCount[$catName] ?? 0) + 1;
+    }
+
+    arsort($categoriesCount);
+    $topCategory = !empty($categoriesCount) ? array_key_first($categoriesCount) : 'N/A';
+
+    $data['stats'] = [
+      'total_products' => count($data['products']),
+      'out_of_stock' => $outOfStock,
+      'top_category' => $topCategory
+    ];
+
     $this->view('templates/header_admin', $data);
     $this->view('templates/sidebar_admin', $data);
     $this->view('admin_web/products', $data);
+    $this->view('templates/footer_admin', $data);
+  }
+
+  public function create(): void
+  {
+    $data['judul'] = 'Tambah Produk | TI MART';
+    $data['categories'] = $this->model('ProdukModel')->getAllCategoriesAdmin();
+
+    $this->view('templates/header_admin', $data);
+    $this->view('templates/sidebar_admin', $data);
+    $this->view('admin_web/create_product', $data);
     $this->view('templates/footer_admin', $data);
   }
 
@@ -41,7 +73,24 @@ class AdminProductController extends Controller
       }
 
       if ($this->model('ProdukModel')->addProduct($_POST, $imageName) > 0) {
-        $this->sendResponse('success', 'Produk baru berhasil ditambahkan ke katalog!', '/adminproduct');
+        $newProduct = $this->model('ProdukModel')->getProductBySlug($_POST['slug']);
+        if ($newProduct && isset($_POST['spec_name']) && isset($_POST['spec_value'])) {
+          $specName = $_POST['spec_name'];
+          $specValue = $_POST['spec_value'];
+
+          for ($i = 0; $i < count($specName); $i++) {
+            if (!empty(trim($specName[$i])) && !empty(trim($specValue[$i]))) {
+              $specData = [
+                'product_id' => $newProduct['id'],
+                'spec_name' => trim($specName[$i]),
+                'spec_value' => trim($specValue[$i])
+              ];
+              $this->model('ProdukModel')->addProductSpecs($specData);
+            }
+          }
+        }
+
+        $this->sendResponse('success', 'Produk dan spesifikasi berhasil ditambahkan!', '/adminproduct');
       } else {
         $this->sendResponse('error', 'Gagal menyimpan produk ke database.', '/adminproduct', 500);
       }
@@ -72,14 +121,28 @@ class AdminProductController extends Controller
     }
   }
 
-  public function deleteProduct(string $product_id): void
+  public function delete(string $product_id): void
   {
     $productId = (int) $product_id;
 
-    if ($this->model('ProdukModel')->deleteProduct($productId) > 0) {
-      $this->sendResponse('success', 'Produk berhasil dihapus dari katalog!', '/adminproduct');
-    } else {
-      $this->sendResponse('error', 'Gagal menghapus produk dari katalog.', '/adminproduct', 400);
+    $product = $this->model('ProdukModel')->getProductById($productId);
+
+    try {
+      if ($this->model('ProdukModel')->deleteProduct($productId) > 0) {
+        if ($product && !empty($product['image_url'])) {
+          Helper::deleteImage($product['image_url'], 'products');
+        }
+
+        $this->sendResponse('success', 'Produk berhasil dihapus dari katalog!', '/adminproduct');
+      } else {
+        $this->sendResponse('error', 'Gagal menghapus produk. Produk tidak ditemukan.', '/adminproduct', 400);
+      }
+    } catch (PDOException $e) {
+      if ($e->getCode() == '23000') {
+        $this->sendResponse('error', 'DITOLAK! Produk ini tidak bisa di hapus karena sudah ada di dalam riwayat pesanan pelanggan. Silahkan ubah menjadi DRAFT(Inactive) untuk menyembunyikannya.', '/adminproduct', 400);
+      } else {
+        $this->sendResponse('error', 'Terjadi kesalahan pada server database.', '/adminproduct', 500);
+      }
     }
   }
 
@@ -96,6 +159,17 @@ class AdminProductController extends Controller
         $this->sendResponse('success', 'Spesifikasi produk berhasil ditambahkan!', '/adminproduct');
       } else {
         $this->sendResponse('error', 'Gagal menyimpan spesifikasi produk ke database.', '/adminproduct', 500);
+      }
+    }
+  }
+
+  public function updateSpecs(): void
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      if ($this->model('ProdukModel')->updateProductSpecs($_POST) > 0) {
+        $this->sendResponse('success', 'Spesifikasi produk berhasil diperbarui!', '/adminproduct');
+      } else {
+        $this->sendResponse('error', 'Gagal memperbarui spesifikasi produk.', '/adminproduct', 500);
       }
     }
   }

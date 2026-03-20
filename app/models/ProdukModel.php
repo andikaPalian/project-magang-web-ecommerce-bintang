@@ -111,6 +111,18 @@ class ProdukModel
     return $this->db->rowCount();
   }
 
+  public function updateProductSpecs(array $data): int
+  {
+    $this->db->query("UPDATE product_specifications SET spec_name = :spec_name, spec_value = :spec_value WHERE id = :spec_id");
+    $this->db->bind('spec_name', $data['spec_name']);
+    $this->db->bind('spec_value', $data['spec_value']);
+    $this->db->bind('spec_id', $data['id']);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
+
   public function deleteProductSpecs(int $spec_id): int
   {
     $this->db->query("DELETE FROM product_specifications WHERE id = :spec_id");
