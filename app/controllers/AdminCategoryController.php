@@ -92,11 +92,8 @@ class AdminCategoryController extends Controller
     }
 
     if ($this->model('CategoryModel')->deleteCategory($categoryId) > 0) {
-      if (!empty($category['icon'])) {
-        $filePath = $_SERVER['DOCUMENT_ROOT' . '/website-ecommerce-bintang/public/img/categories/' . $category['icon']];
-        if (file_exists($filePath)) {
-          unlink($filePath);
-        }
+      if ($category && !empty($category['icon'])) {
+        Helper::deleteImage($category['icon'], 'categories');
       }
 
       $this->sendResponse('success', 'Kategori berhasil dihapus! Produk yang terikat kini menjadi "Tanpa Kategori".', '/admincategory', 200);
