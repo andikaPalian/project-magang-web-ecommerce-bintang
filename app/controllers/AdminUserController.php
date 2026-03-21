@@ -19,6 +19,32 @@ class AdminUserController extends Controller
     $data['judul'] = 'User management | TI MART';
     $data['users'] = $this->model('UserModel')->getAllUsers($_SESSION['user_id']);
 
+    $totalUsers = count($data['users']) + 1;
+    $activeStaff = 1;
+    $newUserThisMonth = 0;
+
+    $currentMonth = date('m');
+    $currentYear = date('Y');
+
+    foreach ($data['users'] as $user) {
+      if ($user['role'] !== 'pembeli') {
+        $activeStaff++;
+      }
+
+      $userMonth = date('m', strtotime($user['created_at']));
+      $userYear = date('Y', strtotime($user['created_at']));
+
+      if ($userMonth === $currentMonth && $userYear === $currentYear) {
+        $newUserThisMonth++;
+      }
+    }
+
+    $data['stats'] = [
+      'total_users' => $totalUsers,
+      'active_staff' => $activeStaff,
+      'new_user_this_month' => $newUserThisMonth
+    ];
+
     $this->view('templates/header_admin', $data);
     $this->view('templates/sidebar_admin', $data);
     $this->view('admin_web/users', $data);
