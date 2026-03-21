@@ -107,7 +107,12 @@ function deleteProduct(productId) {
 
 function executeDeleteProduct() {
   closeModal("confirmDeleteProductModal");
-  fetch(`${BASEURL}/adminproduct/delete/${productIdToDelete}`)
+  fetch(`${BASEURL}/adminproduct/delete/${productIdToDelete}`, {
+    headers: {
+      Accept: "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+    },
+  })
     .then((res) => res.json())
     .then((data) => {
       if (data.status === "success") {
@@ -128,7 +133,10 @@ function openSpecModal(productId, productName) {
   openModal("specModal");
 
   fetch(`${BASEURL}/adminproduct/getSpecs/${productId}`, {
-    headers: { Accept: "application/json" },
+    headers: {
+      Accept: "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+    },
   })
     .then((res) => res.json())
     .then(({ data }) => {
@@ -177,7 +185,14 @@ function saveSpecRow(specId, productId) {
   formData.append("spec_name", document.getElementById(`edit-spec-name-${specId}`).value);
   formData.append("spec_value", document.getElementById(`edit-spec-val-${specId}`).value);
 
-  fetch(`${BASEURL}/adminproduct/updateSpecs`, { method: "POST", body: formData })
+  fetch(`${BASEURL}/adminproduct/updateSpecs`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+    },
+    body: formData,
+  })
     .then((res) => res.json())
     .then((data) => {
       if (data.status === "success") {
@@ -197,7 +212,14 @@ if (addSpecForm) {
   addSpecForm.addEventListener("submit", function (e) {
     e.preventDefault();
     const formData = new FormData(this);
-    fetch(this.action, { method: "POST", body: formData })
+    fetch(this.action, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      body: formData,
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -228,7 +250,14 @@ function executeDeleteSpec() {
   const formData = new FormData();
   formData.append("id", specIdToDelete);
 
-  fetch(`${BASEURL}/adminproduct/deleteSpecs`, { method: "POST", body: formData })
+  fetch(`${BASEURL}/adminproduct/deleteSpecs`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+    },
+    body: formData,
+  })
     .then((res) => res.json())
     .then((data) => {
       if (data.status === "success") {
@@ -248,7 +277,14 @@ if (editForm) {
   editForm.addEventListener("submit", function (e) {
     e.preventDefault();
     closeModal("editProductModal");
-    fetch(this.action, { method: "POST", body: new FormData(this) })
+    fetch(this.action, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      body: new FormData(this),
+    })
       .then((res) => res.json())
       .then((data) => showAlert(data.status, data.message))
       .catch(() => showAlert("error", "Gagal memperbarui produk."));
