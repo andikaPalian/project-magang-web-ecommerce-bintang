@@ -40,7 +40,7 @@ class ArticleModel
     return $this->db->single();
   }
 
-  public function addArticle(array $data): int
+  public function addArticle(array $data, ?string $image_url = null): int
   {
     $this->db->query("INSERT INTO articles (title, slug, excerpt, content, image_url, author_id, status) VALUES (:title, :slug, :excerpt, :content, :image_url, :author_id, :status)");
 
@@ -48,7 +48,7 @@ class ArticleModel
     $this->db->bind('slug', $data['slug']);
     $this->db->bind('excerpt', $data['excerpt']);
     $this->db->bind('content', $data['content']);
-    $this->db->bind('image_url', $data['image_url']);
+    $this->db->bind('image_url', $image_url);
     $this->db->bind('author_id', $data['author_id']);
     $this->db->bind('status', $data['status']);
 
@@ -57,7 +57,7 @@ class ArticleModel
     return $this->db->rowCount();
   }
 
-  public function updateArticle(int $article_id, array $data): int
+  public function updateArticle(int $article_id, array $data, ?string $image_url = null): int
   {
     $this->db->query("UPDATE articles SET title = :title, slug = :slug, excerpt = :excerpt, content = :content, image_url = :image_url, status = :status WHERE id = :article_id");
 
@@ -65,7 +65,7 @@ class ArticleModel
     $this->db->bind('slug', $data['slug']);
     $this->db->bind('excerpt', $data['excerpt']);
     $this->db->bind('content', $data['content']);
-    $this->db->bind('image_url', $data['image_url']);
+    $this->db->bind('image_url', $image_url);
     $this->db->bind('status', $data['status']);
     $this->db->bind('article_id', $article_id);
 

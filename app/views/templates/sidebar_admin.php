@@ -11,7 +11,7 @@ $isDashboard  = strpos($current_uri, 'dashboard') !== false;
 $isUsers      = strpos($current_uri, 'adminuser') !== false;
 $isProducts   = strpos($current_uri, 'katalog') !== false || strpos($current_uri, 'adminproduct') !== false;
 $isCategories = strpos($current_uri, 'admincategory') !== false;
-$isArticles   = strpos($current_uri, 'artikel') !== false;
+$isArticles   = strpos($current_uri, 'adminarticle') !== false;
 $isVouchers   = strpos($current_uri, 'voucher') !== false;
 ?>
 
@@ -59,7 +59,7 @@ $isVouchers   = strpos($current_uri, 'voucher') !== false;
         CATEGORIES
       </a>
 
-      <a href="<?= BASEURL; ?>/artikel" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isArticles ? $activeClass : $inactiveClass; ?>">
+      <a href="<?= BASEURL; ?>/adminarticle" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isArticles ? $activeClass : $inactiveClass; ?>">
         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H14"></path>
         </svg>
