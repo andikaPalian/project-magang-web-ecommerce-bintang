@@ -19,6 +19,36 @@ class AdminCategoryController extends Controller
     $data['judul'] = 'Category Management | TI MART';
     $data['categories'] = $this->model('CategoryModel')->getAllCategories();
 
+    $products = $this->model('ProdukModel')->getAllProducts();
+
+    $totalCategories = count($data['categories']);
+    $totalProductsIndexed = count($products);
+
+    $productCount = [];
+    foreach ($products as $p) {
+      $categoryId = $p['category_id'];
+      if (!isset($productCount[$categoryId])) {
+        $productCount[$categoryId] = 0;
+      }
+      $productCount[$categoryId]++;
+    }
+
+    $activeCategories = 0;
+    foreach ($data['categories'] as &$cat) {
+      $count = $productCount[$cat['id']] ?? 0;
+      $cat['product_count'] = $count;
+
+      if ($count > 0) {
+        $activeCategories++;
+      }
+    }
+
+    $data['stats'] = [
+      'total_categories' => $totalCategories,
+      'total_products_indexed' => $totalProductsIndexed,
+      'active_categories' => $activeCategories
+    ];
+
     $this->view('templates/header_admin', $data);
     $this->view('templates/sidebar_admin', $data);
     $this->view('admin_web/categories', $data);
@@ -28,7 +58,7 @@ class AdminCategoryController extends Controller
   public function store(): void
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      if (empty($$_POST['name'])) {
+      if (empty($_POST['name'])) {
         $this->sendResponse('error', 'Nama kategori tidak boleh kosong.', '/admincategory', 400);
       }
 
