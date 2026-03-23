@@ -35,7 +35,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <?php foreach ($data['articles'] as $article):
-          $img_src = !empty($article['image_url']) ? $article['image_url'] : 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=600&q=80';
+          $img_src = !empty($article['image_url']) ? (str_starts_with($article['image_url'], 'http') ? $article['image_url'] : BASEURL . '/img/articles/' . $article['image_url']) : 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=600&q=80';
           $tanggal = date('d M Y', strtotime($article['created_at']));
         ?>
           <div class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] flex flex-col group hover:-translate-y-2 hover:shadow-[12px_12px_0_0_#000] transition-all duration-300">

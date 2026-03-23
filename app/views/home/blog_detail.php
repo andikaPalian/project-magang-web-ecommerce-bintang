@@ -1,6 +1,6 @@
 <?php
 $article = $data['article'];
-$img_src = !empty($article['image_url']) ? $article['image_url'] : 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&q=80';
+$img_src = !empty($article['image_url']) ? (str_starts_with($article['image_url'], 'http') ? $article['image_url'] : BASEURL . '/img/articles/' . $article['image_url']) : 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&q=80';
 $tanggal = date('d F Y', strtotime($article['created_at']));
 
 $share_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";

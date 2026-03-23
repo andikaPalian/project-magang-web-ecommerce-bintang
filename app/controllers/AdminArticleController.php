@@ -82,22 +82,23 @@ class AdminArticleController extends Controller
 
       $oldArticle = $this->model('ArticleModel')->getArticleById($article_id);
 
-      $imageName = null;
+      $imageName = $oldArticle['image_url'];
       if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $imageName = Helper::uploadImage($$_FILES['image'], 'articles');
+        $newImage = Helper::uploadImage($_FILES['image'], 'articles');
         if (!$imageName) {
           $this->sendResponse('error', 'Gagal upload gambar! Format tidak sesuai atau ukuran melebihi batas 5MB.', '/adminarticle', 400);
         }
 
+        $imageName = $newImage;
+
         if (!empty($oldArticle['image'])) {
           Helper::deleteImage($oldArticle['image'], 'articles');
         }
-
-        if ($this->model('ArticleModel')->updateArticle($article_id, $_POST, $imageName) >= 0) {
-          $this->sendResponse('success', 'Artikel berhasil diperbarui.', '/adminarticle', 200);
-        } else {
-          $this->sendResponse('error', 'Gagal memperbarui artikel.', '/adminarticle', 500);
-        }
+      }
+      if ($this->model('ArticleModel')->updateArticle($article_id, $_POST, $imageName) >= 0) {
+        $this->sendResponse('success', 'Artikel berhasil diperbarui.', '/adminarticle', 200);
+      } else {
+        $this->sendResponse('error', 'Gagal memperbarui artikel.', '/adminarticle', 500);
       }
     }
   }
@@ -112,7 +113,7 @@ class AdminArticleController extends Controller
     }
 
     if ($this->model('ArticleModel')->deleteArticle($articleId) > 0) {
-      if ($article['image_url']) {
+      if (!empty($article['image_url']) && !filter_var($article['image_url'], FILTER_VALIDATE_URL)) {
         Helper::deleteImage($article['image_url'], 'articles');
       }
       $this->sendResponse('success', 'Artikel berhasil dihapus.', '/adminarticle', 200);

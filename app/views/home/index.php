@@ -339,7 +339,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <?php foreach (array_slice($data['articles'] ?? [], 0, 3) as $article):
-        $img_src = !empty($article['image_url']) ? $article['image_url'] : 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=600&q=80';
+        $img_src = !empty($article['image_url']) ? (str_starts_with($article['image_url'], 'http') ? $article['image_url'] : BASEURL . '/img/articles/' . $article['image_url']) : 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=600&q=80';
         $tanggal = date('d M Y', strtotime($article['created_at']));
       ?>
         <a href="<?= BASEURL; ?>/article/read/<?= $article['slug']; ?>" class="border-4 border-black shadow-[6px_6px_0_0_#000] bg-white group hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#000] transition-all flex flex-col">

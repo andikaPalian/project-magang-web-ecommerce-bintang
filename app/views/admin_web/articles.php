@@ -1,7 +1,7 @@
 <div class="mb-6" data-aos="fade-in">
   <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
     <div>
-      <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black">ARTICLES MANAGEMENT</h1>
+      <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black">ARTICLE MANAGEMENT</h1>
       <p class="text-sm font-bold text-gray-600 max-w-xl leading-relaxed mt-2">
         Kelola artikel/blog dan informasi terkini
       </p>
@@ -15,7 +15,7 @@
         RESET
       </button>
       <button onclick="openModal('addArticleModal')" class="bg-[#2563EB] text-white px-6 py-3 border-4 border-black font-black text-xs uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all flex items-center">
-        + NEW ARTICLE
+        + ADD NEW ARTICLE
       </button>
     </div>
   </div>
@@ -24,7 +24,7 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" data-aos="fade-up">
   <div class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] p-6 relative overflow-hidden">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4">TOTAL ARTICLE</h3>
-    <div class="text-6xl font-black tracking-tighter text-black"><?= str_pad((string)$data['stats']['total_articles'], 2, '0', STR_PAD_LEFT) ?></div>
+    <div class="text-6xl font-black tracking-tighter text-black"><?= str_pad((string)($data['stats']['total_articles'] ?? 0), 2, '0', STR_PAD_LEFT) ?></div>
     <svg class="absolute -right-4 -bottom-4 w-32 h-32 text-gray-100 opacity-50" fill="currentColor" viewBox="0 0 20 20">
       <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
     </svg>
@@ -32,7 +32,7 @@
 
   <div class="bg-[#A6FAAE] border-4 border-black shadow-[8px_8px_0_0_#000] p-6 relative overflow-hidden">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-black mb-4">PUBLISHED ARTICLE</h3>
-    <div class="text-6xl font-black tracking-tighter text-black"><?= str_pad((string)$data['stats']['published_live'], 2, '0', STR_PAD_LEFT) ?></div>
+    <div class="text-6xl font-black tracking-tighter text-black"><?= str_pad((string)($data['stats']['published_live'] ?? 0), 2, '0', STR_PAD_LEFT) ?></div>
     <svg class="absolute -right-4 -bottom-4 w-32 h-32 text-black opacity-10" fill="currentColor" viewBox="0 0 20 20">
       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
     </svg>
@@ -40,7 +40,7 @@
 
   <div class="bg-[#FFE600] border-4 border-black shadow-[8px_8px_0_0_#000] p-6 relative overflow-hidden">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-black mb-4">DRAFT ARTICLE</h3>
-    <div class="text-6xl font-black tracking-tighter text-black"><?= str_pad((string)$data['stats']['draft_pending'], 2, '0', STR_PAD_LEFT) ?></div>
+    <div class="text-6xl font-black tracking-tighter text-black"><?= str_pad((string)($data['stats']['draft_pending'] ?? 0), 2, '0', STR_PAD_LEFT) ?></div>
     <svg class="absolute -right-4 -bottom-4 w-32 h-32 text-black opacity-10" fill="currentColor" viewBox="0 0 20 20">
       <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
     </svg>
@@ -48,7 +48,6 @@
 </div>
 
 <div class="flex flex-col md:flex-row gap-4 mb-6 relative z-20" data-aos="fade-up" data-aos-delay="100">
-
   <div class="w-full md:w-64 relative" id="filterStatusDropdown">
     <input type="hidden" id="statusFilter" value="ALL">
     <button type="button" onclick="toggleFilterStatus()" class="w-full py-4 px-4 bg-white border-4 border-black font-black text-xs uppercase flex justify-between items-center shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] focus:outline-none transition-all cursor-pointer">
@@ -59,7 +58,7 @@
     </button>
 
     <div id="filterStatusMenu" class="absolute z-50 w-full mt-2 bg-white border-4 border-black shadow-[6px_6px_0_0_#000] hidden flex-col text-left">
-      <div onclick="selectFilterStatus('ALL', 'STATUS ALL')" class="p-3 font-black text-xs uppercase border-b-2 border-black hover:bg-[#FFE600] cursor-pointer">STATUS ALL</div>
+      <div onclick="selectFilterStatus('ALL', 'STATUS_ALL')" class="p-3 font-black text-xs uppercase border-b-2 border-black hover:bg-[#FFE600] cursor-pointer">STATUS ALL</div>
       <div onclick="selectFilterStatus('PUBLISHED', 'PUBLISHED')" class="p-3 font-black text-xs uppercase border-b-2 border-black hover:bg-[#FFE600] cursor-pointer">PUBLISHED</div>
       <div onclick="selectFilterStatus('DRAFT', 'DRAFT')" class="p-3 font-black text-xs uppercase hover:bg-[#FFE600] cursor-pointer">DRAFT</div>
     </div>
@@ -69,7 +68,7 @@
     <svg class="w-5 h-5 text-black mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
     </svg>
-    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="SEARCH ARTICLE TITLE OR AUTHOR..." class="w-full py-4 bg-transparent font-black text-xs uppercase outline-none placeholder-gray-400">
+    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="SEARCH ARTICLE NAME OR SLUG..." class="w-full py-4 bg-transparent font-black text-xs uppercase outline-none placeholder-gray-400">
   </div>
 </div>
 
@@ -78,9 +77,9 @@
     <thead>
       <tr class="bg-black text-white text-[10px] font-black uppercase tracking-widest border-b-4 border-black">
         <th class="p-5 border-r-2 border-black w-24 text-center">MEDIA</th>
-        <th class="p-5 border-r-2 border-black">ARTICLE TITLE</th>
+        <th class="p-5 border-r-2 border-black">ARTICLE_TITLE</th>
         <th class="p-5 border-r-2 border-black">AUTHOR</th>
-        <th class="p-5 border-r-2 border-black">DATE PUBLISHED</th>
+        <th class="p-5 border-r-2 border-black">PUBLISHED DATE</th>
         <th class="p-5 border-r-2 border-black text-center">STATUS</th>
         <th class="p-5 text-center w-32">OPS</th>
       </tr>
@@ -99,7 +98,8 @@
           $statusColor = $isPublished ? 'bg-[#A6FAAE]' : 'bg-[#F8F9FA]';
           $statusText = $isPublished ? 'PUBLISHED' : 'DRAFT';
 
-          $authorSlug = '@' . strtoupper(str_replace(' ', '_', $art['author_name']));
+          $authorName = $art['author_name'] ?? 'SYSTEM';
+          $authorSlug = '@' . strtoupper(str_replace(' ', '_', $authorName));
         ?>
           <tr class="border-b-2 border-black hover:bg-[#F8F9FA] transition-colors article-row">
 
@@ -162,7 +162,7 @@
   </table>
 </div>
 
-<div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" id="paginationWrapper">
+<div class="flex flex-col md:flex-row justify-between items-center mb-10 mt-6 gap-4" id="paginationWrapper">
   <div class="text-[10px] font-black text-gray-500 uppercase tracking-widest" id="paginationInfo">PAGE_000_OF_000</div>
   <div class="flex items-center gap-2 text-black" id="paginationControls"></div>
 </div>
@@ -170,7 +170,7 @@
 <div id="addArticleModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity overflow-y-auto pt-20 pb-10">
   <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-4xl relative my-auto">
     <div class="flex justify-between items-center p-6 border-b-4 border-black bg-[#2563EB] text-white">
-      <h2 class="text-2xl font-black uppercase tracking-widest">NEW_POST.EXE</h2>
+      <h2 class="text-2xl font-black uppercase tracking-widest">ADD NEW ARTICLE</h2>
       <button onclick="closeModal('addArticleModal')" type="button" class="bg-white text-black border-4 border-black w-10 h-10 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white shadow-[4px_4px_0_0_#000] transition-all">X</button>
     </div>
 
@@ -179,7 +179,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-widest">ARTICLE_TITLE</label>
+            <label class="text-[10px] font-black uppercase tracking-widest">ARTICLE TITLE</label>
             <input type="text" name="title" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all">
           </div>
 
@@ -202,23 +202,23 @@
         </div>
 
         <div class="space-y-2">
-          <label class="text-[10px] font-black uppercase tracking-widest">EXCERPT (SHORT DESCRIPTION)</label>
+          <label class="text-[10px] font-black uppercase tracking-widest">SHORT DESCRIPTION</label>
           <textarea name="excerpt" rows="2" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all resize-none"></textarea>
         </div>
 
         <div class="space-y-2">
-          <label class="text-[10px] font-black uppercase tracking-widest">FULL_CONTENT (HTML SUPPORTED)</label>
-          <textarea name="content" rows="8" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all resize-y"></textarea>
+          <label class="text-[10px] font-black uppercase tracking-widest">FULL CONTENT</label>
+          <textarea name="content" id="add_content" rows="10" class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all resize-y"></textarea>
         </div>
 
         <div class="space-y-2">
-          <label class="text-[10px] font-black uppercase tracking-widest">COVER_MEDIA (OPTIONAL)</label>
+          <label class="text-[10px] font-black uppercase tracking-widest">COVER IMAGE</label>
           <input type="file" name="image" accept="image/*" class="w-full p-3 bg-[#F8F9FA] border-4 border-dashed border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all cursor-pointer">
         </div>
 
         <div class="flex gap-4 pt-4 mt-6 border-t-4 border-black">
-          <button type="button" onclick="closeModal('addArticleModal')" class="flex-1 bg-white text-black py-4 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all">ABORT</button>
-          <button type="submit" class="flex-1 bg-[#2563EB] text-white py-4 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">EXECUTE_DEPLOY</button>
+          <button type="button" onclick="closeModal('addArticleModal')" class="flex-1 bg-white text-black py-4 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all">CANCEL</button>
+          <button type="submit" class="flex-1 bg-[#2563EB] text-white py-4 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">CREATE</button>
         </div>
       </form>
     </div>
@@ -228,7 +228,7 @@
 <div id="editArticleModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity overflow-y-auto pt-20 pb-10">
   <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-4xl relative my-auto">
     <div class="flex justify-between items-center p-6 border-b-4 border-black bg-[#FFE600] text-black">
-      <h2 class="text-2xl font-black uppercase tracking-widest">EDIT_ARTICLE.SYS</h2>
+      <h2 class="text-2xl font-black uppercase tracking-widest">EDIT ARTICLE</h2>
       <button onclick="closeModal('editArticleModal')" type="button" class="bg-white text-black border-4 border-black w-10 h-10 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white shadow-[4px_4px_0_0_#000] transition-all">X</button>
     </div>
 
@@ -238,7 +238,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-widest">ARTICLE_TITLE</label>
+            <label class="text-[10px] font-black uppercase tracking-widest">ARTICLE TITLE</label>
             <input type="text" name="title" id="edit_title" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all">
           </div>
 
@@ -261,23 +261,23 @@
         </div>
 
         <div class="space-y-2">
-          <label class="text-[10px] font-black uppercase tracking-widest">EXCERPT (SHORT DESCRIPTION)</label>
+          <label class="text-[10px] font-black uppercase tracking-widest">SHORT DESCRIPTION</label>
           <textarea name="excerpt" id="edit_excerpt" rows="2" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all resize-none"></textarea>
         </div>
 
         <div class="space-y-2">
-          <label class="text-[10px] font-black uppercase tracking-widest">FULL_CONTENT (HTML SUPPORTED)</label>
-          <textarea name="content" id="edit_content" rows="8" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all resize-y"></textarea>
+          <label class="text-[10px] font-black uppercase tracking-widest">FULL CONTENT</label>
+          <textarea name="content" id="edit_content" rows="10" class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all resize-y"></textarea>
         </div>
 
         <div class="space-y-2">
-          <label class="text-[10px] font-black uppercase tracking-widest">UPDATE_MEDIA (OPTIONAL)</label>
+          <label class="text-[10px] font-black uppercase tracking-widest">UPDATE COVER IMAGE</label>
           <input type="file" name="image" accept="image/*" class="w-full p-3 bg-[#F8F9FA] border-4 border-dashed border-black font-bold focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] transition-all cursor-pointer">
         </div>
 
         <div class="flex gap-4 pt-4 mt-6 border-t-4 border-black">
-          <button type="button" onclick="closeModal('editArticleModal')" class="flex-1 bg-white text-black py-4 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all">ABORT</button>
-          <button type="submit" class="flex-1 bg-[#FFE600] text-black py-4 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">UPDATE_DATA</button>
+          <button type="button" onclick="closeModal('editArticleModal')" class="flex-1 bg-white text-black py-4 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all">CANCEL</button>
+          <button type="submit" class="flex-1 bg-[#FFE600] text-black py-4 border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">UPDATE</button>
         </div>
       </form>
     </div>
@@ -292,9 +292,9 @@
       </svg>
     </div>
     <h2 class="text-2xl font-black uppercase text-white mb-2">WARNING!</h2>
-    <p class="text-sm font-bold text-white mb-6">Hapus artikel transmisi ini secara permanen dari server?</p>
+    <p class="text-sm font-bold text-white mb-6">Yakin ingin menghapus artikel ini?</p>
     <div class="flex gap-4">
-      <button onclick="closeModal('confirmDeleteModal')" class="flex-1 bg-white text-black py-3 border-4 border-black font-black uppercase shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all">BATAL</button>
+      <button onclick="closeModal('confirmDeleteModal')" class="flex-1 bg-white text-black py-3 border-4 border-black font-black uppercase shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all">CANCEL</button>
       <button onclick="executeDeleteArticle()" class="flex-1 bg-black text-white py-3 border-4 border-white font-black uppercase shadow-[4px_4px_0_0_#fff] hover:-translate-y-1 transition-all">DELETE</button>
     </div>
   </div>
@@ -320,4 +320,6 @@
   const HAS_REAL_DATA = <?= empty($data['articles']) ? 'false' : 'true'; ?>;
   const BASEURL = '<?= BASEURL; ?>';
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
 <script src="<?= BASEURL; ?>/js/admin_articles.js?v=<?= time(); ?>"></script>

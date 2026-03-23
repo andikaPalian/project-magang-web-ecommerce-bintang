@@ -1,3 +1,19 @@
+tinymce.init({
+  selector: "#add_content, #edit_content",
+  plugins: "lists link code table",
+  toolbar:
+    "undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist | code",
+  menubar: false,
+  promotion: false,
+  branding: false,
+  height: 350,
+  setup: function (editor) {
+    editor.on("change", function () {
+      tinymce.triggerSave();
+    });
+  },
+});
+
 function openModal(modalId) {
   document.getElementById(modalId).classList.remove("hidden");
   document.getElementById(modalId).classList.add("flex");
@@ -25,7 +41,12 @@ function openEditModal(btnElement) {
   document.getElementById("edit_id").value = artData.id;
   document.getElementById("edit_title").value = artData.title;
   document.getElementById("edit_excerpt").value = artData.excerpt;
+
   document.getElementById("edit_content").value = artData.content;
+
+  if (typeof tinymce !== "undefined" && tinymce.get("edit_content")) {
+    tinymce.get("edit_content").setContent(artData.content);
+  }
 
   const status = artData.status;
   document.getElementById("edit_hiddenStatus").value = status;
@@ -93,6 +114,8 @@ const addForm = document.getElementById("addForm");
 if (addForm) {
   addForm.addEventListener("submit", function (e) {
     e.preventDefault();
+    if (typeof tinymce !== "undefined") tinymce.triggerSave();
+
     closeModal("addArticleModal");
     fetch(this.action, {
       method: "POST",
@@ -109,6 +132,8 @@ const editForm = document.getElementById("editForm");
 if (editForm) {
   editForm.addEventListener("submit", function (e) {
     e.preventDefault();
+    if (typeof tinymce !== "undefined") tinymce.triggerSave();
+
     closeModal("editArticleModal");
     fetch(this.action, {
       method: "POST",
