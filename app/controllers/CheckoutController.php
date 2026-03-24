@@ -67,4 +67,48 @@ class CheckoutController extends Controller
     $this->view('home/checkout', $data);
     $this->view('templates/footer', $data);
   }
+
+  public function validateVoucher(): void
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $voucherCode = strtoupper($_POST['voucher_code']) ?? '';
+      $subtotal = (float) ($_POST['subtotal'] ?? 0);
+
+      if (empty($voucherCode)) {
+        $this->sendResponse('error', 'Masukkan kode voucher terlebih dahulu!', '/checkout', 400);
+      }
+
+      $voucher = $this->model('VoucherModel')->getVoucherByCode($voucherCode);
+      if (!$voucher) {
+        $this->sendResponse('error', 'Voucher tidak ditemukan!', '/checkout', 404);
+      }
+
+      $today = date('Y-m-d');
+      if ($voucher['is_active'] == 0 || $voucher['valid_until'] < $today) {
+        $this->sendResponse('error', 'Voucher sudah kadaluwarsa atau tidak aktif!', '/checkout', 400);
+      }
+
+      if ($subtotal < $voucher['min_purchase']) {
+        $minPurchase = number_format((float) $voucher['min_purchase'], 0, '.', '.');
+        $this->sendResponse('error', 'Minimal belanja Rp ' . $minPurchase . ' untuk menggunakan voucher ini.', '/checkout', 400);
+      }
+
+      $discount_amount = 0;
+      if ($voucher['discount_type'] === 'percent') {
+        $discount_amount = $subtotal * (float) $voucher['discount_amount'] / 100;
+      } else {
+        $discount_amount = (float) $voucher['discount_amount'];
+      }
+
+      if ($discount_amount > $subtotal) {
+        $discount_amount = $subtotal;
+      }
+
+      $this->sendResponse('success', 'Voucher berhasil digunakan!', '/checkout', 200, [
+        'voucher_id' => $voucher['id'],
+        'voucher_code' => $voucher['code'],
+        'discount_value' => $discount_amount
+      ]);
+    }
+  }
 }
