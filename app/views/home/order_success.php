@@ -10,6 +10,7 @@
       </div>
       <?php unset($_SESSION['flash_success']); ?>
     <?php endif; ?>
+
     <div class="bg-[#A6FAAE] border-4 border-black shadow-[8px_8px_0_0_#000] p-8 mb-10 text-center relative overflow-hidden">
       <div class="absolute -right-10 -top-10 w-32 h-32 bg-white rounded-full mix-blend-overlay opacity-50"></div>
 
@@ -35,6 +36,17 @@
         <p class="text-4xl md:text-5xl font-black text-[#2563EB] tracking-tighter">
           Rp <?= number_format((float)$data['order']['grand_total'], 0, ',', '.'); ?>
         </p>
+
+        <?php if (!empty($data['order']['discount_applied']) && $data['order']['discount_applied'] > 0): ?>
+          <div class="mt-3 inline-block bg-[#A6FAAE] border-2 border-black px-3 py-1 shadow-[2px_2px_0_0_#000]">
+            <p class="text-[10px] font-black uppercase tracking-widest text-black flex items-center">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+              </svg>
+              YOU SAVED Rp <?= number_format((float)$data['order']['discount_applied'], 0, ',', '.'); ?>!
+            </p>
+          </div>
+        <?php endif; ?>
       </div>
 
       <div class="bg-gray-50 border-4 border-black p-6 mb-8 relative">

@@ -90,6 +90,13 @@
               <div class="w-full lg:w-auto">
                 <p class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">TOTAL DEPLOYMENT COST</p>
                 <p class="text-3xl md:text-4xl font-black text-black tracking-tighter mb-2">Rp <?= number_format((float)$order['grand_total'], 0, ',', '.'); ?></p>
+
+                <?php if (!empty($order['discount_applied']) && $order['discount_applied'] > 0): ?>
+                  <p class="text-[10px] font-black uppercase tracking-widest text-[#FF5757] mb-2">
+                    <span class="bg-[#FF5757] text-white px-1.5 py-0.5 border border-black mr-1 shadow-[1px_1px_0_0_#000]">SAVED</span> Rp <?= number_format((float)$order['discount_applied'], 0, ',', '.'); ?>
+                  </p>
+                <?php endif; ?>
+
                 <p class="text-xs font-bold text-gray-600 uppercase border-l-4 border-[#2563EB] pl-2">METHOD: <?= htmlspecialchars($order['payment_method']); ?></p>
               </div>
 
