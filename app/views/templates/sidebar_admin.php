@@ -13,6 +13,7 @@ $isProducts   = strpos($current_uri, 'adminproduct') !== false;
 $isCategories = strpos($current_uri, 'admincategory') !== false;
 $isArticles   = strpos($current_uri, 'adminarticle') !== false;
 $isVouchers   = strpos($current_uri, 'adminvoucher') !== false;
+$isOrders     = strpos($current_uri, 'adminorder') !== false;
 ?>
 
 <div class="flex h-screen w-full bg-[#F8F9FA] font-sans text-black overflow-hidden selection:bg-[#FFE600] selection:text-black">
@@ -69,6 +70,13 @@ $isVouchers   = strpos($current_uri, 'adminvoucher') !== false;
       <a href="<?= BASEURL; ?>/adminvoucher" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isVouchers ? $activeClass : $inactiveClass; ?>">
         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+        </svg>
+        VOUCHERS
+      </a>
+
+      <a href="<?= BASEURL; ?>/adminorder" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isOrders ? $activeClass : $inactiveClass; ?>">
+        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
         </svg>
         VOUCHERS
       </a>
