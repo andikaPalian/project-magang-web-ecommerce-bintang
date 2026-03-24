@@ -15,6 +15,18 @@ class CheckoutController extends Controller
     $data['judul'] = 'Checkout | TI MART';
     $data['user'] = $this->model('UserModel')->getUserById($_SESSION['user_id']);
 
+    $allVouchers = $this->model('VoucherModel')->getAllVouchers();
+    $activeVouchers = [];
+    $today = date('Y-m-d');
+
+    foreach ($allVouchers as $v) {
+      if ($v['is_active'] == 1 && $v['valid_until'] >= $today) {
+        $activeVouchers[] = $v;
+      }
+    }
+
+    $data['vouchers'] = $activeVouchers;
+
     if (isset($_SESSION['buy_now_item'])) {
       $product_id = $_SESSION['buy_now_item']['product_id'];
       $quantity = $_SESSION['buy_now_item']['quantity'];

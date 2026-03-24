@@ -134,7 +134,10 @@
           </div>
 
           <div class="mb-6 border-b-4 border-black pb-6">
-            <label class="block text-[10px] font-black uppercase tracking-widest mb-2 text-black">HAVE A VOUCHER CODE?</label>
+            <div class="flex justify-between items-end mb-2">
+              <label class="block text-[10px] font-black uppercase tracking-widest text-black">HAVE A VOUCHER CODE?</label>
+              <button type="button" onclick="openVoucherModal()" class="text-[10px] font-black uppercase text-[#2563EB] hover:text-[#FF5757] transition-colors border-b border-[#2563EB] hover:border-[#FF5757]">LIHAT PROMO</button>
+            </div>
             <div class="flex gap-2 h-12">
               <input type="text" id="voucher-input" class="w-full h-full bg-white border-4 border-black px-3 font-black uppercase text-sm outline-none shadow-[4px_4px_0_0_#000] focus:-translate-y-1 focus:shadow-[6px_6px_0_0_#000] transition-all placeholder-gray-400" placeholder="ENTER CODE">
               <button type="button" onclick="applyVoucher()" id="btn-apply-voucher" class="h-full bg-black text-white border-4 border-black px-4 font-black uppercase text-sm shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:shadow-none transition-all flex-shrink-0">APPLY</button>
@@ -144,6 +147,7 @@
               <p id="voucher-msg" class="text-[10px] md:text-xs font-black uppercase tracking-widest leading-tight"></p>
             </div>
           </div>
+
           <div class="space-y-2 mb-6 font-bold text-sm">
             <div class="flex justify-between items-end border-b-2 border-black border-dashed pb-2">
               <span class="uppercase">SUBTOTAL</span>
@@ -186,6 +190,45 @@
       </div>
 
     </form>
+  </div>
+</div>
+
+<div id="listVoucherModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/80 backdrop-blur-sm transition-opacity opacity-0 duration-300 p-4">
+  <div class="modal-box bg-white border-4 border-black w-full max-w-md shadow-[12px_12px_0_0_#000] transform translate-y-10 transition-all duration-300 flex flex-col max-h-[85vh]">
+    <div class="flex justify-between items-center p-4 border-b-4 border-black bg-[#FFE600] text-black">
+      <h2 class="text-lg font-black uppercase tracking-widest">PILIH VOUCHER</h2>
+      <button onclick="closeVoucherModal()" type="button" class="bg-white text-black border-4 border-black w-8 h-8 flex items-center justify-center font-black hover:bg-[#FF5757] hover:text-white shadow-[2px_2px_0_0_#000] transition-all">X</button>
+    </div>
+
+    <div class="p-4 overflow-y-auto bg-[#F8F9FA] flex-1 custom-scrollbar">
+      <?php if (empty($data['vouchers'])): ?>
+        <div class="text-center py-8">
+          <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">TIDAK ADA VOUCHER AKTIF SAAT INI.</p>
+        </div>
+      <?php else: ?>
+        <div class="space-y-4">
+          <?php foreach ($data['vouchers'] as $v):
+            $minSpend = number_format((float)$v['min_purchase'], 0, ',', '.');
+            $valDisplay = $v['discount_type'] === 'percent' ? rtrim(rtrim($v['discount_amount'], '0'), '.') . '%' : 'Rp ' . number_format((float)$v['discount_amount'], 0, ',', '.');
+          ?>
+            <div class="bg-white border-4 border-black p-4 shadow-[4px_4px_0_0_#000] flex flex-col relative overflow-hidden group hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">
+              <div class="absolute top-0 left-0 w-2 h-full bg-[#2563EB]"></div>
+              <div class="pl-4">
+                <div class="flex justify-between items-start mb-2">
+                  <h4 class="font-black text-lg uppercase text-[#2563EB] tracking-wider"><?= $v['code'] ?></h4>
+                  <span class="bg-[#A6FAAE] border-2 border-black text-[9px] font-black px-2 py-0.5 shadow-[2px_2px_0_0_#000]">DISKON <?= $valDisplay ?></span>
+                </div>
+                <p class="text-xs font-bold text-gray-600 mb-4 uppercase">Min. Belanja: Rp <?= $minSpend ?><br>Berlaku s/d: <?= date('d M Y', strtotime($v['valid_until'])) ?></p>
+                <button type="button" onclick="pilihVoucher('<?= $v['code'] ?>')" class="w-full bg-black text-white border-2 border-black font-black uppercase tracking-widest text-xs py-3 hover:bg-[#FFE600] hover:text-black hover:translate-y-[-2px] hover:shadow-[4px_4px_0_0_#000] transition-all">PAKAI VOUCHER</button>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+    </div>
   </div>
 </div>
 

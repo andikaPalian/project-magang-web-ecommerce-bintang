@@ -3,6 +3,37 @@ let diskonVoucher = 0;
 
 const formatRupiah = (angka) => new Intl.NumberFormat("id-ID").format(angka);
 
+const voucherModal = document.getElementById("listVoucherModal");
+const voucherModalBox = voucherModal ? voucherModal.querySelector(".modal-box") : null;
+
+function openVoucherModal() {
+  if (!voucherModal) return;
+  voucherModal.classList.remove("hidden");
+  voucherModal.classList.add("flex");
+  setTimeout(() => {
+    voucherModal.classList.remove("opacity-0");
+    voucherModalBox.classList.remove("translate-y-10");
+  }, 10);
+  document.body.style.overflow = "hidden";
+}
+
+function closeVoucherModal() {
+  if (!voucherModal) return;
+  voucherModal.classList.add("opacity-0");
+  voucherModalBox.classList.add("translate-y-10");
+  setTimeout(() => {
+    voucherModal.classList.add("hidden");
+    voucherModal.classList.remove("flex");
+  }, 300);
+  document.body.style.overflow = "auto";
+}
+
+function pilihVoucher(code) {
+  closeVoucherModal();
+  document.getElementById("voucher-input").value = code;
+  applyVoucher();
+}
+
 function updateOngkir(ongkir, methodName) {
   ongkirTerpilih = parseInt(ongkir);
   document.getElementById("display-ongkir").textContent = "Rp " + formatRupiah(ongkirTerpilih);
