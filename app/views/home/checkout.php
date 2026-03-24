@@ -12,6 +12,15 @@
       <p class="text-sm font-bold mt-2 text-gray-700 bg-[#FFE600] inline-block px-3 py-1 border-2 border-black shadow-[2px_2px_0_0_#000]">CHECKOUT PRODUK ANDA</p>
     </div>
 
+    <?php if (isset($_SESSION['flash_error'])): ?>
+      <div class="bg-[#FF5757] border-4 border-black text-white px-4 py-3 mb-6 shadow-[4px_4px_0_0_#000] font-black uppercase tracking-wider flex items-center" data-aos="fade-down">
+        <svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+        <p><?= $_SESSION['flash_error']; ?></p>
+      </div>
+      <?php unset($_SESSION['flash_error']); ?>
+    <?php endif; ?>
     <form action="<?= BASEURL; ?>/order/create" method="POST" id="checkout-form" class="flex flex-col lg:flex-row gap-8 items-start">
 
       <input type="hidden" name="shipping_method_name" id="input-shipping-method-name" value="Standard Drop">
@@ -32,7 +41,7 @@
             </div>
             <div class="md:col-span-1">
               <label class="block text-xs font-black uppercase tracking-widest mb-2">NO. TELEPON</label>
-              <input type="tel" name="recipient_phone" value="<?= htmlspecialchars($data['user']['phone'] ?? ''); ?>" required class="w-full bg-gray-50 border-2 border-black px-4 py-3 font-bold text-sm outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 focus:-translate-x-1 transition-all placeholder-gray-400" placeholder="08XXXXXXXXXX">
+              <input type="tel" name="phone_number" value="<?= htmlspecialchars($data['user']['phone'] ?? ''); ?>" required class="w-full bg-gray-50 border-2 border-black px-4 py-3 font-bold text-sm outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 focus:-translate-x-1 transition-all placeholder-gray-400" placeholder="08XXXXXXXXXX">
             </div>
             <div class="md:col-span-2">
               <label class="block text-xs font-black uppercase tracking-widest mb-2">ALAMAT LENGKAP</label>
