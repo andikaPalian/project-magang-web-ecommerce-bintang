@@ -15,10 +15,11 @@ class OrderModel
     try {
       $this->db->beginTransaction();
 
-      $this->db->query("INSERT INTO orders (invoice_number, user_id, fulfilled_by_location_id, total_price, shipping_cost, shipping_method, payment_method, discount_applied, grand_total, payment_status, order_status, recipient_name, recipient_phone, shipping_address) VALUES (:invoice_number, :user_id, :location_id, :total_price, :shipping_cost, :shipping_method, :payment_method, :discount_applied, :grand_total, 'pending', 'pending', :recipient_name, :recipient_phone, :shipping_address)");
+      $this->db->query("INSERT INTO orders (invoice_number, user_id, fulfilled_by_location_id, voucher_id, total_price, shipping_cost, shipping_method, payment_method, discount_applied, grand_total, payment_status, order_status, recipient_name, recipient_phone, shipping_address) VALUES (:invoice_number, :user_id, :location_id, :voucher_id, :total_price, :shipping_cost, :shipping_method, :payment_method, :discount_applied, :grand_total, 'pending', 'pending', :recipient_name, :recipient_phone, :shipping_address)");
       $this->db->bind('invoice_number', $orderData['invoice_number']);
       $this->db->bind('user_id', $orderData['user_id']);
       $this->db->bind('location_id', $orderData['fulfilled_by_location_id']);
+      $this->db->bind('voucher_id', $orderData['voucher_id']);
       $this->db->bind('total_price', $orderData['total_price']);
       $this->db->bind('shipping_cost', $orderData['shipping_cost']);
       $this->db->bind('shipping_method', $orderData['shipping_method']);
@@ -90,5 +91,34 @@ class OrderModel
     $this->db->bind("order_id", $order_id);
 
     return $this->db->execute();
+  }
+
+  public function getAllOrders(): array
+  {
+    $this->db->query("SELECT o.*, u.name AS customer_name FROM orders o JOIN users u ON o.user_id = u.id ORDER BY o.created_at DESC");
+
+    return $this->db->resultSet();
+  }
+
+  public function updatePaymentStatus(int $order_id, string $status): int
+  {
+    $this->db->query("UPDATE orders SET payment_status = :status WHERE id = :order_id");
+    $this->db->bind('status', $status);
+    $this->db->bind('order_id', $order_id);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
+
+  public function updateOrderStatus(int $order_id, string $status): int
+  {
+    $this->db->query("UPDATE orders SET order_status = :status WHERE id = :order_id");
+    $this->db->bind('status', $status);
+    $this->db->bind('order_id', $order_id);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
   }
 }
