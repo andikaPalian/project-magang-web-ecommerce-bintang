@@ -1,7 +1,7 @@
 <div class="mb-8" data-aos="fade-in">
   <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-1">DASHBOARD</h1>
   <p class="text-sm font-bold text-gray-500 uppercase tracking-widest">
-    STATUS: <span class="text-black">ONLINE</span> / COMMANDER: <span class="text-[#2563EB]"><?= $_SESSION['name'] ?? 'ROOT' ?></span>
+    Logged in as: <span class="text-[#2563EB]"><?= $_SESSION['role'] ?? 'ROOT' ?></span>
   </p>
 </div>
 
