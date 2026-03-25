@@ -78,7 +78,7 @@ $isOrders     = strpos($current_uri, 'adminorder') !== false;
         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
         </svg>
-        VOUCHERS
+        ORDERS
       </a>
     </nav>
 
