@@ -108,11 +108,11 @@ $isOrders     = strpos($current_uri, 'adminorder') !== false;
           PENGEMASAN
         </a>
 
-        <a href="<?= BASEURL; ?>/gudang/outbound" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isOutbound ? $activeClass : $inactiveClass; ?>">
+        <a href="<?= BASEURL; ?>/outbound" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isOutbound ? $activeClass : $inactiveClass; ?>">
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
           </svg>
-          OUTBOUND.SYS
+          OUTBOUND
         </a>
 
         <a href="<?= BASEURL; ?>/adminproduct" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isProducts && !$isFulfillment && !$isOutbound ? $activeClass : $inactiveClass; ?>">

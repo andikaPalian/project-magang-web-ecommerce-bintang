@@ -154,4 +154,11 @@ class OrderModel
 
     return $this->db->resultSet();
   }
+
+  public function getOrdersForOutbound(): array
+  {
+    $this->db->query("SELECT o.*, u.name AS customer_name, COALESCE(SUM(oi.quantity), 0) AS total_items FROM orders o JOIN users u ON o.user_id = u.id LEFT JOIN order_items oi ON o.id = oi.order_id WHERE o.order_status = 'ready_for_pickup' GROUP BY o.id ORDER BY o.created_at ASC");
+
+    return $this->db->resultSet();
+  }
 }
