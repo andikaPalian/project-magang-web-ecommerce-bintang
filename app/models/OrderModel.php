@@ -139,4 +139,19 @@ class OrderModel
 
     return $this->db->resultSet();
   }
+
+  public function getOrdersForFulfillment(): array
+  {
+    $this->db->query("SELECT o.*, u.name AS customer_name, COALESCE(SUM(oi.quantity), 0) AS total_items FROM orders o JOIN users u ON o.user_id = u.id LEFT JOIN order_items oi ON o.id = oi.order_id WHERE o.order_status = 'processing' GROUP BY o.id ORDER BY o.created_at ASC");
+
+    return $this->db->resultSet();
+  }
+
+  public function getOrderItemDetails(int $order_id): array
+  {
+    $this->db->query("SELECT oi.*, p.name AS product_name, p.weight_grams FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = :order_id");
+    $this->db->bind('order_id', $order_id);
+
+    return $this->db->resultSet();
+  }
 }

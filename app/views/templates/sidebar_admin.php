@@ -7,7 +7,16 @@ $current_uri = $_SERVER['REQUEST_URI'];
 $activeClass = 'bg-[#2563EB] text-white border-4 border-black shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-transform mr-1 mb-1';
 $inactiveClass = 'text-black border-4 border-transparent hover:border-black hover:bg-gray-100 transition-all mr-1 mb-1';
 
-$isDashboard  = strpos($current_uri, 'dashboard') !== false;
+$dashboard_url = BASEURL . '/adminweb/dashboard';
+if ($role === 'gudang') {
+  $dashboard_url = BASEURL . '/gudang';
+} elseif ($role === 'pemilik') {
+  $dashboard_url = BASEURL . '/pemilik/dashboard';
+} elseif ($role === 'ekspedisi') {
+  $dashboard_url = BASEURL . '/ekspedisi';
+}
+
+$isDashboard  = strpos($current_uri, 'dashboard') !== false || rtrim($current_uri, '/') === rtrim(parse_url($dashboard_url, PHP_URL_PATH), '/');
 $isUsers      = strpos($current_uri, 'adminuser') !== false;
 $isProducts   = strpos($current_uri, 'adminproduct') !== false;
 $isCategories = strpos($current_uri, 'admincategory') !== false;
@@ -32,7 +41,7 @@ $isOrders     = strpos($current_uri, 'adminorder') !== false;
 
     <nav class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-1">
 
-      <a href="<?= BASEURL; ?>/adminweb/dashboard" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isDashboard ? $activeClass : $inactiveClass; ?>">
+      <a href="<?= $dashboard_url; ?>" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isDashboard ? $activeClass : $inactiveClass; ?>">
         <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
         </svg>
@@ -92,11 +101,11 @@ $isOrders     = strpos($current_uri, 'adminorder') !== false;
         ?>
         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b-2 border-gray-200 pb-1 mt-6 mb-2 px-1">GUDANG</p>
 
-        <a href="<?= BASEURL; ?>/gudang/fulfillment" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isFulfillment ? $activeClass : $inactiveClass; ?>">
+        <a href="<?= BASEURL; ?>/fulfillment" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isFulfillment ? $activeClass : $inactiveClass; ?>">
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
           </svg>
-          FULFILLMENT.EXE
+          PENGEMASAN
         </a>
 
         <a href="<?= BASEURL; ?>/gudang/outbound" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isOutbound ? $activeClass : $inactiveClass; ?>">
@@ -106,7 +115,7 @@ $isOrders     = strpos($current_uri, 'adminorder') !== false;
           OUTBOUND.SYS
         </a>
 
-        <a href="<?= BASEURL; ?>/adminproduct" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isProducts ? $activeClass : $inactiveClass; ?>">
+        <a href="<?= BASEURL; ?>/adminproduct" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isProducts && !$isFulfillment && !$isOutbound ? $activeClass : $inactiveClass; ?>">
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
           </svg>
