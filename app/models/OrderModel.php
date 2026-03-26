@@ -121,4 +121,22 @@ class OrderModel
 
     return $this->db->rowCount();
   }
+
+  public function countOrdersByStatus(string $status): int
+  {
+    $this->db->query("SELECT COUNT(*) AS total FROM orders WHERE order_status = :status");
+    $this->db->bind('status', $status);
+
+    $result = $this->db->single();
+
+    return (int) ($result['total'] ?? 0);
+  }
+
+  public function getRecentOrderActivities($limit = 10): array
+  {
+    $this->db->query("SELECT invoice_number, order_status, created_at FROM orders ORDER BY created_at DESC LIMIT :limit");
+    $this->db->bind('limit', $limit);
+
+    return $this->db->resultSet();
+  }
 }

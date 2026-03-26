@@ -233,4 +233,14 @@ class ProdukModel
 
     return $this->db->rowCount();
   }
+
+  public function countLowStockProducts($threshold = 5): int
+  {
+    $this->db->query("SELECT COUNT(*) AS total FROM product_stocks WHERE stock_quantity <= :threshold");
+    $this->db->bind('threshold', $threshold);
+
+    $result = $this->db->single();
+
+    return (int) ($result['total'] ?? 0);
+  }
 }
