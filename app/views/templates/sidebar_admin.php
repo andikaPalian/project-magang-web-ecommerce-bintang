@@ -119,7 +119,7 @@ $isOrders     = strpos($current_uri, 'adminorder') !== false;
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
           </svg>
-          WAREHOUSE_INV.DB
+          INVENTORY
         </a>
       <?php endif; ?>
 

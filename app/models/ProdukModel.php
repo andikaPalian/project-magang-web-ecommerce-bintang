@@ -243,4 +243,38 @@ class ProdukModel
 
     return (int) ($result['total'] ?? 0);
   }
+
+  public function updateStockOnly(int $product_id, int $stock): int
+  {
+    $this->db->query("SELECT id FROM product_stocks WHERE product_id = :product_id");
+    $this->db->bind('product_id', $product_id);
+    $existing = $this->db->single();
+
+    if ($existing) {
+      $this->db->query("UPDATE product_stocks SET stock_quantity = :stock WHERE product_id = :product_id");
+    } else {
+      $this->db->query("INSERT INTO product_stocks (product_id, location_id, stock_quantity) VALUES (:product_id, 1, :stock)");
+    }
+
+    $this->db->bind('stock', $stock);
+    $this->db->bind('product_id', $product_id);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
+
+  public function updateInventory(array $data): int
+  {
+    $this->db->query("UPDATE products SET name = :name, category_id = :category_id, weight_grams = :weight_grams WHERE id = :product_id");
+
+    $this->db->bind('name', $data['name']);
+    $this->db->bind('category_id', $data['category_id']);
+    $this->db->bind('weight_grams', $data['weight_grams']);
+    $this->db->bind('product_id', $data['id']);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
 }

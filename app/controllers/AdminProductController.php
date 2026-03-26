@@ -9,7 +9,7 @@ class AdminProductController extends Controller
       $this->sendResponse('error', 'Silahkan login terlebih dahulu!', '/auth', 401);
     }
 
-    if (!in_array($_SESSION['role'], ['admin_web', 'admin_toko'])) {
+    if (!in_array($_SESSION['role'], ['admin_web', 'admin_toko', 'gudang'])) {
       $this->sendResponse('error', 'Anda tidak memiliki akses ke halaman ini!', '', 403);
     }
   }
@@ -19,6 +19,7 @@ class AdminProductController extends Controller
     $data['judul'] = 'Product Management | TI MART';
     $data['products'] = $this->model('ProdukModel')->getAllProductsForAdmin();
     $data['categories'] = $this->model('ProdukModel')->getAllCategoriesAdmin();
+    $data['role'] = $_SESSION['role'];
 
     $outOfStock = 0;
     $categoriesCount = [];
@@ -43,7 +44,11 @@ class AdminProductController extends Controller
 
     $this->view('templates/header_admin', $data);
     $this->view('templates/sidebar_admin', $data);
-    $this->view('admin_web/products', $data);
+    if ($_SESSION['role'] === 'gudang') {
+      $this->view('gudang/inventory', $data);
+    } else if ($_SESSION['role'] === 'admin_web') {
+      $this->view('admin_web/products', $data);
+    }
     $this->view('templates/footer_admin', $data);
   }
 
@@ -117,6 +122,31 @@ class AdminProductController extends Controller
         $this->sendResponse('success', 'Data produk berhasil diperbarui!', '/adminproduct');
       } else {
         $this->sendResponse('error', 'Tidak ada perubahan atau gagal memperbarui data produk.', '/adminproduct', 400);
+      }
+    }
+  }
+
+  public function quickUpdateStock(): void
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $productId = (int) $_POST['product_id'];
+      $stock = (int) $_POST['total_stock'];
+
+      if ($this->model('ProdukModel')->updateStockOnly($productId, $stock) >= 0) {
+        $this->sendResponse('success', 'Stok produk berhasil diperbarui!', '/adminproduct', 200);
+      } else {
+        $this->sendResponse('error', 'Gagal memperbarui stok produk.', '/adminproduct', 500);
+      }
+    }
+  }
+
+  public function quickUpdateInventory(): void
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      if ($this->model('ProdukModel')->updateInventory($_POST) >= 0) {
+        $this->sendResponse('success', 'Data fisik inventaris berhasil diperbarui!', '/adminproduct', 200);
+      } else {
+        $this->sendResponse('error', 'Gagal memperbarui data fisik inventaris.', '/adminproduct', 500);
       }
     }
   }
