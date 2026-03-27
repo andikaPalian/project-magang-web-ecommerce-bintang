@@ -52,4 +52,12 @@ class EkspedisiModel
 
     return $this->db->rowCount();
   }
+
+  public function getMyDeliveryHistory(int $courier_id): array
+  {
+    $this->db->query("SELECT d.*, o.invoice_number, o.recipient_name, o.shipping_address, d.updated_at AS completed_at FROM deliveries d JOIN orders o ON d.order_id = o.id WHERE d.courier_id = :courier_id AND d.delivery_status = 'completed' ORDER BY d.updated_at DESC");
+    $this->db->bind('courier_id', $courier_id);
+
+    return $this->db->resultSet();
+  }
 }

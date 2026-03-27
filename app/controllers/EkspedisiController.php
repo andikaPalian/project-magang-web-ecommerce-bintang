@@ -25,6 +25,31 @@ class EkspedisiController extends Controller
     $this->view('templates/footer_admin', $data);
   }
 
+  public function deliveries(): void
+  {
+    $data['judul'] = 'Deliveries | TI MART';
+    $courier_id = (int) $_SESSION['user_id'];
+    $data['deliveries'] = $this->model('EkspedisiModel')->getMyActiveDeliveries($courier_id);
+
+    $this->view('templates/header_admin', $data);
+    $this->view('templates/sidebar_admin', $data);
+    $this->view('ekspedisi/deliveries', $data);
+    $this->view('templates/footer_admin', $data);
+  }
+
+  public function history(): void
+  {
+    $data['judul'] = 'Delivery History | TI MART';
+    $courier_id = (int) $_SESSION['user_id'];
+
+    $data['history'] = $this->model('EkspedisiModel')->getMyDeliveryHistory($courier_id);
+
+    $this->view('templates/header_admin', $data);
+    $this->view('templates/sidebar_admin', $data);
+    $this->view('ekspedisi/history', $data);
+    $this->view('templates/footer_admin', $data);
+  }
+
   public function take(string $order_id): void
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -41,7 +66,7 @@ class EkspedisiController extends Controller
 
   public function markDelivered(string $order_id): void
   {
-    if ($$_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $orderId = (int) $order_id;
 
       if ($this->model('EkspedisiModel')->completeDelivery($orderId) > 0) {

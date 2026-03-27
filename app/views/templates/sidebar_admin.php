@@ -16,7 +16,7 @@ if ($role === 'gudang') {
   $dashboard_url = BASEURL . '/ekspedisi';
 }
 
-// Deteksi URL Aktif
+// Deteksi URL Aktif (Umum)
 $isDashboard  = strpos($current_uri, 'dashboard') !== false || rtrim($current_uri, '/') === rtrim(parse_url($dashboard_url, PHP_URL_PATH), '/');
 $isUsers      = strpos($current_uri, 'adminuser') !== false;
 $isProducts   = strpos($current_uri, 'adminproduct') !== false;
@@ -25,9 +25,9 @@ $isArticles   = strpos($current_uri, 'adminarticle') !== false;
 $isVouchers   = strpos($current_uri, 'adminvoucher') !== false;
 $isOrders     = strpos($current_uri, 'adminorder') !== false;
 
-// TAMBAHAN: Deteksi URL Ekspedisi
-$isEkspedisiActive = strpos($current_uri, 'ekspedisi/active') !== false;
-$isEkspedisiQueue  = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedisiActive;
+$isEkspedisiActive  = strpos($current_uri, 'ekspedisi/deliveries') !== false;
+$isEkspedisiHistory = strpos($current_uri, 'ekspedisi/history') !== false;
+$isEkspedisiQueue   = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedisiActive && !$isEkspedisiHistory;
 ?>
 
 <div class="flex h-screen w-full bg-[#F8F9FA] font-sans text-black overflow-hidden selection:bg-[#FFE600] selection:text-black">
@@ -46,7 +46,7 @@ $isEkspedisiQueue  = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedis
 
     <nav class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-1">
 
-      <a href="<?= $dashboard_url; ?>" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isDashboard && !$isEkspedisiQueue && !$isEkspedisiActive ? $activeClass : $inactiveClass; ?>">
+      <a href="<?= $dashboard_url; ?>" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isDashboard && !$isEkspedisiQueue && !$isEkspedisiActive && !$isEkspedisiHistory ? $activeClass : $inactiveClass; ?>">
         <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
         </svg>
@@ -129,7 +129,7 @@ $isEkspedisiQueue  = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedis
       <?php endif; ?>
 
       <?php if (in_array($role, ['ekspedisi', 'admin_web', 'pemilik'])): ?>
-        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b-2 border-gray-200 pb-1 mt-6 mb-2 px-1">LOGISTIK</p>
+        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b-2 border-gray-200 pb-1 mt-6 mb-2 px-1">LOGISTICS FLEET</p>
 
         <a href="<?= BASEURL; ?>/ekspedisi" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isEkspedisiQueue ? $activeClass : $inactiveClass; ?>">
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
@@ -138,11 +138,18 @@ $isEkspedisiQueue  = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedis
           PICKUP
         </a>
 
-        <a href="<?= BASEURL; ?>/ekspedisi/active" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isEkspedisiActive ? $activeClass : $inactiveClass; ?>">
+        <a href="<?= BASEURL; ?>/ekspedisi/deliveries" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isEkspedisiActive ? $activeClass : $inactiveClass; ?>">
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
           </svg>
-          ACTIVE ROUTES
+          DELIVERIES
+        </a>
+
+        <a href="<?= BASEURL; ?>/ekspedisi/history" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isEkspedisiHistory ? $activeClass : $inactiveClass; ?>">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          HISTORY
         </a>
       <?php endif; ?>
 
