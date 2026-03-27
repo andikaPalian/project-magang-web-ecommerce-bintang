@@ -16,6 +16,7 @@ if ($role === 'gudang') {
   $dashboard_url = BASEURL . '/ekspedisi';
 }
 
+// Deteksi URL Aktif
 $isDashboard  = strpos($current_uri, 'dashboard') !== false || rtrim($current_uri, '/') === rtrim(parse_url($dashboard_url, PHP_URL_PATH), '/');
 $isUsers      = strpos($current_uri, 'adminuser') !== false;
 $isProducts   = strpos($current_uri, 'adminproduct') !== false;
@@ -23,6 +24,10 @@ $isCategories = strpos($current_uri, 'admincategory') !== false;
 $isArticles   = strpos($current_uri, 'adminarticle') !== false;
 $isVouchers   = strpos($current_uri, 'adminvoucher') !== false;
 $isOrders     = strpos($current_uri, 'adminorder') !== false;
+
+// TAMBAHAN: Deteksi URL Ekspedisi
+$isEkspedisiActive = strpos($current_uri, 'ekspedisi/active') !== false;
+$isEkspedisiQueue  = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedisiActive;
 ?>
 
 <div class="flex h-screen w-full bg-[#F8F9FA] font-sans text-black overflow-hidden selection:bg-[#FFE600] selection:text-black">
@@ -41,7 +46,7 @@ $isOrders     = strpos($current_uri, 'adminorder') !== false;
 
     <nav class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-1">
 
-      <a href="<?= $dashboard_url; ?>" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isDashboard ? $activeClass : $inactiveClass; ?>">
+      <a href="<?= $dashboard_url; ?>" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isDashboard && !$isEkspedisiQueue && !$isEkspedisiActive ? $activeClass : $inactiveClass; ?>">
         <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
         </svg>
@@ -120,6 +125,24 @@ $isOrders     = strpos($current_uri, 'adminorder') !== false;
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
           </svg>
           INVENTORY
+        </a>
+      <?php endif; ?>
+
+      <?php if (in_array($role, ['ekspedisi', 'admin_web', 'pemilik'])): ?>
+        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b-2 border-gray-200 pb-1 mt-6 mb-2 px-1">LOGISTIK</p>
+
+        <a href="<?= BASEURL; ?>/ekspedisi" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isEkspedisiQueue ? $activeClass : $inactiveClass; ?>">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+          </svg>
+          PICKUP
+        </a>
+
+        <a href="<?= BASEURL; ?>/ekspedisi/active" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isEkspedisiActive ? $activeClass : $inactiveClass; ?>">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          ACTIVE ROUTES
         </a>
       <?php endif; ?>
 
