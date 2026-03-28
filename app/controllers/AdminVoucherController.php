@@ -9,7 +9,7 @@ class AdminVoucherController extends Controller
       $this->sendResponse('error', 'Silahkan login terlebih dahulu!', '/auth', 401);
     }
 
-    if ($_SESSION['role'] !== 'admin_web') {
+    if (!in_array($_SESSION['role'], ['admin_web', 'pemilik'])) {
       $this->sendResponse('error', 'Anda tidak memiliki akses ke halaman ini!', '', 403);
     }
   }
