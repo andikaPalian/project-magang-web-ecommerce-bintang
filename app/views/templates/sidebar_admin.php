@@ -11,7 +11,7 @@ $dashboard_url = BASEURL . '/adminweb/dashboard';
 if ($role === 'gudang') {
   $dashboard_url = BASEURL . '/gudang';
 } elseif ($role === 'pemilik') {
-  $dashboard_url = BASEURL . '/pemilik/dashboard';
+  $dashboard_url = BASEURL . '/pemilik';
 } elseif ($role === 'ekspedisi') {
   $dashboard_url = BASEURL . '/ekspedisi';
 }
@@ -25,9 +25,16 @@ $isArticles   = strpos($current_uri, 'adminarticle') !== false;
 $isVouchers   = strpos($current_uri, 'adminvoucher') !== false;
 $isOrders     = strpos($current_uri, 'adminorder') !== false;
 
+// Deteksi URL Khusus Ekspedisi
 $isEkspedisiActive  = strpos($current_uri, 'ekspedisi/deliveries') !== false;
 $isEkspedisiHistory = strpos($current_uri, 'ekspedisi/history') !== false;
 $isEkspedisiQueue   = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedisiActive && !$isEkspedisiHistory;
+
+// TAMBAHAN: Deteksi URL Khusus Pemilik Situs (EXECUTIVE SUITE)
+$isPemilikDashboard = strpos($current_uri, 'pemilik/dashboard') !== false || rtrim($current_uri, '/') === rtrim(BASEURL . '/pemilik', '/');
+$isPemilikFinance   = strpos($current_uri, 'pemilik/finance') !== false;
+$isPemilikRadar     = strpos($current_uri, 'pemilik/radar') !== false;
+$isPemilikMaster    = strpos($current_uri, 'pemilik/master_data') !== false;
 ?>
 
 <div class="flex h-screen w-full bg-[#F8F9FA] font-sans text-black overflow-hidden selection:bg-[#FFE600] selection:text-black">
@@ -46,12 +53,47 @@ $isEkspedisiQueue   = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedi
 
     <nav class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-1">
 
-      <a href="<?= $dashboard_url; ?>" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isDashboard && !$isEkspedisiQueue && !$isEkspedisiActive && !$isEkspedisiHistory ? $activeClass : $inactiveClass; ?>">
-        <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-        </svg>
-        DASHBOARD
-      </a>
+      <?php if (in_array($role, ['pemilik', 'admin_web'])): ?>
+        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b-2 border-gray-200 pb-1 <?= $role === 'pemilik' ? 'mb-2' : 'mt-6 mb-2' ?> px-1">EXECUTIVE_SUITE</p>
+
+        <a href="<?= BASEURL; ?>/pemilik" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isPemilikDashboard ? $activeClass : $inactiveClass; ?>">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+          </svg>
+          DASHBOARD
+        </a>
+
+        <a href="<?= BASEURL; ?>/pemilik/finance" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isPemilikFinance ? $activeClass : $inactiveClass; ?>">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          FINANCE
+        </a>
+
+        <a href="<?= BASEURL; ?>/pemilik/radar" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isPemilikRadar ? $activeClass : $inactiveClass; ?>">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+          RADAR
+        </a>
+
+        <a href="<?= BASEURL; ?>/pemilik/master_data" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isPemilikMaster ? $activeClass : $inactiveClass; ?>">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+          </svg>
+          MASTER DATA
+        </a>
+      <?php endif; ?>
+
+      <?php if ($role !== 'pemilik'): ?>
+        <a href="<?= $dashboard_url; ?>" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isDashboard && !$isEkspedisiQueue && !$isEkspedisiActive && !$isEkspedisiHistory ? $activeClass : $inactiveClass; ?>">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+          </svg>
+          DASHBOARD
+        </a>
+      <?php endif; ?>
 
       <?php if (in_array($role, ['admin_web', 'pemilik'])): ?>
         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b-2 border-gray-200 pb-1 mt-6 mb-2 px-1">WEB MANAGEMENT</p>
@@ -135,21 +177,21 @@ $isEkspedisiQueue   = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedi
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
           </svg>
-          PICKUP
+          PICKUP QUEUE
         </a>
 
         <a href="<?= BASEURL; ?>/ekspedisi/deliveries" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isEkspedisiActive ? $activeClass : $inactiveClass; ?>">
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
           </svg>
-          DELIVERIES
+          ACTIVE ROUTES
         </a>
 
         <a href="<?= BASEURL; ?>/ekspedisi/history" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isEkspedisiHistory ? $activeClass : $inactiveClass; ?>">
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          HISTORY
+          HISTORY LOG
         </a>
       <?php endif; ?>
 
@@ -173,7 +215,7 @@ $isEkspedisiQueue   = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedi
         <div class="flex w-full bg-white border-4 border-black shadow-[4px_4px_0_0_#000] transition-transform focus-within:-translate-y-1">
           <input type="text" placeholder="SEARCH" class="w-full px-4 py-2 font-black text-xs uppercase outline-none placeholder-gray-400 text-black">
           <div class="flex items-center justify-center px-3 border-l-4 border-black bg-gray-50">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
           </div>
