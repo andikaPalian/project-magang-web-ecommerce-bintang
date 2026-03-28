@@ -114,11 +114,60 @@ class PemilikModel
     ];
   }
 
-  public function getFinancialLogs(): array
+  private function buildFinanceFilterQuery(array $filters): string
   {
-    $this->db->query("SELECT o.invoice_number, o.created_at, u.name AS customer_name, o.grand_total, o.payment_status, o.order_status FROM orders o JOIN users u ON o.user_id = u.id WHERE o.payment_status = 'paid' OR o.order_status = 'delivered' ORDER BY o.created_at DESC");
+    $filterQuery = "";
+    if (!empty($filters['date_range'])) {
+      if ($filters['date_range'] === 'LAST_30_DAYS') {
+        $filterQuery .= " AND DATE(o.created_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)";
+      } elseif ($filters['date_range'] === 'THIS_YEAR') {
+        $filterQuery .= " AND YEAR(o.created_at) = YEAR(CURRENT_DATE())";
+      }
+    }
+    if (isset($filters['payment_status']) && is_array($filters['payment_status'])) {
+      $status_map = ['completed' => "'paid'", 'pending' => "'pending'"];
+      $selected = [];
+      foreach ($filters['payment_status'] as $status) {
+        if (isset($status_map[$status])) $selected[] = $status_map[$status];
+      }
+      if (!empty($selected)) {
+        $filterQuery .= " AND o.payment_status IN (" . implode(',', $selected) . ")";
+      } else {
+        $filterQuery .= " AND 1=0";
+      }
+    } else {
+      $filterQuery .= " AND 1=0";
+    }
+    return $filterQuery;
+  }
+
+  public function getFinancialLogs(array $filters = [], int $limit = 0, int $offset = 0): array
+  {
+    $query = "SELECT o.invoice_number, o.created_at, u.name AS customer_name, o.grand_total, o.payment_status, o.order_status FROM orders o JOIN users u ON o.user_id = u.id WHERE 1=1";
+
+    $query .= $this->buildFinanceFilterQuery($filters);
+    $query .= " ORDER BY o.created_at DESC";
+
+    if ($limit > 0) {
+      $query .= " LIMIT :limit OFFSET :offset";
+    }
+
+    $this->db->query($query);
+
+    if ($limit > 0) {
+      $this->db->bind(':limit', $limit);
+      $this->db->bind(':offset', $offset);
+    }
 
     return $this->db->resultSet();
+  }
+
+  public function getFinancialTotals(array $filters = []): array
+  {
+    $query = "SELECT COUNT(o.id) AS total_transactions, SUM(o.grand_total) AS total_revenue, SUM(CASE WHEN o.order_status = 'delivered' THEN 1 ELSE 0 END) AS completed_delivered FROM orders o JOIN users u ON o.user_id = u.id WHERE 1=1";
+    $query .= $this->buildFinanceFilterQuery($filters);
+    $this->db->query($query);
+    return $this->db->single();
   }
 
   public function getRadarStats(): array
