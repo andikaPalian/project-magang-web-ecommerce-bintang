@@ -106,4 +106,17 @@ class AdminTokoController extends Controller
     $this->view('admin_toko/inventory', $data);
     $this->view('templates/footer_admin', $data);
   }
+
+  public function history(): void
+  {
+    $data['judul'] = 'Riwayat Penjualan | TI MART';
+    $location_id = (int) $_SESSION['location_id'];
+
+    $data['history'] = $this->model('AdminTokoModel')->getSalesHistory($location_id);
+
+    $this->view('templates/header_admin', $data);
+    $this->view('templates/sidebar_admin', $data);
+    $this->view('admin_toko/history', $data);
+    $this->view('templates/footer_admin', $data);
+  }
 }
