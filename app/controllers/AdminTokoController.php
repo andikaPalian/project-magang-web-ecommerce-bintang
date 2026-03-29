@@ -53,4 +53,44 @@ class AdminTokoController extends Controller
     $this->view('admin_toko/index', $data);
     $this->view('templates/footer_admin', $data);
   }
+
+  public function pos(): void
+  {
+    $data['judul'] = 'POS | TI MART';
+    $location_id = (int) $_SESSION['location_id'];
+
+    $data['products'] = $this->model('AdminTokoModel')->getPostProducts($location_id);
+
+    $this->view('templates/header_admin', $data);
+    $this->view('templates/sidebar_admin', $data);
+    $this->view('admin_toko/pos', $data);
+    $this->view('templates/footer_admin', $data);
+  }
+
+  public function processCheckout(): void
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $json = file_get_contents('php://input');
+      $requestData = json_decode($json, true);
+
+      if (!$requestData || empty($requestData['cart'])) {
+        $this->sendResponse('error', 'Data keranjang tidak valid', '', 400);
+      }
+
+      $checkoutData = [
+        'kasir_id' => $_SESSION['user_id'],
+        'location_id' => $_SESSION['location_id'],
+        'total_price' => $requestData['total_payable'],
+        'payment_method' => $requestData['payment_method']
+      ];
+      $cartItems = $requestData['cart'];
+
+      $isSuccess = $this->model('AdminTokoModel')->processPosCheckout($checkoutData, $cartItems);
+      if ($isSuccess) {
+        $this->sendResponse('success', 'Transaksi berhasil diproses.', '', 200);
+      } else {
+        $this->sendResponse('error', 'Transaksi gagal diproses.', '', 500);
+      }
+    }
+  }
 }
