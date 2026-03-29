@@ -232,6 +232,24 @@
           </div>
         </div>
 
+        <div class="space-y-2 mt-5">
+          <label class="text-[10px] font-black uppercase tracking-widest">PENEMPATAN LOKASI</label>
+          <div class="relative">
+            <select name="location_id" class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-black text-xs uppercase focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all appearance-none cursor-pointer">
+              <option value="">-- TANPA LOKASI (WEB / PEMILIK / PEMBELI) --</option>
+              <?php foreach ($data['locations'] as $loc): ?>
+                <option value="<?= $loc['id'] ?>">[<?= strtoupper($loc['type']) ?>] - <?= strtoupper($loc['name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-black">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+          </div>
+          <p class="text-[8px] font-bold text-gray-500">*Wajib dipilih untuk peran Admin Toko atau Gudang</p>
+        </div>
+
         <div class="flex gap-4 pt-4 mt-6 border-t-4 border-black">
           <button type="button" onclick="closeModal('addStaffModal')" class="flex-1 bg-white border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all py-4">CANCEL</button>
           <button type="submit" class="flex-1 bg-[#2563EB] text-white border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all py-4">ADD</button>
@@ -296,6 +314,24 @@
               <div onclick="selectEditRole('pemilik', 'PEMILIK')" class="p-4 font-black uppercase hover:bg-[#FFE600] cursor-pointer">PEMILIK</div>
             </div>
           </div>
+        </div>
+
+        <div class="space-y-2 mt-5">
+          <label class="text-[10px] font-black uppercase tracking-widest">PENEMPATAN LOKASI</label>
+          <div class="relative">
+            <select name="location_id" id="edit_location_id" class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-black text-xs uppercase focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all appearance-none cursor-pointer">
+              <option value="">-- TANPA LOKASI (WEB / PEMILIK / PEMBELI) --</option>
+              <?php foreach ($data['locations'] as $loc): ?>
+                <option value="<?= $loc['id'] ?>">[<?= strtoupper($loc['type']) ?>] - <?= strtoupper($loc['name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-black">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+          </div>
+          <p class="text-[8px] font-bold text-gray-500">*Wajib dipilih untuk peran Admin Toko atau Gudang</p>
         </div>
 
         <div class="flex gap-4 pt-4 mt-6 border-t-4 border-black">

@@ -28,6 +28,7 @@ function openEditModal(btnElement) {
   document.getElementById("edit_email").value = userData.email;
   document.getElementById("edit_phone").value = userData.phone || "";
   document.getElementById("edit_address").value = userData.address || "-";
+  document.getElementById("edit_location_id").value = user.location_id || "";
 
   const roleValue = userData.role;
   let roleText = roleValue.replace("_", " ").toUpperCase();

@@ -18,6 +18,7 @@ class AdminUserController extends Controller
   {
     $data['judul'] = 'User management | TI MART';
     $data['users'] = $this->model('UserModel')->getAllUsers($_SESSION['user_id']);
+    $data['locations'] = $this->model('UserModel')->getAllLocations();
 
     $totalUsers = count($data['users']) + 1;
     $activeStaff = 1;
@@ -54,6 +55,10 @@ class AdminUserController extends Controller
   public function storeUser(): void
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      if (!isset($_POST['location_id']) || $_POST['location_id'] === '') {
+        $_POST['location_id'] = null;
+      }
+
       if ($this->model('UserModel')->addUserByAdmin($_POST) > 0) {
         $this->sendResponse('success', 'User berhasil ditambahkan!', '/adminuser', 200);
       } else {
@@ -69,6 +74,10 @@ class AdminUserController extends Controller
 
       if (!isset($_POST['address'])) {
         $_POST['address'] = '-';
+      }
+
+      if (!isset($_POST['location_id']) || $_POST['location_id'] === '') {
+        $_POST['location_id'] = null;
       }
 
       if ($id == $_SESSION['user_id']) {

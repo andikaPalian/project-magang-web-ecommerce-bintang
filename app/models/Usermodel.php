@@ -61,7 +61,7 @@ class Usermodel
 
   public function addUserByAdmin(array $data): int
   {
-    $this->db->query("INSERT INTO users (name, email, password, phone, role, address) VALUES (:name, :email, :password, :phone, :role, :address)");
+    $this->db->query("INSERT INTO users (name, email, password, phone, role, address, location_id) VALUES (:name, :email, :password, :phone, :role, :address, :location_id)");
 
     $this->db->bind('name', $data['name']);
     $this->db->bind('email', $data['email']);
@@ -69,6 +69,8 @@ class Usermodel
     $this->db->bind('phone', $data['phone']);
     $this->db->bind('role', $data['role']);
     $this->db->bind('address', $data['address']);
+    $location_id = !empty($data['location_id']) ? (int)$data['location_id'] : null;
+    $this->db->bind('location_id', $location_id);
 
     $this->db->execute();
 
@@ -78,11 +80,11 @@ class Usermodel
   public function updateUserByAdmin(array $data, int $id): int
   {
     if (!empty($data['password'])) {
-      $this->db->query("UPDATE users SET name = :name, email = :email, password = :password, phone = :phone, role = :role, address = :address WHERE id = :id");
+      $this->db->query("UPDATE users SET name = :name, email = :email, password = :password, phone = :phone, role = :role, address = :address, location_id = :location_id WHERE id = :id");
 
       $this->db->bind('password', password_hash($data['password'], PASSWORD_DEFAULT));
     } else {
-      $this->db->query("UPDATE users SET name = :name, email = :email, phone = :phone, role = :role, address = :address WHERE id = :id");
+      $this->db->query("UPDATE users SET name = :name, email = :email, phone = :phone, role = :role, address = :address, location_id = :location_id WHERE id = :id");
     }
 
     $this->db->bind('name', $data['name']);
@@ -91,6 +93,8 @@ class Usermodel
     $this->db->bind('role', $data['role']);
     $this->db->bind('address', $data['address']);
     $this->db->bind('id', $id);
+    $location_id = !empty($data['location_id']) ? (int)$data['location_id'] : null;
+    $this->db->bind('location_id', $location_id);
 
     $this->db->execute();
 
@@ -104,5 +108,11 @@ class Usermodel
     $this->db->execute();
 
     return $this->db->rowCount();
+  }
+
+  public function getAllLocations(): array
+  {
+    $this->db->query("SELECT id, name, type FROM locations WHERE is_active = 1");
+    return $this->db->resultSet() ?: [];
   }
 }
