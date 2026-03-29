@@ -4,8 +4,8 @@ $user_name = $_SESSION['name'] ?? 'ROOT_USER';
 
 $current_uri = $_SERVER['REQUEST_URI'];
 
-$activeClass = 'bg-[#2563EB] text-white border-4 border-black shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-transform mr-1 mb-1';
-$inactiveClass = 'text-black border-4 border-transparent hover:border-black hover:bg-gray-100 transition-all mr-1 mb-1';
+$activeClass = 'bg-[#2563EB] text-white border-4 border-black shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-transform mr-2 mb-2';
+$inactiveClass = 'text-black border-4 border-transparent hover:border-black hover:bg-gray-100 transition-all mr-2 mb-2';
 
 $dashboard_url = BASEURL . '/adminweb/dashboard';
 if ($role === 'gudang') {
@@ -15,10 +15,9 @@ if ($role === 'gudang') {
 } elseif ($role === 'ekspedisi') {
   $dashboard_url = BASEURL . '/ekspedisi';
 } elseif ($role === 'admin_toko') {
-  $dashboard_url = BASEURL . '/admintoko'; // [TAMBAHAN] Routing dasar Admin Toko
+  $dashboard_url = BASEURL . '/admintoko';
 }
 
-// Deteksi URL Aktif (Umum)
 $isDashboard  = strpos($current_uri, 'dashboard') !== false || rtrim($current_uri, '/') === rtrim(parse_url($dashboard_url, PHP_URL_PATH), '/');
 $isUsers      = strpos($current_uri, 'adminuser') !== false;
 $isProducts   = strpos($current_uri, 'adminproduct') !== false;
@@ -27,22 +26,20 @@ $isArticles   = strpos($current_uri, 'adminarticle') !== false;
 $isVouchers   = strpos($current_uri, 'adminvoucher') !== false;
 $isOrders     = strpos($current_uri, 'adminorder') !== false;
 
-// Deteksi URL Khusus Ekspedisi
 $isEkspedisiActive  = strpos($current_uri, 'ekspedisi/deliveries') !== false;
 $isEkspedisiHistory = strpos($current_uri, 'ekspedisi/history') !== false;
 $isEkspedisiQueue   = strpos($current_uri, 'ekspedisi') !== false && !$isEkspedisiActive && !$isEkspedisiHistory;
 
-// Deteksi URL Khusus Pemilik Situs (EXECUTIVE SUITE)
 $isPemilikDashboard = strpos($current_uri, 'pemilik/dashboard') !== false || rtrim($current_uri, '/') === rtrim(BASEURL . '/pemilik', '/');
 $isPemilikFinance   = strpos($current_uri, 'pemilik/finance') !== false;
 $isPemilikRadar     = strpos($current_uri, 'pemilik/radar') !== false;
 $isPemilikMaster    = strpos($current_uri, 'pemilik/master_data') !== false;
 
-// [TAMBAHAN] Deteksi URL Khusus Admin Toko Offline (OPERATIONS.SYS)
-$isAdminTokoDashboard = strpos($current_uri, 'admintoko') !== false || rtrim($current_uri, '/') === rtrim(BASEURL . '/admintoko', '/');
 $isAdminTokoPos       = strpos($current_uri, 'admintoko/pos') !== false;
 $isAdminTokoInventory = strpos($current_uri, 'admintoko/inventory') !== false;
 $isAdminTokoHistory   = strpos($current_uri, 'admintoko/history') !== false;
+
+$isAdminTokoDashboard = (strpos($current_uri, 'admintoko') !== false) && !$isAdminTokoPos && !$isAdminTokoInventory && !$isAdminTokoHistory;
 ?>
 
 <div class="flex h-screen w-full bg-[#F8F9FA] font-sans text-black overflow-hidden selection:bg-[#FFE600] selection:text-black">
@@ -104,19 +101,19 @@ $isAdminTokoHistory   = strpos($current_uri, 'admintoko/history') !== false;
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
           </svg>
-          POS_SYSTEM
+          POS
         </a>
         <a href="<?= BASEURL; ?>/admintoko/inventory" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isAdminTokoInventory ? $activeClass : $inactiveClass; ?>">
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
           </svg>
-          INVENTARIS_LOKAL
+          INVENTARIS
         </a>
         <a href="<?= BASEURL; ?>/admintoko/history" class="flex items-center px-4 py-3 font-black uppercase text-xs tracking-widest <?= $isAdminTokoHistory ? $activeClass : $inactiveClass; ?>">
           <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
-          RIWAYAT_PENJUALAN
+          RIWAYAT PENJUALAN
         </a>
       <?php endif; ?>
 
