@@ -19,6 +19,9 @@ class OutboundController extends Controller
     $data['judul'] = 'Outbound | TI MART';
     $data['orders'] = $this->model('OrderModel')->getOrdersForOutbound();
 
+    $data['products'] = $this->model('ProdukModel')->getAllProducts();
+    $data['locations'] = $this->model('UserModel')->getAllLocations();
+
     $totalReady = count($data['orders']);
     $totalParcels = 0;
 

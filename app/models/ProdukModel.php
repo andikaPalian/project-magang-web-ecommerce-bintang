@@ -244,20 +244,22 @@ class ProdukModel
     return (int) ($result['total'] ?? 0);
   }
 
-  public function updateStockOnly(int $product_id, int $stock): int
+  public function updateStockOnly(int $product_id, int $stock, int $location_id): int
   {
-    $this->db->query("SELECT id FROM product_stocks WHERE product_id = :product_id");
+    $this->db->query("SELECT id FROM product_stocks WHERE product_id = :product_id AND location_id = :location_id");
     $this->db->bind('product_id', $product_id);
+    $this->db->bind('location_id', $location_id);
     $existing = $this->db->single();
 
     if ($existing) {
-      $this->db->query("UPDATE product_stocks SET stock_quantity = :stock WHERE product_id = :product_id");
+      $this->db->query("UPDATE product_stocks SET stock_quantity = :stock WHERE product_id = :product_id AND location_id = :location_id");
     } else {
-      $this->db->query("INSERT INTO product_stocks (product_id, location_id, stock_quantity) VALUES (:product_id, 1, :stock)");
+      $this->db->query("INSERT INTO product_stocks (product_id, location_id, stock_quantity) VALUES (:product_id, :location_id, :stock)");
     }
 
     $this->db->bind('stock', $stock);
     $this->db->bind('product_id', $product_id);
+    $this->db->bind('location_id', $location_id);
 
     $this->db->execute();
 
@@ -276,5 +278,49 @@ class ProdukModel
     $this->db->execute();
 
     return $this->db->rowCount();
+  }
+
+  public function distributeStockToBranch(int $product_id, int $qty, int $from_location, int $to_location): bool
+  {
+    try {
+      $this->db->beginTransaction();
+
+      $this->db->query("SELECT stock_quantity FROM product_stocks WHERE product_id = :pid AND location_id = :loc");
+      $this->db->bind('pid', $product_id);
+      $this->db->bind('loc', $from_location);
+      $gudangStock = $this->db->single();
+
+      if (!$gudangStock || $gudangStock['stock_quantity'] < $qty) {
+        $this->db->rollBack();
+        return false;
+      }
+
+      $this->db->query("UPDATE product_stocks SET stock_quantity = stock_quantity - :qty WHERE product_id = :pid AND location_id = :loc");
+      $this->db->bind('qty', $qty);
+      $this->db->bind('pid', $product_id);
+      $this->db->bind('loc', $from_location);
+      $this->db->execute();
+
+      $this->db->query("SELECT id FROM product_stocks WHERE product_id = :pid AND location_id = :loc");
+      $this->db->bind('pid', $product_id);
+      $this->db->bind('loc', $to_location);
+      $cabangStock = $this->db->single();
+
+      if ($cabangStock) {
+        $this->db->query("UPDATE product_stocks SET stock_quantity = stock_quantity + :qty WHERE product_id = :pid AND location_id = :loc");
+      } else {
+        $this->db->query("INSERT INTO product_stocks (product_id, location_id, stock_quantity) VALUES (:pid, :loc, :qty)");
+      }
+      $this->db->bind('qty', $qty);
+      $this->db->bind('pid', $product_id);
+      $this->db->bind('loc', $to_location);
+      $this->db->execute();
+
+      $this->db->commit();
+      return true;
+    } catch (Exception $e) {
+      $this->db->rollBack();
+      return false;
+    }
   }
 }

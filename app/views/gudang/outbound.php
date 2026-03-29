@@ -1,10 +1,19 @@
 <div class="p-6 sm:p-10 w-full min-h-screen bg-[#F8F9FA] text-black font-sans uppercase tracking-widest relative">
 
-  <div class="mb-6 border-b-4 border-black pb-4" data-aos="fade-down">
-    <h1 class="text-4xl md:text-5xl font-black tracking-tighter mb-1">OUTBOUND</h1>
-    <p class="text-sm font-bold text-gray-600 max-w-xl leading-relaxed mt-2">
-      Kelola pengiriman barang.
-    </p>
+  <div class="mb-6 border-b-4 border-black pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-4" data-aos="fade-down">
+    <div>
+      <h1 class="text-4xl md:text-5xl font-black tracking-tighter mb-1">OUTBOUND</h1>
+      <p class="text-sm font-bold text-gray-600 max-w-xl leading-relaxed mt-2">
+        Kelola pengiriman pesanan online dan distribusi stok ke cabang.
+      </p>
+    </div>
+
+    <button onclick="openTransferModal()" class="w-full md:w-auto bg-[#2563EB] text-white px-6 py-3 border-4 border-black font-black text-sm uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:shadow-none transition-all flex items-center justify-center shrink-0">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+      </svg>
+      DISTRIBUSI KE CABANG
+    </button>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8" data-aos="fade-up">
@@ -15,14 +24,14 @@
       <div class="flex justify-between items-center mb-4">
         <span class="text-xs font-black">READY FOR HANDOVER</span>
         <span class="bg-black text-white px-3 py-1 font-black text-lg">
-          <?= str_pad((string)$data['stats']['ready_to_ship'], 2, '0', STR_PAD_LEFT) ?>
+          <?= str_pad((string)($data['stats']['ready_to_ship'] ?? 0), 2, '0', STR_PAD_LEFT) ?>
         </span>
       </div>
 
       <div class="flex justify-between items-center">
         <span class="text-xs font-black">TOTAL PARCELS</span>
         <span class="bg-[#2563EB] border-2 border-black text-white px-3 py-1 font-black text-lg shadow-[2px_2px_0_0_#000]">
-          <?= str_pad((string)$data['stats']['total_parcels'], 2, '0', STR_PAD_LEFT) ?>
+          <?= str_pad((string)($data['stats']['total_parcels'] ?? 0), 2, '0', STR_PAD_LEFT) ?>
         </span>
       </div>
     </div>
@@ -42,7 +51,7 @@
   <div class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] flex flex-col relative z-10" data-aos="fade-up" data-aos-delay="100">
     <div class="bg-black text-white p-3 flex justify-between items-center border-b-4 border-black">
       <div class="flex items-center text-xs font-black">
-        LIST ORDERS
+        LIST ORDERS (ONLINE B2C)
       </div>
     </div>
 
@@ -103,7 +112,7 @@
     </div>
 
     <div class="border-t-4 border-black p-3 text-[9px] font-black text-gray-500 bg-gray-50">
-      SHOWING <?= count($data['orders']) ?> PACKAGES READY FOR DISPATCH
+      SHOWING <?= count($data['orders'] ?? []) ?> PACKAGES READY FOR DISPATCH
     </div>
   </div>
 
@@ -143,9 +152,81 @@
     </div>
   </div>
 
+  <div id="transferModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity overflow-y-auto pt-20 pb-10">
+    <div class="bg-white border-4 border-black shadow-[12px_12px_0_0_#000] w-full max-w-2xl relative my-auto">
+
+      <div class="flex justify-between items-center p-6 border-b-4 border-black bg-[#FFE600] text-black">
+        <div>
+          <h2 class="text-2xl font-black uppercase tracking-widest">TRANSFER STOK</h2>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-gray-600">Gudang Pusat -> Toko Cabang</p>
+        </div>
+        <button onclick="closeTransferModal()" type="button" class="bg-white text-black border-4 border-black w-10 h-10 flex items-center justify-center font-black text-xl hover:bg-[#FF5757] hover:text-white shadow-[4px_4px_0_0_#000] transition-all">X</button>
+      </div>
+
+      <div class="p-8">
+        <form id="transferForm" action="<?= BASEURL; ?>/adminproduct/distributeStock" method="POST" class="space-y-6">
+
+          <div class="space-y-2">
+            <label class="text-[10px] font-black uppercase tracking-widest">PILIH PRODUK YANG DIKIRIM</label>
+            <div class="relative">
+              <select name="product_id" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-black text-xs uppercase focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all appearance-none cursor-pointer">
+                <option value="">-- PILIH PRODUK --</option>
+                <?php if (isset($data['products'])): ?>
+                  <?php foreach ($data['products'] as $p): ?>
+                    <option value="<?= $p['id'] ?>">ID: <?= $p['id'] ?> - <?= htmlspecialchars($p['name']) ?></option>
+                  <?php endforeach; ?>
+                <?php endif; ?>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-black">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label class="text-[10px] font-black uppercase tracking-widest">CABANG TUJUAN</label>
+              <div class="relative">
+                <select name="destination_location_id" required class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-black text-xs uppercase focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all appearance-none cursor-pointer">
+                  <option value="">-- PILIH CABANG --</option>
+                  <?php if (isset($data['locations'])): ?>
+                    <?php foreach ($data['locations'] as $loc): ?>
+                      <?php if ($loc['id'] != $_SESSION['location_id']): ?>
+                        <option value="<?= $loc['id'] ?>">[<?= strtoupper($loc['type']) ?>] <?= htmlspecialchars($loc['name']) ?></option>
+                      <?php endif; ?>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-black">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-[10px] font-black uppercase tracking-widest">JUMLAH (QTY)</label>
+              <input type="number" name="quantity" min="1" required placeholder="Contoh: 10" class="w-full p-4 bg-[#F8F9FA] border-4 border-black font-black text-xl text-center focus:outline-none focus:bg-white focus:shadow-[4px_4px_0_0_#2563EB] focus:-translate-y-1 transition-all">
+            </div>
+          </div>
+
+          <div class="flex gap-4 pt-4 mt-4 border-t-4 border-black">
+            <button type="button" onclick="closeTransferModal()" class="flex-1 bg-white border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 transition-all py-4">BATAL</button>
+            <button type="submit" class="flex-1 bg-[#FFE600] text-black border-4 border-black font-black uppercase tracking-widest shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all py-4">KIRIM STOK</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 <script>
+  // FUNGSI MODAL HANDOVER KURIR (B2C)
   function openDispatchModal(orderId, invoiceNumber, courier) {
     let invArray = invoiceNumber.split('-');
     let shortInv = invArray[2] ? 'INV-' + invArray[2] : invoiceNumber;
@@ -161,6 +242,19 @@
 
   function closeDispatchModal() {
     const modal = document.getElementById('dispatchModal');
+    modal.classList.remove('flex');
+    modal.classList.add('hidden');
+  }
+
+  // FUNGSI MODAL TRANSFER GUDANG (B2B)
+  function openTransferModal() {
+    const modal = document.getElementById('transferModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeTransferModal() {
+    const modal = document.getElementById('transferModal');
     modal.classList.remove('flex');
     modal.classList.add('hidden');
   }

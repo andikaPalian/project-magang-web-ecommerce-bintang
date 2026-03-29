@@ -131,8 +131,9 @@ class AdminProductController extends Controller
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $productId = (int) $_POST['product_id'];
       $stock = (int) $_POST['total_stock'];
+      $locationId = (int) $_SESSION['location_id'];
 
-      if ($this->model('ProdukModel')->updateStockOnly($productId, $stock) >= 0) {
+      if ($this->model('ProdukModel')->updateStockOnly($productId, $stock, $locationId) >= 0) {
         $this->sendResponse('success', 'Stok produk berhasil diperbarui!', '/adminproduct', 200);
       } else {
         $this->sendResponse('error', 'Gagal memperbarui stok produk.', '/adminproduct', 500);
@@ -213,6 +214,26 @@ class AdminProductController extends Controller
         $this->sendResponse('success', 'Spesifikasi produk berhasil dihapus!', '/adminproduct');
       } else {
         $this->sendResponse('error', 'Gagal menghapus spesifikasi produk.', '/adminproduct', 400);
+      }
+    }
+  }
+
+  public function distributeStock(): void
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $productId = (int) $_POST['product_id'];
+      $qty = (int) $_POST['quantity'];
+      $toLocationId = (int) $_POST['destination_location_id'];
+
+      $fromLocationId = (int) $_SESSION['location_id'];
+      if ($fromLocationId === $toLocationId) {
+        $this->sendResponse('error', 'Tujuan pengiriman tidak boleh sama dengan lokasi asal!', '/adminproduct', 400);
+      }
+
+      if ($this->model('ProdukModel')->distributeStockToBranch($productId, $qty, $fromLocationId, $toLocationId)) {
+        $this->sendResponse('success', 'Barang berhasil diberangkatkan ke Toko Cabang!', '/adminproduct', 200);
+      } else {
+        $this->sendResponse('error', 'GAGAL! Stok gudang tidak mencukupi atau terjadi kesalahan database.', '/adminproduct', 500);
       }
     }
   }
