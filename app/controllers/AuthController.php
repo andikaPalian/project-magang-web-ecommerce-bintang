@@ -31,6 +31,7 @@ class AuthController extends Controller
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['name'] = $user['name'];
         $_SESSION['role'] = $user['role'];
+        $_SESSION['location_id'] = $user['location_id'] ?? null;
 
         $this->redirectBasedOnRole($user['role']);
       } else {
@@ -43,7 +44,7 @@ class AuthController extends Controller
   {
     $dashboardUrl = match ($role) {
       'pembeli'    => '/home',
-      'admin_toko' => '/admin_toko/dashboard',
+      'admin_toko' => '/admintoko/dashboard',
       'gudang'     => '/gudang/dashboard',
       'ekspedisi'  => '/ekspedisi/dashboard',
       'admin_web'  => '/adminweb/dashboard',
