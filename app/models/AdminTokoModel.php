@@ -101,4 +101,12 @@ class AdminTokoModel
       return false;
     }
   }
+
+  public function getLocalInventory(int $location_id): array
+  {
+    $this->db->query("SELECT p.id, p.name, p.price, p.image_url, p.is_active, c.name AS category_name, ps.stock_quantity, ps.last_updated FROM products p LEFT JOIN categories c ON p.category_id = c.id JOIN product_stocks ps ON p.id = ps.product_id WHERE ps.location_id = :location_id ORDER BY ps.stock_quantity ASC");
+    $this->db->bind('location_id', $location_id);
+
+    return $this->db->resultSet() ?: [];
+  }
 }

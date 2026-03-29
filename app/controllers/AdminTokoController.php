@@ -93,4 +93,17 @@ class AdminTokoController extends Controller
       }
     }
   }
+
+  public function inventory(): void
+  {
+    $data['judul'] = 'Inventory | TI MART';
+    $location_id = (int) $_SESSION['location_id'];
+
+    $data['inventory'] = $this->model('AdminTokoModel')->getLocalInventory($location_id);
+
+    $this->view('templates/header_admin', $data);
+    $this->view('templates/sidebar_admin', $data);
+    $this->view('admin_toko/inventory', $data);
+    $this->view('templates/footer_admin', $data);
+  }
 }
